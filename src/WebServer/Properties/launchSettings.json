@@ -1,0 +1,11 @@
+{
+    "profiles": {
+        "WebgServer": {
+            "commandName": "Project",
+            "applicationUrl": "http://localhost",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        }
+    }
+}

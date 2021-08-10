@@ -1,0 +1,1 @@
+[![Master CI](https://github.com/xieyubo/feedreader/actions/workflows/master-ci.yaml/badge.svg)](https://github.com/xieyubo/feedreader/actions/workflows/master-ci.yaml)

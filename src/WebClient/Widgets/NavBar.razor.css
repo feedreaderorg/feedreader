@@ -1,0 +1,27 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-hight);
+    background-color: var(--panel-bg-color);
+    padding: 8px var(--body-left-right-padding);
+}
+
+.navbar .logo {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .logo img {
+    height: 100%;
+    border: 2px solid var(--main-text-bg-color);
+    border-radius: 50%;
+}
+
+.navbar .logo span {
+    margin-left: 8px;
+}

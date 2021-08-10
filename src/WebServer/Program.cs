@@ -26,6 +26,8 @@ namespace FeedReader.WebServer
     {
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseStaticFiles();
+
             app.UseBlazorFrameworkFiles();
 
             app.UseRouting();

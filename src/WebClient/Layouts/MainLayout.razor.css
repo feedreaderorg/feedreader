@@ -1,0 +1,9 @@
+.main-layout {
+    display: flex;
+    height: 100%;
+    padding-top: var(--navbar-hight);
+}
+
+.main-layout .page {
+    padding: 0px var(--body-left-right-padding);
+}

@@ -1,0 +1,23 @@
+@import url("dimension.css");
+@import url("light.theme.css");
+@import url("dark.theme.css");
+
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+
+html, body, #app {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    color: var(--color);
+    background-color: var(--bg-color);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

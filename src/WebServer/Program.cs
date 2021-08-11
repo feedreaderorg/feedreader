@@ -26,7 +26,15 @@ namespace FeedReader.WebServer
     {
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    if (ctx.File.Name.EndsWith(".css")) {
+                        ctx.Context.Response.Headers["Cache-Control"] = "no-cache";
+                    }
+                }
+            });
 
             app.UseBlazorFrameworkFiles();
 

@@ -6,4 +6,5 @@
 
 .main-layout .page {
     padding: 0px var(--body-left-right-padding);
+    width: 100%;
 }

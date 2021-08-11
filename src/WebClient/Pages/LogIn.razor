@@ -1,10 +1,25 @@
 @page "/login"
+@page "/login/{OAuthProvider}"
 
-<div class="login">
-    <div class="wrapper">
-        <div class="title">Welcome back</div>
-        <a class="btn"><img src="img/microsoft.svg"><span>Continue with Microsoft</span></a>
-        <a class="btn"><img src="img/google.svg"><span>Continue with Google</span></a>
-        <div class="term">By continuing, you agree to FeedReader &nbsp;<br /><a href="/terms">Terms of Service</a>,&nbsp;<a href="/privacy">Privacy Policy</a></div>
+@if (App.CurrentUser.Role != UserRole.Guest)
+{
+    NavigationManager.NavigateTo("/");
+}
+else if (string.IsNullOrEmpty(OAuthProvider))
+{
+    var callbackUri = NavigationManager.ToAbsoluteUri("/login/microsoft");
+    var microsoftLoginUri = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=dcaaa2ba-a614-4b8c-b78e-1fb39cb8899a&redirect_uri={callbackUri}&response_type=id_token&scope=openid+profile&nonce=feedreader";
+
+    <div class="login">
+        <div class="wrapper">
+            <div class="title">Welcome back</div>
+            <a class="btn" href="@microsoftLoginUri"><img src="img/microsoft.svg"><span>Continue with Microsoft</span></a>
+            <a class="btn"><img src="img/google.svg"><span>Continue with Google</span></a>
+            <div class="term">By continuing, you agree to FeedReader &nbsp;<br /><a href="/terms">Terms of Service</a>,&nbsp;<a href="/privacy">Privacy Policy</a></div>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <Waiting Text="logging in"/>
+}

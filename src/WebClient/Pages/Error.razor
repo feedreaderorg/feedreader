@@ -1,0 +1,48 @@
+@page "/error"
+
+@inject NavigationManager NavigationManager
+
+<div class="error">
+    <div class="wrapper">
+        <div class="icon">
+            <img src="img/emoji/sweat.svg">
+        </div>
+        <div class="content">
+            <div class="title">@Title</div>
+            <div class="detail">@Detail</div>
+            <a href="@BackUri">@BackTitle</a>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    string Title { get; set; } = "Error";
+
+    string Detail { get; set; } = "Operation failed.";
+
+    string BackTitle { get; set; } = "Back to homepage";
+
+    string BackUri { get; set; } = "/";
+
+    protected override void OnInitialized()
+    {
+        var query = HttpUtility.ParseQueryString(new Uri(NavigationManager.Uri).Query);
+        if (!string.IsNullOrEmpty(query["title"]))
+        {
+            Title = query["title"];
+        }
+        if (!string.IsNullOrEmpty(query["detail"]))
+        {
+            Detail = query["detail"];
+        }
+        if (!string.IsNullOrEmpty(query["backTitle"]))
+        {
+            BackTitle = query["backTitle"];
+        }
+        if (!string.IsNullOrEmpty(query["backUri"]))
+        {
+            BackUri = query["backUri"];
+        }
+    }
+}

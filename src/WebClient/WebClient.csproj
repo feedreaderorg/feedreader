@@ -5,6 +5,11 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.8" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.38.0" />
+      <PackageReference Include="Grpc.Net.Client.Web" Version="2.38.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.9" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Share\Share.csproj" />
     </ItemGroup>
 </Project>

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "Protocols/Types.proto";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+service AuthServerApi
+{
+    rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest
+{
+    string Token = 1;
+}
+
+message LoginResponse
+{
+    string Token = 1;
+    User User = 2;
+}

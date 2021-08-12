@@ -5,9 +5,13 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.8" />
+      <PackageReference Include="Grpc.AspNetCore" Version="2.38.0" />
+      <PackageReference Include="Grpc.AspNetCore.Web" Version="2.38.0" />
+      <PackageReference Include="JWT" Version="8.2.3" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.9" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\WebClient\WebClient.csproj" />
+      <ProjectReference Include="..\Share\Share.csproj" />
     </ItemGroup>
 </Project>

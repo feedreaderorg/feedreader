@@ -12,7 +12,7 @@ namespace FeedReader.WebClient
 
             builder.RootComponents.Add<App>("#app");
 
-            App.CurrentUser = new User();
+            App.CurrentUser = new User(builder.HostEnvironment.BaseAddress);
 
             await builder.Build().RunAsync();
         }

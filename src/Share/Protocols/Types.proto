@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+enum UserRole
+{
+    // The user who hasn't logged in.
+    Guest = 0;
+
+    // The user who has valid toke, but isn't registered.
+    Unregistered = 1;
+
+    // The user who has been disabled.
+    Disabled = 2;
+
+    // The user who has logged in.
+    Normal = 3;
+}
+
+message User
+{
+    // The unique id of the user.
+    string Username = 1;
+
+    // The role of the user.
+    UserRole Role = 2;
+
+    // The display name of the user.
+    string DisplayName = 3;
+
+    // The avatar of the user.
+    string AvatarUri = 4;
+
+    // The registration time of the user.
+    google.protobuf.Timestamp RegistrationTime = 5;
+}

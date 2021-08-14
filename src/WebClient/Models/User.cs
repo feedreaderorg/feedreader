@@ -10,8 +10,6 @@ namespace FeedReader.WebClient.Models
     public enum UserRole
     {
         Guest,
-        Unregistered,
-        Disabled,
         Normal
     };
 
@@ -20,13 +18,7 @@ namespace FeedReader.WebClient.Models
         #region Properties
         string Token { get; set; }
 
-        public string Username { get; set; }
-
-        public string DisplayName { get; set; }
-
         public UserRole Role { get; set; }
-
-        public string AvatarUri { get; set; }
         #endregion
 
         AuthServerApiClient AuthServerapi { get; set; }
@@ -50,34 +42,7 @@ namespace FeedReader.WebClient.Models
                 Token = token,
             });
             Token = response.Token;
-            UpdateFrom(response.User);
-        }
-
-        void UpdateFrom(Share.Protocols.User u)
-        {
-            Username = u.Username;
-            DisplayName = u.DisplayName;
-            Role = ProtocolUserRoleToUserRole(u.Role);
-            AvatarUri = u.AvatarUri;
-        }
-
-        static UserRole ProtocolUserRoleToUserRole(Share.Protocols.UserRole role)
-        {
-            switch (role)
-            {
-                default:
-                case Share.Protocols.UserRole.Guest:
-                    return UserRole.Guest;
-
-                case Share.Protocols.UserRole.Unregistered:
-                    return UserRole.Unregistered;
-
-                case Share.Protocols.UserRole.Disabled:
-                    return UserRole.Disabled;
-
-                case Share.Protocols.UserRole.Normal:
-                    return UserRole.Normal;
-            }
+            Role = UserRole.Normal;
         }
     }
 }

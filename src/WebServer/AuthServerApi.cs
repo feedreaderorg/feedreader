@@ -19,8 +19,7 @@ namespace FeedReader.WebServer
             var user = await AuthService.LoginAsync(request.Token);
             return new LoginResponse()
             {
-                Token = user.Token,
-                User = user.ToProtocolUser()
+                Token = user.Token
             };
         }
     }

@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "Protocols/Types.proto";
-
 option csharp_namespace = "FeedReader.Share.Protocols";
 
 service AuthServerApi
@@ -17,5 +15,4 @@ message LoginRequest
 message LoginResponse
 {
     string Token = 1;
-    User User = 2;
 }

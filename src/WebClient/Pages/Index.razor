@@ -1,3 +1,10 @@
 @page "/"
 
-<h1>Hello: @App.CurrentUser.Username! UserRole: @App.CurrentUser.Role</h1>
+@if (App.CurrentUser.Role == UserRole.Guest)
+{
+	<h1>Hello Guest</h1>
+}
+else
+{
+	<h1>Hello Logged in user.</h1>
+}

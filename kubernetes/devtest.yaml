@@ -25,6 +25,11 @@ spec:
               secretKeyRef:
                 name: feedreader-devtest-db-secret
                 key: db-conns
+          - name: FeedReaderJwtSecret
+            valueFrom:
+              secretKeyRef:
+                name: feedreader-devtest-jwt-secret
+                key: key
 ---
 apiVersion: v1
 kind: Service

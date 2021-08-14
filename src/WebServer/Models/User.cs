@@ -1,21 +1,29 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FeedReader.WebServer.Models
 {
-    public static class UserRoles
+    public static class OAuthIssuers
     {
-        public const string Guest = "guest";
-        public const string Unregistered = "unregistered";
-        public const string Normal = "normal";
+        public const string FeedReader = "feedreader";
+        public const string Microsoft = "microsoft";
     }
 
     public class User
     {
-        public string Username { get; set; }
-        public string Role { get; set; }
-        public string DisplayName { get; set; }
-        public string AvatarUri { get; set; }
+        public Guid Id { get; set; }
         public DateTime RegistrationTime { get; set; }
+
+        [NotMapped]
         public string Token { get; set; }
+    }
+
+    public class UserOAuthIds
+    {
+        public string OAuthIssuer { get; set; }
+
+        public string OAuthId { get; set; }
+
+        public Guid UserId { get; set; }
     }
 }

@@ -1,2 +1,5 @@
+.vs/
 bin/
 obj/
+src/WebClient/Properties/
+*.user

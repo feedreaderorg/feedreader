@@ -19,6 +19,12 @@ spec:
         image: docker.xyb.name/feedreader-devtest/webserver:b5850023a70b0307e9686e985dcf9a2a07052634
         ports:
         - containerPort: 80
+        env:
+          - name: ConnectionStrings__DbConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: feedreader-devtest-db-secret
+                key: db-conns
 ---
 apiVersion: v1
 kind: Service

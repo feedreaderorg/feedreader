@@ -1,0 +1,19 @@
+﻿@page "/logout"
+@inject NavigationManager NavigationManager
+
+<Waiting Text="logging out"/>
+
+@code
+{
+	[CascadingParameter]
+    public User CurrentUser { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (CurrentUser.Role != UserRole.Guest)
+		{
+			await CurrentUser.LogoutAsync();
+		}
+		NavigationManager.NavigateTo("/");
+	}
+}

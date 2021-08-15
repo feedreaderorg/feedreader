@@ -4,6 +4,15 @@
         <span>FeedReader</span>
     </a>
     <div class="toolbar">
-        <a href="/login"><i class="far fa-user-circle"></i></a>
+        @if (CurrentUser.Role != UserRole.Guest)
+        {
+            <a href="/profile"><img src="@CurrentUser.AvatarUri" /></a>
+        }
     </div>
 </div>
+
+@code
+{
+    [CascadingParameter]
+    public User CurrentUser { get; set; }
+}

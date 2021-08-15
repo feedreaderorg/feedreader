@@ -11,29 +11,30 @@
     justify-content: space-between;
 }
 
-.navbar .logo {
+.logo {
     display: flex;
     align-items: center;
 }
 
-.navbar .logo img {
+.logo img, .navbar .toolbar img {
     width: var(--left-side-button-image-size);
     height: var(--left-side-button-image-size);
     border: 2px solid var(--main-text-bg-color);
     border-radius: 50%;
 }
 
-.navbar .logo span {
+.logo span {
     margin-left: var(--left-side-button-text-margin-left);
     color: #ffffff;
     font-size: 22px;
 }
 
-.navbar .toolbar {
+.toolbar {
     color: white;
     font-size: 28px;
 }
 
-.navbar .toolbar i {
-    cursor: pointer;
+.toolbar a {
+    display: flex;
+    align-items: center;
 }

@@ -6,7 +6,7 @@
 					<img src="img/home.png"><span>Home</span>
 				</a>
 			</li>
-			@if (App.CurrentUser.Role == UserRole.Guest)
+			@if (CurrentUser.Role == UserRole.Guest)
 			{
 				<li>
 					<a href="/login">
@@ -75,3 +75,9 @@
 		</ul>
 	</div>
 </div>
+
+@code
+{
+	[CascadingParameter]
+    public User CurrentUser { get; set; }
+}

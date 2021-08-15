@@ -1,0 +1,14 @@
+﻿.left-side-bar-layout {
+    height: 100%;
+}
+
+.left {
+    position: fixed;
+    left: 0px;
+    top: var(--navbar-hight);
+    bottom: 0px;
+    width: 256px;
+    box-shadow: inset 0 6px 12px hsl(0deg 0% 56% / 8%);
+    background-color: var(--left-side-bar-bg-color);
+    padding: 0px var(--body-left-right-padding);
+}

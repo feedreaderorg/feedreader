@@ -1,0 +1,77 @@
+﻿<div class="left-side-bar">
+	<div class="section">
+		<ul>
+			<li>
+				<a href="/" class="selected">
+					<img src="img/home.png"><span>Home</span>
+				</a>
+			</li>
+			@if (App.CurrentUser.Role == UserRole.Guest)
+			{
+				<li>
+					<a href="/login">
+						<img src="img/login.png"><span>Login</span>
+					</a>
+				</li>
+			}
+			else
+			{
+				<li>
+					<a href="/">
+						<img src="img/favorite.png"><span>My favorites</span>
+					</a>
+				</li>
+				<li>
+					<a href="/">
+						<img src="img/profile.png"><span>My profile</span>
+					</a>
+				</li>
+				<li>
+					<a href="/">
+						<img src="img/add.png"><span>Add feed</span>
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+	@if (false)
+	{
+		<div class="section">
+			<div class="title">MY FEEDS</div>
+			<ul>
+			
+			</ul>
+		</div>
+	}
+	<div class="section">
+		<div class="title">TOP FEEDS</div>
+		<ul>
+			<li>
+				<a href="/">
+					<img src="img/econmy.png"><span>Economy</span>
+				</a>
+				<a href="/">
+					<img src="img/entertainment.png"><span>Entertainment</span>
+				</a>
+				<a href="/">
+					<img src="img/health.png"><span>Health</span>
+				</a>
+				<a href="/">
+					<img src="img/lifestyle.png"><span>Lifestyle</span>
+				</a>
+				<a href="/">
+					<img src="img/politics.png"><span>Politics</span>
+				</a>
+				<a href="/">
+					<img src="img/sports.png"><span>Sports</span>
+				</a>
+				<a href="/">
+					<img src="img/technology.png"><span>Technology</span>
+				</a>
+				<a href="/">
+					<img src="img/more.png"><span>More</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>

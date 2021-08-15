@@ -17,15 +17,15 @@
 }
 
 .navbar .logo img {
-    height: 30px;
+    width: var(--left-side-button-image-size);
+    height: var(--left-side-button-image-size);
     border: 2px solid var(--main-text-bg-color);
     border-radius: 50%;
 }
 
 .navbar .logo span {
-    margin-left: 8px;
+    margin-left: var(--left-side-button-text-margin-left);
     color: #ffffff;
-    margin-top: -4px;
     font-size: 22px;
 }
 

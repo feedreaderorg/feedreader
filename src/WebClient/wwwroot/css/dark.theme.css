@@ -5,5 +5,7 @@
         --panel-bg-color: #444444;
         --subtext-color: #a0a0a0;
         --gray-bg-color: #444444;
+        --left-side-bar-bg-color: #242424;
+        --left-side-bar-selected-color: #ffffff;
     }
 }

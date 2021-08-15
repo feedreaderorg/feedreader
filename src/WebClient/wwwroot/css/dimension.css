@@ -1,4 +1,6 @@
 :root {
     --navbar-hight: 56px;
-    --body-left-right-padding: 16px
+    --body-left-right-padding: 16px;
+    --left-side-button-image-size: 30px;
+    --left-side-button-text-margin-left: 10px;
 }

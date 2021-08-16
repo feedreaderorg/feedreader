@@ -2,7 +2,8 @@
     :root {
         --color: #ffffff;
         --bg-color: #000000;
-        --panel-bg-color: #444444;
+        --btn-bg-color: #444444;
+        --panel-bg-color: #343434;
         --subtext-color: #a0a0a0;
         --gray-bg-color: #444444;
         --left-side-bar-bg-color: #242424;

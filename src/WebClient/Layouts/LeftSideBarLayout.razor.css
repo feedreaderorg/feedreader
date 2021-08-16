@@ -7,8 +7,25 @@
     left: 0px;
     top: var(--navbar-hight);
     bottom: 0px;
-    width: 256px;
+    width: var(--left-side-bar-size);
     box-shadow: inset 0 6px 12px hsl(0deg 0% 56% / 8%);
     background-color: var(--left-side-bar-bg-color);
     padding: 0px var(--body-left-right-padding);
+}
+
+.right {
+    margin-left: var(--left-side-bar-size);
+}
+
+::deep .page-header {
+    box-shadow: 0 0 8px hsl(0deg 0% 89% / 60%);
+    padding: 10px 24px;
+    background-color: var(--panel-bg-color);
+}
+
+::deep .page-header h1 {
+    margin: 0px;
+    font-family: Arial;
+    font-size: 22px;
+    font-weight: 700;
 }

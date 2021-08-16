@@ -33,7 +33,7 @@ ul {
 
 .btn {
     user-select: none;
-    background-color: var(--panel-bg-color);
+    background-color: var(--btn-bg-color);
 }
 
 .btn:hover {

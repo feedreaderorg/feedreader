@@ -6,7 +6,7 @@
     left: 0;
     right: 0;
     height: var(--navbar-hight);
-    background-color: var(--panel-bg-color);
+    background-color: var(--btn-bg-color);
     padding: 8px var(--body-left-right-padding);
     justify-content: space-between;
 }

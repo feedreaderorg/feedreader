@@ -1,7 +1,8 @@
 :root {
     --color: #000000;
-    --bg-color: #ffffff;
-    --panel-bg-color: #5BC4C5;
+    --bg-color: #f7f9fa;
+    --btn-bg-color: #5BC4C5;
+    --panel-bg-color: #fefefe;
     --gray-bg-color: #f2f5f8;
     --main-text-bg-color: #ffffff;
     --subtext-color: #656565;

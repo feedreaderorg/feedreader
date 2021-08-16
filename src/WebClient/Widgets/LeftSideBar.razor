@@ -1,34 +1,13 @@
-﻿<div class="left-side-bar">
+﻿@inject NavigationManager NavigationManager
+
+<div class="left-side-bar">
 	<div class="section">
 		<ul>
-			<li>
-				<a href="/" class="selected">
-					<img src="img/home.png"><span>Home</span>
-				</a>
-			</li>
-			@if (CurrentUser.Role == UserRole.Guest)
+			@foreach (var item in ActionItems)
 			{
 				<li>
-					<a href="/login">
-						<img src="img/login.png"><span>Login</span>
-					</a>
-				</li>
-			}
-			else
-			{
-				<li>
-					<a href="/">
-						<img src="img/favorite.png"><span>My favorites</span>
-					</a>
-				</li>
-				<li>
-					<a href="/">
-						<img src="img/profile.png"><span>My profile</span>
-					</a>
-				</li>
-				<li>
-					<a href="/">
-						<img src="img/add.png"><span>Add feed</span>
+					<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
+						<img src="@item.ImgUri"><span>@item.Name</span>
 					</a>
 				</li>
 			}
@@ -78,6 +57,78 @@
 
 @code
 {
+	class ActionItem
+	{
+		public string TargetUri { get; set; }
+		public string ImgUri { get; set; }
+		public string Name { get; set; }
+		public bool IsSelected { get; set; }
+	}
+
+	List<ActionItem> ActionItems { get; set; } = new List<ActionItem>();
+
 	[CascadingParameter]
     public User CurrentUser { get; set; }
+
+	protected override void OnInitialized()
+	{
+		ActionItems.Add(new ActionItem()
+		{
+			TargetUri = "/",
+			ImgUri = "img/home.png",
+			Name = "Home",
+		});
+
+		if (CurrentUser.Role == UserRole.Guest)
+		{
+			ActionItems.Add(new ActionItem()
+			{
+				TargetUri = "/login",
+				ImgUri = "img/login.png",
+				Name = "Login",
+			});
+		}
+		else
+		{
+			ActionItems.Add(new ActionItem()
+			{
+				TargetUri = "/favorites",
+				ImgUri = "img/favorite.png",
+				Name = "My favorites",
+			});
+
+			ActionItems.Add(new ActionItem()
+			{
+				TargetUri = "/profile",
+				ImgUri = "img/profile.png",
+				Name = "My profile",
+			});
+
+			ActionItems.Add(new ActionItem()
+			{
+				TargetUri = "/add",
+				ImgUri = "img/add.png",
+				Name = "Add feed",
+			});
+		}
+
+		NavigationManager.LocationChanged += OnLocationChanged;
+		OnLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, false));
+	}
+
+	public void Dispose()
+	{
+		NavigationManager.LocationChanged -= OnLocationChanged;
+	}
+
+	void OnLocationChanged(object sender, LocationChangedEventArgs args)
+	{
+		var realPath = NavigationManager.ToBaseRelativePath(args.Location);
+		var path = new PathString($"/{realPath}");
+		foreach (var item in ActionItems)
+		{
+			item.IsSelected = path.StartsWithSegments(item.TargetUri);
+		}
+		StateHasChanged();
+	}
 }

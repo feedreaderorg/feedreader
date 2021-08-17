@@ -6,10 +6,51 @@
 		<h1>Add Feed</h1>
 	</div>
 	<div class="panel">
-		Bla bla bla ...
+		<div class="search">
+			<Search Placeholder="Search RSS link" InputChanged="@OnSearchRssChanged" />
+		</div>
 	</div>
+	@if (Feeds != null)
+	{
+		<div class="panel">
+			@foreach (var feed in Feeds)
+			{
+				<div>
+					<div><img src="@feed.IconUri" />@feed.Name</div>
+					<div>@feed.Description</div>
+				</div>
+			}
+		</div>
+	}
 </div>
 
-@code {
+@code
+{
+	[CascadingParameter]
+	User CurrentUser { get; set; }
 
+	List<Feed> Feeds { get; set; }
+
+	CancellationTokenSource SearchRssCancellationSource { get; set; }
+
+	async Task OnSearchRssChanged(string query)
+	{
+		Feeds = null;
+
+		if (SearchRssCancellationSource != null)
+		{
+			SearchRssCancellationSource.Cancel();
+			SearchRssCancellationSource.Dispose();
+			SearchRssCancellationSource = null;
+		}
+
+		SearchRssCancellationSource = new CancellationTokenSource();
+		try
+		{
+			Feeds = await CurrentUser.SearchFeedAsync(query, SearchRssCancellationSource.Token);
+		}
+		catch
+		{
+		}
+	}
 }

@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Protobuf Include="Protocols\AuthServerApi.proto" GrpcServices="Both" />
+        <Protobuf Include="Protocols\WebServerApi.proto" GrpcServices="Both" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Google.Protobuf" Version="3.17.3" />

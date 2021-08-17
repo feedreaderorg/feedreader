@@ -1,0 +1,24 @@
+﻿<div class="search">
+	<div class="icon">
+		<i class="fas fa-search"></i>
+	</div>
+	<input value="@Input" @oninput="@OnInputChanged" placeholder="@Placeholder" />
+</div>
+
+@code
+{
+	[Parameter]
+	public string Placeholder { get; set; }
+
+	[Parameter]
+	public string Input { get; set; }
+
+	[Parameter]
+	public EventCallback<string> InputChanged { get; set; }
+
+	Task OnInputChanged(ChangeEventArgs e)
+	{
+		Input = e.Value.ToString();
+		return InputChanged.InvokeAsync(Input);
+	}
+}

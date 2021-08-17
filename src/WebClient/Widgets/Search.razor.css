@@ -1,0 +1,29 @@
+﻿.search {
+    position: relative;
+    color: var(--subtext-color);
+}
+
+.icon {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+input {
+    padding: 10px;
+    padding-left: 36px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid var(--subtext-color);
+    background-color: var(--panel-bg-color);
+    color: var(--color);
+}
+
+input:focus {
+    border-color: var(--btn-bg-color);
+}

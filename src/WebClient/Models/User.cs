@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using static FeedReader.Share.Protocols.AuthServerApi;
+using static FeedReader.Share.Protocols.WebServerApi;
 
 namespace FeedReader.WebClient.Models
 {
@@ -30,7 +34,8 @@ namespace FeedReader.WebClient.Models
         public IJSRuntime JSRuntime { get; set; }
         #endregion
 
-        AuthServerApiClient AuthServerapi { get; set; }
+        AuthServerApiClient AuthServerApi { get; set; }
+        WebServerApiClient WebServerApi { get; set; }
 
         public User()
         {
@@ -42,12 +47,13 @@ namespace FeedReader.WebClient.Models
             var httpHandler = new HttpClientHandler();
             var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
             var grpcChannel = GrpcChannel.ForAddress(serverAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
-            AuthServerapi = new AuthServerApiClient(grpcChannel);
+            AuthServerApi = new AuthServerApiClient(grpcChannel);
+            WebServerApi = new WebServerApiClient(grpcChannel);
         }
 
         public async Task LoginAsync(string token)
         {
-            var response = await AuthServerapi.LoginAsync(new Share.Protocols.LoginRequest()
+            var response = await AuthServerApi.LoginAsync(new Share.Protocols.LoginRequest()
             {
                 Token = token,
             });
@@ -63,6 +69,16 @@ namespace FeedReader.WebClient.Models
             Reset();
             OnStateChanged?.Invoke(this, null);
             await Task.CompletedTask;
+        }
+
+        public async Task<List<Feed>> SearchFeedAsync(string query, CancellationToken cancelToken)
+        {
+            Console.WriteLine("search feed: " + query);
+            var response = await WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
+            {
+                Query = query ?? string.Empty
+            }, headers: null, deadline: null, cancelToken);
+            return response.Feeds.Select(s => s.ToModelFeed()).ToList();
         }
 
         void Reset()

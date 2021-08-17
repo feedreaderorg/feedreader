@@ -18,5 +18,6 @@ namespace FeedReader.WebServer
         public DbSet<File> Files { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserOAuthIds> UserOAuthIds { get; set; }
+        public DbSet<FeedInfo> FeedInfos { get; set; }
     }
 }

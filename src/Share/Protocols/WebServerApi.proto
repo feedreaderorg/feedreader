@@ -1,0 +1,26 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+service WebServerApi
+{
+    rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
+}
+
+message DiscoverFeedsRequest
+{
+    string Query = 1;
+}
+
+message DiscoverFeedsResponse
+{
+    repeated FeedInfo Feeds = 1;
+}
+
+message FeedInfo
+{
+    string SubscriptionName = 1;
+    string IconUri = 2;
+    string Name = 3;
+    string Description = 4;
+}

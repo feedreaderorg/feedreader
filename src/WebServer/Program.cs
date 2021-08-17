@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using FeedReader.WebServer.Services;
+using System.Net.Http;
 
 namespace FeedReader.WebServer
 {
@@ -39,8 +40,10 @@ namespace FeedReader.WebServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextFactory<DbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConnectionString")));
+            services.AddSingleton<HttpClient>();
             services.AddSingleton<StaticFileService>();
             services.AddSingleton<AuthService>();
+            services.AddSingleton<FeedService>();
             services.AddGrpc();
         }
 
@@ -81,7 +84,7 @@ namespace FeedReader.WebServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<AuthServerApi>().EnableGrpcWeb();
-
+                endpoints.MapGrpcService<WebServerApi>().EnableGrpcWeb();
                 endpoints.MapFallbackToFile("/index.html");
             });
         }

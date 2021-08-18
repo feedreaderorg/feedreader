@@ -3,10 +3,13 @@ using System;
 
 namespace FeedReader.WebServer.Models
 {
+    [Index(nameof(IdFromUri), IsUnique = true)]
     [Index(nameof(SubscriptionName), IsUnique = true)]
     public class FeedInfo
     {
         public Guid Id { get; set; }
+
+        public Guid IdFromUri { get; set; }
 
         public string SubscriptionName { get; set; }
 
@@ -19,5 +22,7 @@ namespace FeedReader.WebServer.Models
         public string Description { get; set; }
 
         public string WebsiteLink { get; set; }
+
+        public DateTime RegistrationTime { get; set; }
     }
 }

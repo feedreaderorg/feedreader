@@ -10,14 +10,41 @@
 			<Search Placeholder="Search RSS link" InputChanged="@OnSearchRssChanged" />
 		</div>
 	</div>
-	@if (Feeds != null)
+	@if (SearchingCount != 0)
 	{
-		<div class="panel">
-			@foreach (var feed in Feeds)
+		<div class="panel waitting">
+			<img src="img/loading-buffering.gif"/>
+		</div>
+	}
+	else if (Feeds != null)
+	{
+		var index = 0;
+		<div class="panel feeds">
+			@foreach (var g in Feeds.GroupBy(f => index++ / 2))
 			{
-				<div>
-					<div><img src="@feed.IconUri" />@feed.Name</div>
-					<div>@feed.Description</div>
+				<div class="row">
+				@foreach (var feed in g)
+				{
+					<div class="feed-wrapper">
+						<div class="feed">
+							<img src="@feed.IconUri" />
+							<div class="content">
+								<div class="name">@feed.Name</div>
+								<div class="description">@feed.Description</div>
+								<div class="toolbar">
+									<div class="statics"><i class="far fa-user"></i>@feed.TotalSubscribers</div>
+									<div class="actions">
+										<div class="btn">follow</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+				@if (g.Count() % 2 == 1)
+				{
+					<div class="feed-wrapper"/>
+				}
 				</div>
 			}
 		</div>
@@ -31,11 +58,14 @@
 
 	List<Feed> Feeds { get; set; }
 
+	int SearchingCount { get; set; }
+
 	CancellationTokenSource SearchRssCancellationSource { get; set; }
 
 	async Task OnSearchRssChanged(string query)
 	{
 		Feeds = null;
+		++SearchingCount;
 
 		if (SearchRssCancellationSource != null)
 		{
@@ -46,11 +76,12 @@
 
 		SearchRssCancellationSource = new CancellationTokenSource();
 		try
-		{
+		{	
 			Feeds = await CurrentUser.SearchFeedAsync(query, SearchRssCancellationSource.Token);
 		}
 		catch
 		{
 		}
+		--SearchingCount;
 	}
 }

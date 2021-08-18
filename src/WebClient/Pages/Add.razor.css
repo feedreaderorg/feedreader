@@ -1,1 +1,77 @@
-﻿
+﻿.waitting {
+    display: flex;
+    justify-content: center;
+}
+
+.waitting img {
+    width: 32px;
+    height: 32px;
+}
+
+.feeds {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+}
+
+.feed-wrapper:first-child {
+    padding-left: 0px;
+}
+
+.feed-wrapper:last-child {
+    padding-right: 0px;
+}
+
+.feed-wrapper {
+    display: flex;
+    max-width: 50%;
+    flex: 1;
+    padding: 8px;
+}
+
+.feed {
+    display: flex;
+    border: 1px solid var(--btn-bg-color);
+    padding: 16px;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.feed .content {
+    margin-left: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.feed img {
+    width: 64px;
+    height: 64px;
+}
+
+.feed .name {
+    font-weight: 500;
+}
+
+.feed .description, .feed .statics {
+    font-size: 13px;
+    color: var(--subtext-color);
+}
+
+.feed .statics i {
+    margin-right: 4px;
+}
+
+.feed .toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.feed .actions .btn {
+    font-size: 13px;
+    padding: 0px 8px;
+}

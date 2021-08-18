@@ -73,7 +73,6 @@ namespace FeedReader.WebClient.Models
 
         public async Task<List<Feed>> SearchFeedAsync(string query, CancellationToken cancelToken)
         {
-            Console.WriteLine("search feed: " + query);
             var response = await WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
             {
                 Query = query ?? string.Empty

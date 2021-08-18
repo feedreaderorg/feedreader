@@ -23,4 +23,5 @@ message FeedInfo
     string IconUri = 2;
     string Name = 3;
     string Description = 4;
+    int32 TotalSubscribers = 5;  
 }

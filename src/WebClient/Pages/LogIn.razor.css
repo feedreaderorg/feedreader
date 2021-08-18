@@ -19,13 +19,10 @@
 .login .btn {
     width: 280px;
     height: 40px;
-    border-radius: 40px;
     display: flex;
     align-items: center;
     font-size: 16px;
     font-weight: 600;
-    cursor: pointer;
-    color: white;
     margin-bottom: 12px;
 }
 

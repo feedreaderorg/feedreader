@@ -78,25 +78,87 @@ namespace FeedReader.WebServer.Services
             {
                 feed.Id = Guid.NewGuid();
                 feed.IdFromUri = idFromUri;
-                // TODO: add subscription name.
                 feed.RegistrationTime = DateTime.UtcNow;
                 feed.Uri = uri.ToString();
-                feeds.Add(feed);
 
                 // Save to db.
                 using (var db = DbFactory.CreateDbContext())
                 {
                     if (await db.FeedInfos.FirstOrDefaultAsync(f => f.IdFromUri == idFromUri) == null)
                     {
-                        db.FeedInfos.Add(feed);
-                        await db.SaveChangesAsync();
+                        bool findUnusedSubscriptionName = false;
+                        for (var i = 0; i < 10; ++i)
+                        {
+                            feed.SubscriptionName = GenerateFeedSubscriptionName(feed, feed.SubscriptionName);
+                            if (await db.FeedInfos.FirstOrDefaultAsync(f => f.SubscriptionName == feed.SubscriptionName) == null)
+                            {
+                                findUnusedSubscriptionName = true;
+                                break;
+                            }
+                        }
+                        if (findUnusedSubscriptionName)
+                        {
+                            db.FeedInfos.Add(feed);
+                            await db.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to generate unused subscription name");
+                        }
                     }
                 }
+
+                // Return
+                feeds.Add(feed);
                 return;
             }
 
             // Try to discover feed from html content directly.
             await TryToDiscoverFeedsFromHtmlAsync(content, feeds);
+        }
+
+        string GenerateFeedSubscriptionName(FeedInfo feed, string lastProposedName)
+        {
+            var proposedName = lastProposedName;
+            if (!string.IsNullOrEmpty(proposedName))
+            {
+                var lastHyphen = proposedName.LastIndexOf("-0");
+                if (lastHyphen > -1)
+                {
+                    proposedName.Substring(0, lastHyphen);
+                }
+                return $"{proposedName}-{new Random().Next(1000)}";
+            }
+            else
+            {
+                proposedName = "";
+                var uri = new Uri(feed.Uri);
+                var domainsPart = uri.Host.ToLower().Split('.');
+                for (var i = 0; i < domainsPart.Length - 1; ++i)
+                {
+                    var str = new string(domainsPart[i].Where(c => char.IsLetterOrDigit(c)).ToArray());
+                    if (str == "www")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (proposedName == "")
+                        {
+                            proposedName = str;
+                        }
+                        else
+                        {
+                            proposedName = $"{proposedName}-{str}";
+                        }
+                    }
+                }
+                if (proposedName == "")
+                {
+                    proposedName = new Random().Next(1000).ToString();
+                }
+                return proposedName;
+            }
         }
 
         async Task<FeedInfo> TryToParseFeedFromContentAsync(string content)

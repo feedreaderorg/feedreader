@@ -20,7 +20,7 @@
 			<ul>
 				@foreach (var feed in CurrentUser.SubscribedFeeds)
 				{
-					<a href="/">
+					<a href="/feed/@feed.SubscriptionName">
 						<img src="@feed.IconUri"><span>@feed.Name</span>
 					</a>
 				}

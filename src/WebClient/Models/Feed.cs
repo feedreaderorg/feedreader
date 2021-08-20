@@ -1,7 +1,10 @@
-﻿namespace FeedReader.WebClient.Models
+﻿using System;
+
+namespace FeedReader.WebClient.Models
 {
     public class Feed
     {
+        public Guid Id { get; set; }
         public string SubscriptionName { get; set; }
         public string IconUri { get; set; }
         public string Name { get; set; }

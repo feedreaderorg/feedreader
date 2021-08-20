@@ -40,11 +40,15 @@ namespace FeedReader.WebServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextFactory<DbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConnectionString")));
+
             services.AddSingleton<HttpClient>();
             services.AddSingleton<StaticFileService>();
             services.AddSingleton<AuthService>();
             services.AddSingleton<FeedService>();
-            services.AddGrpc();
+            services.AddSingleton<UserService>();
+
+            var grpc = services.AddGrpc();
+            grpc.AddServiceOptions<WebServerApi>(configure => configure.Interceptors.Add<WebServerApiInterceptor>());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

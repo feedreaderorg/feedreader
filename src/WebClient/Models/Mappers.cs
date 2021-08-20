@@ -1,4 +1,6 @@
-﻿namespace FeedReader.WebClient.Models
+﻿using System;
+
+namespace FeedReader.WebClient.Models
 {
     static class Mappers
     {
@@ -6,6 +8,7 @@
         {
             return new Feed()
             {
+                Id = Guid.Parse(f.Id),
                 SubscriptionName = f.SubscriptionName,
                 Description = f.Description,
                 IconUri = f.IconUri,

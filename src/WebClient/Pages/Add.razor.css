@@ -69,9 +69,5 @@
 .feed .toolbar {
     display: flex;
     justify-content: space-between;
-}
-
-.feed .actions .btn {
-    font-size: 13px;
-    padding: 0px 8px;
+    align-items: center;
 }

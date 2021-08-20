@@ -98,6 +98,11 @@ namespace FeedReader.WebServer.Services
             return user;
         }
 
+        public Guid ValidateFeedReaderUserToken(string feedReaderToken)
+        {
+            return Guid.Parse(ParseFeedReaderToken(feedReaderToken).OAuthId);
+        }
+
         Token ParseToken(string jwtToken)
         {
             try

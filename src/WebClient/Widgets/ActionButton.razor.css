@@ -1,0 +1,15 @@
+﻿.btn {
+    font-size: 13px;
+    padding: 0px 8px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+img {
+    padding: 6px;
+    height: 100%;
+    position: absolute;
+}

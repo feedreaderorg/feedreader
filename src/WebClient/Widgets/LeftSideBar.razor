@@ -13,12 +13,17 @@
 			}
 		</ul>
 	</div>
-	@if (false)
+	@if (CurrentUser.SubscribedFeeds.Count > 0)
 	{
 		<div class="section">
 			<div class="title">MY FEEDS</div>
 			<ul>
-			
+				@foreach (var feed in CurrentUser.SubscribedFeeds)
+				{
+					<a href="/">
+						<img src="@feed.IconUri"><span>@feed.Name</span>
+					</a>
+				}
 			</ul>
 		</div>
 	}

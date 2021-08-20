@@ -34,7 +34,14 @@
 								<div class="toolbar">
 									<div class="statics"><i class="far fa-user"></i>@feed.TotalSubscribers</div>
 									<div class="actions">
-										<div class="btn">follow</div>
+										@if (CurrentUser.SubscribedFeeds.Find(f => f.Id == feed.Id) == null)
+										{
+											<ActionButton Text="subscribe" OnClick="@(() => Subscribe(feed))"/>
+										}
+										else
+										{
+											<ActionButton Text="unsubscribe" OnClick="@(() => Unsubscribe(feed))"/>
+										}
 									</div>
 								</div>
 							</div>
@@ -63,7 +70,7 @@
 	CancellationTokenSource SearchRssCancellationSource { get; set; }
 
 	async Task OnSearchRssChanged(string query)
-	{
+	{	
 		Feeds = null;
 		++SearchingCount;
 
@@ -83,5 +90,19 @@
 		{
 		}
 		--SearchingCount;
+	}
+
+	async Task Subscribe(Feed feed)
+	{
+		await CurrentUser.SubscribeFeedAsync(feed);
+		++feed.TotalSubscribers;
+		StateHasChanged();
+	}
+
+	async Task Unsubscribe(Feed feed)
+	{
+		await CurrentUser.UnsubscribeFeedAsync(feed);
+		--feed.TotalSubscribers;
+		StateHasChanged();
 	}
 }

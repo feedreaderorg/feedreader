@@ -1,0 +1,33 @@
+﻿<div class="btn @(IsDoing ? "disabled" : "")" @onclick="@OnClickInternal">
+    <img src="img/loading-buffering.gif" style="@(IsDoing ? "display:block" : "display:none")"/>
+    <div style="@(IsDoing ? "visibility:hidden" : "visibility:visible")">@Text</div>
+</div>
+
+@code
+{
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public Func<Task> OnClick { get; set; }
+
+    bool IsDoing { get; set; }
+
+    async Task OnClickInternal()
+    {
+        if (IsDoing)
+        {
+            return;
+        }
+
+        IsDoing = true;
+        try
+        {
+            await OnClick();
+        }
+        catch
+        {
+        }
+        IsDoing = false;
+    }
+}

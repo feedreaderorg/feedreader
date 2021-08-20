@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,5 +26,16 @@ namespace FeedReader.WebServer.Models
         public string OAuthId { get; set; }
 
         public Guid UserId { get; set; }
+    }
+
+    [Index(nameof(UserId), IsUnique = false)]
+    [Index(nameof(FeedId), IsUnique = false)]
+    public class FeedSubscription
+    {
+        public Guid UserId { get; set; }
+        public User User { get; set; }
+
+        public Guid FeedId { get; set; }
+        public FeedInfo Feed { get; set; }
     }
 }

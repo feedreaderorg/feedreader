@@ -6,6 +6,7 @@
         {
             var feedInfo = new Share.Protocols.FeedInfo()
             {
+                Id = f.Id.ToString() ?? string.Empty,
                 SubscriptionName = f.SubscriptionName ?? string.Empty,
                 Description = f.Description ?? string.Empty,
                 IconUri = f.IconUri ?? string.Empty,

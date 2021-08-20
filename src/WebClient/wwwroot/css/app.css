@@ -39,6 +39,10 @@ ul {
     border-radius: 40px;
 }
 
+.btn.disabled {
+    cursor: not-allowed;
+}
+
 .btn:hover {
     filter: brightness(0.9);
 }

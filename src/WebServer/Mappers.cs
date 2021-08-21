@@ -2,7 +2,7 @@
 {
     public static class Mappers
     {
-        public static Share.Protocols.FeedInfo ToProtocolFeedInfo(this Models.FeedInfo f)
+        public static Share.Protocols.FeedInfo ToProtocolFeedInfo(this ServerCore.Models.FeedInfo f)
         {
             var feedInfo = new Share.Protocols.FeedInfo()
             {

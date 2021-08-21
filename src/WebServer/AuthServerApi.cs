@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Grpc.Core;
 using FeedReader.Share.Protocols;
-using FeedReader.WebServer.Services;
+using FeedReader.ServerCore.Services;
 
 namespace FeedReader.WebServer
 {

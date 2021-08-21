@@ -1,6 +1,5 @@
-using FeedReader.WebServer.Models;
+using FeedReader.ServerCore.Models;
 using HtmlAgilityPack;
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace FeedReader.WebServer.Services
+namespace FeedReader.ServerCore.Services
 {
     public class FeedService
     {

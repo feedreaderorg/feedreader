@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace FeedReader.WebServer.Models
+namespace FeedReader.ServerCore.Models
 {
     [Index(nameof(IdFromUri), IsUnique = true)]
     [Index(nameof(SubscriptionName), IsUnique = true)]

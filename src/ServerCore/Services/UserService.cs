@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace FeedReader.WebServer.Services
+namespace FeedReader.ServerCore.Services
 {
     public class UserService
     {

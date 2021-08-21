@@ -1,5 +1,5 @@
-﻿using FeedReader.Share.Protocols;
-using FeedReader.WebServer.Services;
+﻿using FeedReader.ServerCore.Services;
+using FeedReader.Share.Protocols;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System;

@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
+using FeedReader.ServerCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
-using FeedReader.WebServer.Models;
 
 namespace FeedReader.WebServer.Services
 {
     public class StaticFileService
     {
-        IDbContextFactory<DbContext> DbFactory;
+        FileService FileService;
 
-        public StaticFileService(IDbContextFactory<DbContext> dbFactory)
+        public StaticFileService(FileService fileSerivce)
         {
-            DbFactory = dbFactory;
+            FileService = fileSerivce;
         }
 
         public async Task ProcessUploadAsync(HttpContext context)
@@ -65,25 +63,8 @@ namespace FeedReader.WebServer.Services
                 }
             }
 
-            // Caculate file md5 hash which will be treated as file id.
-            var guid = new Guid(MD5.Create().ComputeHash(bytes));
-
             // Save to db.
-            using (var db = DbFactory.CreateDbContext())
-            {
-                if (await db.Files.FindAsync(guid) == null)
-                {
-                    db.Files.Add(new File()
-                    {
-                        Id = guid,
-                        Size = (uint)bytes.Length,
-                        Content = bytes,
-                        CreationTime = DateTime.UtcNow,
-                        MimeType = contentType
-                    });
-                    await db.SaveChangesAsync();
-                }
-            }
+            await FileService.SaveFileAsync(bytes, contentType);
         }
 
         public async Task ProcessGetFileAsync(HttpContext context)
@@ -101,20 +82,17 @@ namespace FeedReader.WebServer.Services
             }
 
             // Try to get the file.
-            using (var db = DbFactory.CreateDbContext())
+            var file = await FileService.GetFileAsync(fileId);
+            if (file == null)
             {
-                var file = await db.Files.FindAsync(fileId);
-                if (file == null)
-                {
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    return;
-                }
-
-                // Return the file.
-                context.Response.ContentType = file.MimeType;
-                context.Response.ContentLength = file.Size;
-                await context.Response.Body.WriteAsync(file.Content, 0, file.Content.Length);
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return;
             }
+
+            // Return the file.
+            context.Response.ContentType = file.MimeType;
+            context.Response.ContentLength = file.Size;
+            await context.Response.Body.WriteAsync(file.Content, 0, file.Content.Length);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FeedReader.WebServer.Migrations
+namespace FeedReader.ServerCore.Migrations
 {
     public partial class AddUserTable : Migration
     {

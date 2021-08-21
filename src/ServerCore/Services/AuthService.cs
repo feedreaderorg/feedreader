@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using FeedReader.WebServer.Models;
+using FeedReader.ServerCore.Models;
 using JWT;
 using JWT.Algorithms;
 using JWT.Builder;
@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
-namespace FeedReader.WebServer.Services
+namespace FeedReader.ServerCore.Services
 {
     public class AuthService
     {

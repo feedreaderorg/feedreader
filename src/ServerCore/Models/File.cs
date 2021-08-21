@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FeedReader.WebServer.Models
+namespace FeedReader.ServerCore.Models
 {
     public class File
     {

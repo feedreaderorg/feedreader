@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FeedReader.WebServer.Models;
+using FeedReader.ServerCore.Models;
 
-namespace FeedReader.WebServer
+namespace FeedReader.ServerCore
 {
     public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {

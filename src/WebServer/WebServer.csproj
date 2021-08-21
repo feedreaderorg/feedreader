@@ -5,19 +5,12 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Grpc.AspNetCore" Version="2.38.0" />
-      <PackageReference Include="Grpc.AspNetCore.Web" Version="2.38.0" />
-      <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
-      <PackageReference Include="JWT" Version="8.2.3" />
+      <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
+      <PackageReference Include="Grpc.AspNetCore.Web" Version="2.39.0" />
       <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.9" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\ServerCore\ServerCore.csproj" />
       <ProjectReference Include="..\WebClient\WebClient.csproj" />
-      <ProjectReference Include="..\Share\Share.csproj" />
     </ItemGroup>
 </Project>

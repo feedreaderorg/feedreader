@@ -24,5 +24,11 @@ namespace FeedReader.ServerCore.Models
         public string WebsiteLink { get; set; }
 
         public DateTime RegistrationTime { get; set; }
+
+        public string LastParseError { get; set; }
+
+        public int TotalSubscribers { get; set; }
+
+        public DateTime LastUpdatedTime { get; set; }
     }
 }

@@ -1,12 +1,14 @@
 using FeedReader.ServerCore.Models;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -15,13 +17,14 @@ namespace FeedReader.ServerCore.Services
     public class FeedService
     {
         IDbContextFactory<DbContext> DbFactory { get; set; }
-
         HttpClient HttpClient { get; set; }
+        ILogger Logger { get; set; }
 
-        public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient)
+        public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient, ILogger<FeedService> logger)
         {
             DbFactory = dbFactory;
             HttpClient = httpClient;
+            Logger = logger;
         }
 
         public async Task<List<FeedInfo>> DiscoverFeedsAsync(string query)
@@ -54,6 +57,25 @@ namespace FeedReader.ServerCore.Services
             }
 
             return feeds;
+        }
+
+        public async Task RefreshFeedsAsync(CancellationToken cancellationToken)
+        {
+            Guid[] feedIds;
+            using (var db = DbFactory.CreateDbContext())
+            {
+                feedIds = await db.FeedInfos.Select(f => f.Id).ToArrayAsync(cancellationToken);
+            }
+
+            foreach (var feedId in feedIds)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                await RefreshFeedsAsync(feedId, cancellationToken);
+            }
         }
 
         async Task TryToDiscoverFeedsFromUriAsync(Uri uri, List<FeedInfo> feeds)
@@ -161,7 +183,7 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        async Task<FeedInfo> TryToParseFeedFromContentAsync(string content)
+        async Task<FeedInfo> TryToParseFeedFromContentAsync(string content, CancellationToken cancellationToken = default(CancellationToken))
         {
             var feed = TryToParseJsonFeed(content) ?? TryToParseXmlFeed(content);
             if (feed != null)
@@ -174,12 +196,12 @@ namespace FeedReader.ServerCore.Services
                         var httpsUri = GetHttpsUri(websiteUri);
                         if (httpsUri != null)
                         {
-                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(httpsUri);
+                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(httpsUri, cancellationToken);
                         }
 
                         if (string.IsNullOrEmpty(feed.IconUri) && httpsUri != websiteUri)
                         {
-                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(websiteUri);
+                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(websiteUri, cancellationToken);
                         }
                     }
                 }
@@ -237,13 +259,13 @@ namespace FeedReader.ServerCore.Services
             return Task.CompletedTask;
         }
 
-        async Task<string> TryToGetIconUriFromWebsiteUriAsync(Uri uri)
+        async Task<string> TryToGetIconUriFromWebsiteUriAsync(Uri uri, CancellationToken cancellationToken)
         {
             try
             {
                 var link = uri.ToString();
                 var web = new HtmlWeb();
-                var html = await web.LoadFromWebAsync(link);
+                var html = await web.LoadFromWebAsync(link, cancellationToken);
                 var el = html.DocumentNode.SelectSingleNode("/html/head/link[@rel='apple-touch-icon' and @href]") ??
                          html.DocumentNode.SelectSingleNode("/html/head/link[@rel='shortcut icon' and @href]") ??
                          html.DocumentNode.SelectSingleNode("/html/head/link[@rel='icon' and @href]");
@@ -276,6 +298,46 @@ namespace FeedReader.ServerCore.Services
             else
             {
                 return null;
+            }
+        }
+
+        async Task RefreshFeedsAsync(Guid feedId, CancellationToken cancellationToken)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                var feed = await db.FeedInfos.FindAsync(new object[] { feedId }, cancellationToken);
+                if (feed == null)
+                {
+                    return;
+                }
+
+                DateTime starTime = DateTime.Now;
+                Logger.LogInformation($"Refresh feed: {feed.Uri} at {starTime}");
+
+                var content = await HttpClient.GetStringAsync(feed.Uri, cancellationToken);
+                if (string.IsNullOrEmpty(content))
+                {
+                    feed.LastParseError = "Fetch content failed.";
+                    return;
+                }
+
+                var parsedFeed = await TryToParseFeedFromContentAsync(content, cancellationToken);
+                if (parsedFeed == null)
+                {
+                    feed.LastParseError = "Parse feed failed.";
+                }
+
+                // Update feed information.
+                feed.Description = parsedFeed.Description;
+                feed.IconUri = parsedFeed.IconUri;
+                feed.Name = parsedFeed.Name;
+                feed.WebsiteLink = parsedFeed.WebsiteLink;
+                feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
+                feed.LastUpdatedTime = DateTime.UtcNow;
+                await db.SaveChangesAsync(cancellationToken);
+
+                DateTime endTime = DateTime.Now;
+                Logger.LogInformation($"Refresh feed: {feed.Uri} finished at {endTime}, elasped {(endTime - starTime).TotalSeconds} seconds");
             }
         }
     }

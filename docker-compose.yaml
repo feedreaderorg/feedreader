@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  taskserver:
+    image: feedreader-taskserver
+    build:
+      context: .
+      dockerfile: src/TaskServer/Dockerfile
+    environment:
+      - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
+
   db:
     image: postgres:13.4
     environment:

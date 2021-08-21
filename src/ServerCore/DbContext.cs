@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FeedReader.ServerCore.Models;
+using System;
 
 namespace FeedReader.ServerCore
 {
@@ -22,5 +23,15 @@ namespace FeedReader.ServerCore
         public DbSet<UserOAuthIds> UserOAuthIds { get; set; }
         public DbSet<FeedInfo> FeedInfos { get; set; }
         public DbSet<FeedSubscription> FeedSubscriptions { get; set; }
+    }
+
+    public class DesignTimeFeedReaderDbFactory : Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<DbContext>
+    {
+        public DbContext CreateDbContext(string[] args)
+        {
+            var optsBuilder = new DbContextOptionsBuilder<DbContext>();
+            optsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader");
+            return new DbContext(optsBuilder.Options);
+        }
     }
 }

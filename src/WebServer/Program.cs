@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
-using FeedReader.ServerCore.Services;
 using FeedReader.WebServer.Services;
+using FeedReader.ServerCore;
 
 namespace FeedReader.WebServer
 {
@@ -40,14 +38,8 @@ namespace FeedReader.WebServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextFactory<ServerCore.DbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConnectionString")));
+            services.AddFeedReaderServerCoreServices(Configuration);
 
-            services.AddSingleton<AuthService>();
-            services.AddSingleton<FeedService>();
-            services.AddSingleton<UserService>();
-            services.AddSingleton<FileService>();
-
-            services.AddSingleton<HttpClient>();
             services.AddSingleton<StaticFileService>();
 
             var grpc = services.AddGrpc();

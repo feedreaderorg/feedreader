@@ -37,20 +37,21 @@ namespace FeedReader.WebServer.Services
             if (Uri.TryCreate(query, UriKind.Absolute, out uri))
             {
                 // Try to get from https if this is http.
-                if (uri.Scheme == Uri.UriSchemeHttp && uri.IsDefaultPort)
+                var httpsUri = GetHttpsUri(uri);
+                if (httpsUri != null)
                 {
-                    var ub = new UriBuilder(uri);
-                    ub.Scheme = Uri.UriSchemeHttps;
-                    ub.Port = 443;
-                    await TryToDiscoverFeedsFromUriAsync(ub.Uri, feeds);
+                    await TryToDiscoverFeedsFromUriAsync(httpsUri, feeds);
                     if (feeds.Count > 0)
                     {
                         return feeds;
                     }
                 }
 
-                // Ok, try uri directly.
-                await TryToDiscoverFeedsFromUriAsync(uri, feeds);
+                if (httpsUri != uri)
+                {
+                    // Ok, try uri directly.
+                    await TryToDiscoverFeedsFromUriAsync(uri, feeds);
+                }
             }
 
             return feeds;
@@ -168,7 +169,20 @@ namespace FeedReader.WebServer.Services
             {
                 if (string.IsNullOrEmpty(feed.IconUri))
                 {
-                    feed.IconUri = await TryToGetIconUriFromWebsiteLinkAsync(feed.WebsiteLink);
+                    Uri websiteUri;
+                    if (Uri.TryCreate(feed.WebsiteLink, UriKind.Absolute, out websiteUri))
+                    {
+                        var httpsUri = GetHttpsUri(websiteUri);
+                        if (httpsUri != null)
+                        {
+                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(httpsUri);
+                        }
+
+                        if (string.IsNullOrEmpty(feed.IconUri) && httpsUri != websiteUri)
+                        {
+                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(websiteUri);
+                        }
+                    }
                 }
             }
             return feed;
@@ -224,23 +238,19 @@ namespace FeedReader.WebServer.Services
             return Task.CompletedTask;
         }
 
-        async Task<string> TryToGetIconUriFromWebsiteLinkAsync(string websiteLink)
+        async Task<string> TryToGetIconUriFromWebsiteUriAsync(Uri uri)
         {
             try
             {
-                if (string.IsNullOrEmpty(websiteLink))
-                {
-                    return null;
-                }
-
+                var link = uri.ToString();
                 var web = new HtmlWeb();
-                var html = await web.LoadFromWebAsync(websiteLink);
+                var html = await web.LoadFromWebAsync(link);
                 var el = html.DocumentNode.SelectSingleNode("/html/head/link[@rel='apple-touch-icon' and @href]") ??
                          html.DocumentNode.SelectSingleNode("/html/head/link[@rel='shortcut icon' and @href]") ??
                          html.DocumentNode.SelectSingleNode("/html/head/link[@rel='icon' and @href]");
                 if (el != null)
                 {
-                    var uriBuilder = new UriBuilder(websiteLink);
+                    var uriBuilder = new UriBuilder(link);
                     uriBuilder.Path = el.Attributes["href"].Value;
                     return uriBuilder.ToString();
                 }
@@ -249,6 +259,25 @@ namespace FeedReader.WebServer.Services
             {
             }
             return null;
+        }
+
+        Uri GetHttpsUri(Uri uri)
+        {
+            if (uri.Scheme == Uri.UriSchemeHttps)
+            {
+                return uri;
+            }
+            else if (uri.Scheme == Uri.UriSchemeHttp && uri.IsDefaultPort)
+            {
+                var ub = new UriBuilder(uri);
+                ub.Scheme = Uri.UriSchemeHttps;
+                ub.Port = 443;
+                return ub.Uri;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

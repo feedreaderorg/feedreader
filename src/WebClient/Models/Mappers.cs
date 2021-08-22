@@ -8,7 +8,7 @@ namespace FeedReader.WebClient.Models
         {
             return new Feed()
             {
-                Id = Guid.Parse(f.Id),
+                Id = f.Id,
                 SubscriptionName = f.SubscriptionName,
                 Description = f.Description,
                 IconUri = f.IconUri,

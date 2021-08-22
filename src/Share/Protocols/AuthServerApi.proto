@@ -15,4 +15,5 @@ message LoginRequest
 message LoginResponse
 {
     string Token = 1;
+    string UserId = 2;
 }

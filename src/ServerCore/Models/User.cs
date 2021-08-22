@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FeedReader.ServerCore.Models
@@ -14,6 +15,7 @@ namespace FeedReader.ServerCore.Models
     {
         public Guid Id { get; set; }
         public DateTime RegistrationTime { get; set; }
+        public List<FeedSubscription> SubscribedFeeds { get; set; }
 
         [NotMapped]
         public string Token { get; set; }

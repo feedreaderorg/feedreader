@@ -1,11 +1,14 @@
 ﻿syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option csharp_namespace = "FeedReader.Share.Protocols";
 
 service WebServerApi
 {
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
+    rpc SubscribeEvents(google.protobuf.Empty) returns (stream Event);
 }
 
 message DiscoverFeedsRequest
@@ -36,4 +39,16 @@ message FeedInfo
     string Description = 4;
     int32 TotalSubscribers = 5;
     string Id = 6;
+}
+
+message User {
+    string Id = 1;
+    repeated FeedInfo SubscribedFeeds = 2;    
+}
+
+message Event
+{
+    oneof event {
+        User User = 1;
+    }
 }

@@ -1,9 +1,11 @@
 ﻿using FeedReader.ServerCore.Services;
 using FeedReader.Share.Protocols;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FeedReader.WebServer
@@ -21,20 +23,39 @@ namespace FeedReader.WebServer
         {
             try
             {
-                var token = context.RequestHeaders.Get("authentication")?.Value;
-                if (string.IsNullOrEmpty(token))
-                {
-                    throw new UnauthorizedAccessException("token is missing");
-                }
-
-                var userId = AuthService.ValidateFeedReaderUserToken(token);
-                context.UserState.Add("userId", userId);
-                return await continuation(request, context);
+                ValidateToken(context);
+                return await base.UnaryServerHandler(request, context, continuation);
             }
             catch (UnauthorizedAccessException ex)
             {
                 throw new RpcException(new Status(StatusCode.Unauthenticated, ex.Message));
             }
+        }
+
+        public override async Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            try
+            {
+                ValidateToken(context);
+                await base.ServerStreamingServerHandler(request, responseStream, context, continuation);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, ex.Message));
+            }
+            
+        }
+
+        void ValidateToken(ServerCallContext context)
+        {
+            var token = context.RequestHeaders.Get("authentication")?.Value;
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("token is missing");
+            }
+
+            var userId = AuthService.ValidateFeedReaderUserToken(token);
+            context.UserState.Add("userId", userId);
         }
     }
 
@@ -61,13 +82,33 @@ namespace FeedReader.WebServer
         {
             if (request.Subscribe)
             {
-                await UserService.SubscribeFeed((Guid)context.UserState["userId"], Guid.Parse(request.FeedId));
+                await UserService.SubscribeFeed(GetUserId(context), Guid.Parse(request.FeedId));
             }
             else
             {
-                await UserService.UnsubscribeFeed((Guid)context.UserState["userId"], Guid.Parse(request.FeedId));
+                await UserService.UnsubscribeFeed(GetUserId(context), Guid.Parse(request.FeedId));
             }
             return new SubscribeFeedResponse();
+        }
+
+        public override async Task SubscribeEvents(Empty request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        {
+            var userId = GetUserId(context);
+            UserService.SubscribeUserEvent(userId, async user =>
+            {
+                await responseStream.WriteAsync(new Event()
+                {
+                    User = user.ToProtocolUser()
+                });
+            });
+
+            await Task.Delay(60 * 1000);
+            UserService.UnsubscribeUserEvent(userId);
+        }
+
+        Guid GetUserId(ServerCallContext context)
+        {
+            return (Guid)context.UserState["userId"];
         }
     }
 }

@@ -24,6 +24,8 @@ namespace FeedReader.WebClient.Models
         #region Properties
         string ServerAddress { get; set; }
 
+        public string Id { get; set; }
+
         public string Token { get; set; }
 
         public UserRole Role { get; set; }
@@ -64,6 +66,7 @@ namespace FeedReader.WebClient.Models
             });
 
             // Update user.
+            Id = response.UserId;
             Token = response.Token;
             Role = UserRole.Normal;
             RefreshWebServerApi();
@@ -142,7 +145,58 @@ namespace FeedReader.WebClient.Models
                 var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
                 var grpcChannel = GrpcChannel.ForAddress(ServerAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
                 WebServerApi = new WebServerApiClient(grpcChannel);
+                SubscribeEvents();
             }
+        }
+
+        async void SubscribeEvents()
+        {
+            var events = WebServerApi.SubscribeEvents(new Google.Protobuf.WellKnownTypes.Empty());
+            while (await events.ResponseStream.MoveNext(default(CancellationToken)))
+            {
+                switch (events.ResponseStream.Current.EventCase)
+                {
+                    case Share.Protocols.Event.EventOneofCase.User:
+                        UpdateUser(events.ResponseStream.Current.User);
+                        break;
+                }
+            }
+        }
+
+        void UpdateUser(Share.Protocols.User user)
+        {
+            if (user.Id == Id)
+            {
+                UpdateSelf(user);
+            }
+        }
+
+        void UpdateSelf(Share.Protocols.User user)
+        {
+            foreach (var feed in user.SubscribedFeeds)
+            {
+                var f = SubscribedFeeds.FirstOrDefault(f => f.Id == feed.Id);
+                if (f != null)
+                {
+                    // Update existed feed.
+                    f.Description = feed.Description;
+                    f.IconUri = feed.IconUri;
+                    f.Name = feed.Name;
+                    f.SubscriptionName = feed.SubscriptionName;
+                    f.TotalSubscribers = feed.TotalSubscribers;
+                }
+                else
+                {
+                    // Add new feed.
+                    SubscribedFeeds.Add(feed.ToModelFeed());
+                }
+            }
+
+            // Remove unexisted feed
+            SubscribedFeeds.RemoveAll(f => user.SubscribedFeeds.FirstOrDefault(x => x.Id == f.Id) == null);
+
+            // Notify user state has been changed.
+            OnStateChanged?.Invoke(this, null);
         }
 
         #region

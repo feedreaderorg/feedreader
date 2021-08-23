@@ -92,6 +92,7 @@ namespace FeedReader.ServerCore.Services
                 .AddClaim("iss", FEEDREADER_ISS)
                 .AddClaim("aud", FEEDREADER_AUD)
                 .AddClaim("uid", user.Id)
+                .AddClaim("sid", Guid.NewGuid().ToString())
                 .AddClaim("iat", now.ToUnixTimeSeconds())
                 .AddClaim("exp", now.AddDays(7).ToUnixTimeSeconds())
                 .Encode();
@@ -157,6 +158,13 @@ namespace FeedReader.ServerCore.Services
             if (string.IsNullOrEmpty(uid))
             {
                 throw new UnauthorizedAccessException("No uid claim in token");
+            }
+
+            // Validate the session id.
+            var sid = GetValue(claims, "sid");
+            if (string.IsNullOrEmpty(sid))
+            {
+                throw new UnauthorizedAccessException("No sid claim in token");
             }
 
             // All validateions pass
@@ -247,6 +255,11 @@ namespace FeedReader.ServerCore.Services
             public string OAuthId { get; set; }
 
             public string OAuthIssuer { get; set; }
+
+            /// <summary>
+            /// Session id. Only available for feedreader token.
+            /// </summary>
+            public string SessionId { get; set; }
         }
     }
 }

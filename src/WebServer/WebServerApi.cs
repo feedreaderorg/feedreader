@@ -1,11 +1,12 @@
-﻿using FeedReader.ServerCore.Services;
+﻿using FeedReader.ServerCore;
+using FeedReader.ServerCore.Models;
+using FeedReader.ServerCore.Services;
 using FeedReader.Share.Protocols;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FeedReader.WebServer
@@ -94,16 +95,23 @@ namespace FeedReader.WebServer
         public override async Task SubscribeEvents(Empty request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             var userId = GetUserId(context);
-            UserService.SubscribeUserEvent(userId, async user =>
+            var sessionId = context.GetHashCode();
+            UserService.SubscribeUserEvent(userId, sessionId, async user =>
             {
-                await responseStream.WriteAsync(new Event()
+                try
                 {
-                    User = user.ToProtocolUser()
-                });
+                    await responseStream.WriteAsync(new Event()
+                    {
+                        User = user.ToProtocolUser()
+                    });
+                }
+                catch
+                {
+                }
             });
 
             await Task.Delay(60 * 1000);
-            UserService.UnsubscribeUserEvent(userId);
+            UserService.UnsubscribeUserEvent(userId, sessionId);
         }
 
         Guid GetUserId(ServerCallContext context)

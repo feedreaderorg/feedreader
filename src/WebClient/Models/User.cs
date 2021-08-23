@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Grpc.Core;
+using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using Microsoft.AspNetCore.Components;
@@ -78,7 +80,6 @@ namespace FeedReader.WebClient.Models
             // TODO: logout from server?
             await Task.Delay(2000);
             Reset();
-            OnStateChanged?.Invoke(this, null);
             await Task.CompletedTask;
         }
 
@@ -103,8 +104,6 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = true,
             });
-            SubscribedFeeds.Add(feed);
-            OnStateChanged?.Invoke(this, null);
         }
 
         public async Task UnsubscribeFeedAsync(Feed feed)
@@ -120,8 +119,6 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = false,
             });
-            SubscribedFeeds.Remove(feed);
-            OnStateChanged?.Invoke(this, null);
         }
 
         void Reset()
@@ -131,6 +128,7 @@ namespace FeedReader.WebClient.Models
             AvatarUri = "img/default-avatar.png";
             SubscribedFeeds.Clear();
             RefreshWebServerApi();
+            OnStateChanged?.Invoke(this, null);
         }
 
         void RefreshWebServerApi()
@@ -144,7 +142,7 @@ namespace FeedReader.WebClient.Models
                 var httpHandler = new CustomizedHttpClientHandler(Token);
                 var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
                 var grpcChannel = GrpcChannel.ForAddress(ServerAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
-                WebServerApi = new WebServerApiClient(grpcChannel);
+                WebServerApi = new WebServerApiClient(grpcChannel.Intercept(new GrpcInterceptor(OnUnauthenticatedException)));
                 SubscribeEvents();
             }
         }
@@ -199,7 +197,13 @@ namespace FeedReader.WebClient.Models
             OnStateChanged?.Invoke(this, null);
         }
 
-        #region
+        void OnUnauthenticatedException(string message)
+        {
+            // TODO: log exception message.
+            Reset();
+        }
+
+        #region CustomizedHttpClientHandler & GrpcInterceptor
         class CustomizedHttpClientHandler : HttpClientHandler
         {
             string Token { get; set; }
@@ -213,6 +217,56 @@ namespace FeedReader.WebClient.Models
             {
                 request.Headers.Add("authentication", Token);
                 return base.SendAsync(request, cancellationToken);
+            }
+        }
+
+        class GrpcInterceptor : Interceptor
+        {
+            Action<string> OnUnauthenticatedException { get; set; }
+
+            public GrpcInterceptor(Action<string> onUnauthenticatedException)
+            {
+                OnUnauthenticatedException = onUnauthenticatedException;
+            }
+
+            public override AsyncServerStreamingCall<TResponse> AsyncServerStreamingCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncServerStreamingCallContinuation<TRequest, TResponse> continuation)
+            {
+                var call = continuation(request, context);
+                return new AsyncServerStreamingCall<TResponse>(new ResponseStream<TResponse>(call.ResponseStream, OnUnauthenticatedException), call.ResponseHeadersAsync, call.GetStatus, call.GetTrailers, call.Dispose);
+            }
+        }
+
+        class ResponseStream<TResponse> : IAsyncStreamReader<TResponse>
+        {
+            IAsyncStreamReader<TResponse> Stream { get; set; }
+            Action<string> OnUnauthenticatedException { get; set; }
+
+            public TResponse Current => Stream.Current;
+
+            public ResponseStream(IAsyncStreamReader<TResponse> stream, Action<string> onUnauthenticatedException)
+            {
+                Stream = stream;
+                OnUnauthenticatedException = onUnauthenticatedException;
+            }
+
+            public async Task<bool> MoveNext(CancellationToken cancellationToken)
+            {
+                try
+                {
+                    return await Stream.MoveNext(cancellationToken);
+                }
+                catch (RpcException ex)
+                {
+                    if (ex.StatusCode == StatusCode.Unauthenticated)
+                    {
+                        OnUnauthenticatedException(ex.Message);
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
         }
         #endregion

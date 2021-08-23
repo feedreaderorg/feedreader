@@ -11,7 +11,7 @@ namespace FeedReader.ServerCore.Services
     public class UserService
     {
         IDbContextFactory<DbContext> DbFactory { get; set; }
-        ConcurrentDictionary<Guid, Action<User>> UserEventCallbacks { get; set; } = new ConcurrentDictionary<Guid, Action<User>>();
+        ConcurrentDictionary<Guid, List<Session>> UserEventCallbacks { get; set; } = new ConcurrentDictionary<Guid, List<Session>>();
 
         public UserService(IDbContextFactory<DbContext> dbFactory)
         {
@@ -30,6 +30,7 @@ namespace FeedReader.ServerCore.Services
                         FeedId = feedId,
                     });
                     await db.SaveChangesAsync();
+                    UserStateUpdated(userId);
                 }
             }
         }
@@ -43,25 +44,79 @@ namespace FeedReader.ServerCore.Services
                 {
                     db.FeedSubscriptions.Remove(item);
                     await db.SaveChangesAsync();
+                    UserStateUpdated(userId);
                 }
             }
         }
 
-        public async void SubscribeUserEvent(Guid userId, Action<User> updatedCallback)
+        public void SubscribeUserEvent(Guid userId, int sessionId, Action<User> updatedCallback)
         {
-            UserEventCallbacks.AddOrUpdate(userId, updatedCallback, (k, u) => updatedCallback);
-
-            using (var db = DbFactory.CreateDbContext())
+            var sessions = UserEventCallbacks.GetOrAdd(userId, new List<Session>());
+            lock(sessions)
             {
-                var user = await db.Users.Include(u => u.SubscribedFeeds).ThenInclude(f => f.Feed).FirstOrDefaultAsync(u => u.Id == userId);
-                updatedCallback(user);
+                sessions.Add(new Session()
+                {
+                    Id = sessionId,
+                    UserUpdateCallback = updatedCallback
+                });
+            }
+            UserStateUpdated(userId);
+        }
+
+        public void UnsubscribeUserEvent(Guid userId, int sessionId)
+        {
+            // TODO: Unsubscribe should only unsubscribe one session.
+            List<Session> sessions;
+            if (UserEventCallbacks.TryGetValue(userId, out sessions))
+            {
+                lock (sessions)
+                {
+                    var session = sessions.Find(s => s.Id == sessionId);
+                    if (session != null)
+                    {
+                        sessions.Remove(session);
+                        if (sessions.Count() == 0)
+                        {
+                            List<Session> tmpSessions;
+                            UserEventCallbacks.Remove(userId, out tmpSessions);
+                        }
+                    }
+                }
             }
         }
 
-        public void UnsubscribeUserEvent(Guid userId)
+        async void UserStateUpdated(Guid userId)
         {
-            Action<User> callback;
-            UserEventCallbacks.Remove(userId, out callback);
+            List<Session> sessions;
+            if (UserEventCallbacks.TryGetValue(userId, out sessions))
+            {
+                Action<User>[] callbacks;
+                lock (sessions)
+                {
+                    callbacks = sessions.Select(s => s.UserUpdateCallback).ToArray();
+                }
+
+                using (var db = DbFactory.CreateDbContext())
+                {
+                    var user = await db.Users.Include(u => u.SubscribedFeeds).ThenInclude(f => f.Feed).FirstOrDefaultAsync(u => u.Id == userId);
+                    foreach (var callback in callbacks)
+                    {
+                        try
+                        {
+                            callback(user);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }        
+        }
+
+        class Session
+        {
+            public int Id { get; set; }
+            public Action<User> UserUpdateCallback { get; set; }
         }
     }
 }

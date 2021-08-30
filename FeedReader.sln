@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCore", "src\ServerCor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskServer", "src\TaskServer\TaskServer.csproj", "{330C00DF-F381-4E05-ABC1-24CA4B9B0894}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageServer", "src\MessageServer\MessageServer.csproj", "{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{330C00DF-F381-4E05-ABC1-24CA4B9B0894}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{330C00DF-F381-4E05-ABC1-24CA4B9B0894}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{330C00DF-F381-4E05-ABC1-24CA4B9B0894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

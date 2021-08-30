@@ -1,6 +1,7 @@
 ﻿syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "Protocols/Types.proto";
 
 option csharp_namespace = "FeedReader.Share.Protocols";
 
@@ -29,26 +30,4 @@ message SubscribeFeedRequest
 
 message SubscribeFeedResponse
 {
-}
-
-message FeedInfo
-{
-    string SubscriptionName = 1;
-    string IconUri = 2;
-    string Name = 3;
-    string Description = 4;
-    int32 TotalSubscribers = 5;
-    string Id = 6;
-}
-
-message User {
-    string Id = 1;
-    repeated FeedInfo SubscribedFeeds = 2;    
-}
-
-message Event
-{
-    oneof event {
-        User User = 1;
-    }
 }

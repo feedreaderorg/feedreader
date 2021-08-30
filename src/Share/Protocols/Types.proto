@@ -1,0 +1,26 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+message FeedInfo
+{
+    string SubscriptionName = 1;
+    string IconUri = 2;
+    string Name = 3;
+    string Description = 4;
+    int32 TotalSubscribers = 5;
+    string Id = 6;
+}
+
+message User {
+    string Id = 1;
+    repeated FeedInfo SubscribedFeeds = 2;    
+}
+
+message Event {
+    string SenderId = 1;
+    bool IsFromMessageServer = 2;
+    oneof event {
+        User User = 3;
+    }
+}

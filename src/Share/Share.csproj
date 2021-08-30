@@ -6,6 +6,8 @@
     </PropertyGroup>
     <ItemGroup>
         <Protobuf Include="Protocols\AuthServerApi.proto" GrpcServices="Both" />
+        <Protobuf Include="Protocols\MessageServerApi.proto" GrpcServices="Both" />
+        <Protobuf Include="Protocols\Types.proto" GrpcServices="Both" />
         <Protobuf Include="Protocols\WebServerApi.proto" GrpcServices="Both" />
     </ItemGroup>
     <ItemGroup>

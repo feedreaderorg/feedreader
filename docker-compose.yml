@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  webserver:
+    image: feedreader-webserver
+    build:
+      context: .
+      dockerfile: src/WebServer/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
+      - FeedReaderJwtSecret=feedreader-localhost-jwt-secret
+    ports:
+        - 80:80
+
   taskserver:
     image: feedreader-taskserver
     build:

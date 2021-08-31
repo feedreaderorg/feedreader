@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace FeedReader.ServerCore.Models
 {
@@ -30,5 +31,29 @@ namespace FeedReader.ServerCore.Models
         public int TotalSubscribers { get; set; }
 
         public DateTime LastUpdatedTime { get; set; }
+
+        public List<FeedItem> FeedItems { get; set; }
+    }
+
+    public class FeedItem
+    {
+        public Guid Id { get; set; }
+
+        public Guid FeedId { get; set; }
+        public FeedInfo Feed { get; set; }
+
+        public string Link { get; set;}
+
+        public DateTime PublishTime { get; set; }
+
+        public string Summary { get; set; }
+
+        public string Content { get; set; }
+
+        public string Title { get; set; }
+
+        public string PictureUri { get; set; }
+
+        public int TotalFavorites { get; set; }
     }
 }

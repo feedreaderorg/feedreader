@@ -22,23 +22,7 @@ services:
     environment:
       - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
 
-  messageserver1:
-    image: feedreader-messageserver
-    build:
-      context: .
-      dockerfile: src/MessageServer/Dockerfile
-    environment:
-      - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader-messageserver;User Id=feedreader;Password=feedreader
-
-  messageserver2:
-    image: feedreader-messageserver
-    build:
-      context: .
-      dockerfile: src/MessageServer/Dockerfile
-    environment:
-      - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader-messageserver;User Id=feedreader;Password=feedreader
-
-  messageserver3:
+  messageserver:
     image: feedreader-messageserver
     build:
       context: .

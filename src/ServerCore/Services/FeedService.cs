@@ -1,4 +1,5 @@
 using FeedReader.ServerCore.Models;
+using FeedReader.ServerCore.Processors;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -185,7 +186,7 @@ namespace FeedReader.ServerCore.Services
 
         async Task<FeedInfo> TryToParseFeedFromContentAsync(string content, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var feed = TryToParseJsonFeed(content) ?? TryToParseXmlFeed(content);
+            var feed = FeedParser.TryCreateFeedParser(content)?.TryParseFeed();
             if (feed != null)
             {
                 if (string.IsNullOrEmpty(feed.IconUri))
@@ -207,51 +208,6 @@ namespace FeedReader.ServerCore.Services
                 }
             }
             return feed;
-        }
-
-        FeedInfo TryToParseJsonFeed(string content)
-        {
-            // TODO
-            return null;
-        }
-
-        FeedInfo TryToParseXmlFeed(string content)
-        {
-            try
-            {
-                var xml = new XmlDocument();
-                xml.LoadXml(content);
-                if (xml.DocumentElement?.Name == "feed")
-                {
-                    return ParseAtomFeed(xml);
-                }
-                else
-                {
-                    return ParseRssFeed(xml);
-                }
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        FeedInfo ParseRssFeed(XmlDocument xml)
-        {
-            var feed = new FeedInfo();
-
-            // Parse channel. As spec, every feed has only one channel.
-            var channelNode = xml.SelectSingleNode("/rss/channel");
-            feed.Name = channelNode["title"].InnerText;
-            feed.WebsiteLink = channelNode["link"].InnerText;
-            feed.Description = channelNode["description"].InnerText;
-            feed.IconUri = channelNode.SelectSingleNode("/rss/channel/image")?["url"]?.InnerText;
-            return feed;
-        }
-
-        FeedInfo ParseAtomFeed(XmlDocument xml)
-        {
-            throw new NotImplementedException();
         }
 
         Task TryToDiscoverFeedsFromHtmlAsync(string content, List<FeedInfo> feeds)
@@ -334,8 +290,32 @@ namespace FeedReader.ServerCore.Services
                 feed.WebsiteLink = parsedFeed.WebsiteLink;
                 feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
                 feed.LastUpdatedTime = DateTime.UtcNow;
-                await db.SaveChangesAsync(cancellationToken);
 
+                // Update feed items.
+                foreach (var parsedFeedItem in parsedFeed.FeedItems.Where(f => f.Id != Guid.Empty).OrderByDescending(f => f.PublishTime).GroupBy(f => f.Id).Select(g => g.First()))
+                {
+                    parsedFeedItem.Id = $"{feed.Id}-{parsedFeedItem.Id}".Md5HashToGuid();
+                    parsedFeedItem.FeedId = feed.Id;
+                    var feedItem = await db.FeedItems.FindAsync(parsedFeedItem.Id);
+                    if (feedItem != null)
+                    {
+                        // Update feedItemInDb
+                        feedItem.Content = parsedFeedItem.Content;
+                        feedItem.Link = parsedFeedItem.Link;
+                        feedItem.PictureUri = parsedFeedItem.PictureUri;
+                        feedItem.PublishTime = parsedFeedItem.PublishTime;
+                        feedItem.Summary = parsedFeedItem.Summary;
+                        feedItem.Title = parsedFeedItem.Title;
+                    }
+                    else
+                    {
+                        db.FeedItems.Add(parsedFeedItem);
+                    }
+                }
+
+                // Save to db.
+                await db.SaveChangesAsync(cancellationToken);
+                
                 DateTime endTime = DateTime.Now;
                 Logger.LogInformation($"Refresh feed: {feed.Uri} finished at {endTime}, elasped {(endTime - starTime).TotalSeconds} seconds");
             }

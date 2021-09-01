@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskServer", "src\TaskServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageServer", "src\MessageServer\MessageServer.csproj", "{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2B8ECEA1-5195-48D9-A4FC-96B939E63116}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B8ECEA1-5195-48D9-A4FC-96B939E63116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B8ECEA1-5195-48D9-A4FC-96B939E63116}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B8ECEA1-5195-48D9-A4FC-96B939E63116}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B8ECEA1-5195-48D9-A4FC-96B939E63116}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

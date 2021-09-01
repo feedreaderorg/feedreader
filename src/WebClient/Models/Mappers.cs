@@ -16,5 +16,19 @@ namespace FeedReader.WebClient.Models
                 TotalSubscribers = f.TotalSubscribers
             };
         }
+
+        public static FeedItem ToModelFeedItem(this Share.Protocols.FeedItem f)
+        {
+            return new FeedItem()
+            {
+                Id = f.Id,
+                Link = f.Link,
+                PictureUri = f.PictureUri,
+                PublishTime = f.PublishTime.ToDateTime(),
+                Summary = f.Summary,
+                Title = f.Title,
+                TotalFavorites = f.TotalFavorites
+            };
+        }
     }
 }

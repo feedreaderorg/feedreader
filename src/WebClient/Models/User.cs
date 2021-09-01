@@ -38,13 +38,14 @@ namespace FeedReader.WebClient.Models
 
         public List<Feed> SubscribedFeeds { get; set; } = new List<Feed>();
 
+        public WebServerApiClient WebServerApi { get; set; }
+
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
         #endregion
 
         AuthServerApiClient AuthServerApi { get; set; }
-        WebServerApiClient WebServerApi { get; set; }
-
+        
         public User()
         {
             Reset();
@@ -119,6 +120,19 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = false,
             });
+        }
+
+        public Feed GetFeed(string feedSubscriptionName)
+        {
+            if (string.IsNullOrWhiteSpace(feedSubscriptionName))
+            {
+                return null;
+            }
+            else
+            {
+                // TODO: return feed which is not subscribed by this user.
+                return SubscribedFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
+            }
         }
 
         void Reset()
@@ -229,10 +243,36 @@ namespace FeedReader.WebClient.Models
                 OnUnauthenticatedException = onUnauthenticatedException;
             }
 
+            public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
+            {
+                var call = continuation(request, context);
+                return new AsyncUnaryCall<TResponse>(ProcessResponse(call.ResponseAsync, OnUnauthenticatedException), call.ResponseHeadersAsync, call.GetStatus, call.GetTrailers, call.Dispose);
+            }
+
             public override AsyncServerStreamingCall<TResponse> AsyncServerStreamingCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncServerStreamingCallContinuation<TRequest, TResponse> continuation)
             {
                 var call = continuation(request, context);
                 return new AsyncServerStreamingCall<TResponse>(new ResponseStream<TResponse>(call.ResponseStream, OnUnauthenticatedException), call.ResponseHeadersAsync, call.GetStatus, call.GetTrailers, call.Dispose);
+            }
+
+            public static async Task<TResponse> ProcessResponse<TResponse>(Task<TResponse> task, Action<string> onUnauthenticatedException)
+            {
+                try
+                {
+                    return await task;
+                }
+                catch (RpcException ex)
+                {
+                    if (ex.StatusCode == StatusCode.Unauthenticated)
+                    {
+                        onUnauthenticatedException(ex.Message);
+                        return default(TResponse);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
         }
 
@@ -249,24 +289,9 @@ namespace FeedReader.WebClient.Models
                 OnUnauthenticatedException = onUnauthenticatedException;
             }
 
-            public async Task<bool> MoveNext(CancellationToken cancellationToken)
+            public Task<bool> MoveNext(CancellationToken cancellationToken)
             {
-                try
-                {
-                    return await Stream.MoveNext(cancellationToken);
-                }
-                catch (RpcException ex)
-                {
-                    if (ex.StatusCode == StatusCode.Unauthenticated)
-                    {
-                        OnUnauthenticatedException(ex.Message);
-                        return false;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                return GrpcInterceptor.ProcessResponse(Stream.MoveNext(cancellationToken), OnUnauthenticatedException);
             }
         }
         #endregion

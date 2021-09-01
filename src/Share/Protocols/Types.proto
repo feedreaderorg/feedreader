@@ -1,5 +1,7 @@
 ﻿syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "FeedReader.Share.Protocols";
 
 message FeedInfo
@@ -10,6 +12,18 @@ message FeedInfo
     string Description = 4;
     int32 TotalSubscribers = 5;
     string Id = 6;
+}
+
+message FeedItem
+{
+    string Id = 1;
+    string FeedId = 2;
+    string Link = 3;
+    google.protobuf.Timestamp PublishTime = 4;
+    string Summary = 5;
+    string Title = 6;
+    string PictureUri = 7;
+    int32 TotalFavorites = 8;
 }
 
 message User {

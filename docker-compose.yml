@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
-      - FeedReaderJwtSecret=feedreader-localhost-jwt-secret
+      - FeedReaderJwtSecret=fake-feedreader-jwt-secret
     ports:
         - 80:80
 

@@ -101,7 +101,12 @@ namespace FeedReader.ServerCore.Services
 
         public Guid ValidateFeedReaderUserToken(string feedReaderToken)
         {
-            return Guid.Parse(ParseFeedReaderToken(feedReaderToken).OAuthId);
+            var token = ParseToken(feedReaderToken);
+            if (token.OAuthIssuer != OAuthIssuers.FeedReader)
+            {
+                throw new UnauthorizedAccessException("Token is invalid");
+            }
+            return Guid.Parse(token.OAuthId);
         }
 
         Token ParseToken(string jwtToken)

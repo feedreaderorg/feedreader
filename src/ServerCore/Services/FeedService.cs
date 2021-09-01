@@ -17,6 +17,8 @@ namespace FeedReader.ServerCore.Services
 {
     public class FeedService
     {
+        const int PAGE_ITEMS_COUNT = 50;
+
         IDbContextFactory<DbContext> DbFactory { get; set; }
         HttpClient HttpClient { get; set; }
         ILogger Logger { get; set; }
@@ -76,6 +78,18 @@ namespace FeedReader.ServerCore.Services
                 }
 
                 await RefreshFeedsAsync(feedId, cancellationToken);
+            }
+        }
+
+        public async Task<List<FeedItem>> GetFeedItems(Guid feedId, int page)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                return await db.FeedItems
+                    .Where(f => f.FeedId == feedId)
+                    .OrderByDescending(f => f.PublishTime)
+                    .Skip(page * PAGE_ITEMS_COUNT)
+                    .Take(PAGE_ITEMS_COUNT).ToListAsync();
             }
         }
 

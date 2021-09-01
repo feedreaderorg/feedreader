@@ -1,10 +1,23 @@
 ﻿@page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
+@implements IDisposable
 @inject NavigationManager NavigationManager
 
 <div class="feed-page">
     <div class="page-header">
-        <h1>@FeedSubscriptionName</h1>
+        <h1>@Feed.Name</h1>
+    </div>
+    <div class="page-content">
+        @if (Feed.FeedItems?.Count > 0)
+        {
+            foreach (var feedItem in Feed.FeedItems)
+            {
+                <div class="feed-item">
+                    <div>@feedItem.Title</div>
+                    <div>@feedItem.Summary</div>
+                </div>
+            }
+        }
     </div>
 </div>
 
@@ -13,11 +26,32 @@
     [Parameter]
     public string FeedSubscriptionName { get; set; }
 
+    Feed Feed { get; set; }
+
+    public void Dispose()
+    {
+        if (Feed != null)
+        {
+            Feed.OnStateChanged -= OnFeedStateChanged;
+        }
+    }
+
     protected override void OnInitialized()
     {
-        if (string.IsNullOrWhiteSpace(FeedSubscriptionName))
+        Feed = App.CurrentUser.GetFeed(FeedSubscriptionName);
+        if (Feed == null)
         {
             NavigationManager.NavigateTo("/");
         }
+        else
+        {
+            Feed.OnStateChanged += OnFeedStateChanged;
+            _ = Feed.RefreshAsync();
+        }
+    }
+
+    void OnFeedStateChanged(object sender, EventArgs args)
+    {
+        StateHasChanged();
     }
 }

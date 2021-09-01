@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace FeedReader.WebServer
 {
@@ -26,6 +27,21 @@ namespace FeedReader.WebServer
             };
             user.SubscribedFeeds.AddRange(u.SubscribedFeeds.Select(f => f.Feed.ToProtocolFeedInfo()));
             return user;
+        }
+
+        public static Share.Protocols.FeedItem ToProtocolFeedItem(this ServerCore.Models.FeedItem f)
+        {
+            return new Share.Protocols.FeedItem()
+            {
+                FeedId = f.FeedId.ToString() ?? string.Empty,
+                Id = f.Id.ToString() ?? string.Empty,
+                Link = f.Link ?? string.Empty,
+                PictureUri = f.PictureUri ?? string.Empty,
+                PublishTime = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(f.PublishTime.ToUniversalTime()),
+                Summary = f.Summary ?? string.Empty,
+                Title = f.Title ?? string.Empty,
+                TotalFavorites = f.TotalFavorites
+            };
         }
     }
 }

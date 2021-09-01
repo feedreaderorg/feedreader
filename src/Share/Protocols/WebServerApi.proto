@@ -10,6 +10,7 @@ service WebServerApi
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
     rpc SubscribeEvents(google.protobuf.Empty) returns (stream Event);
+    rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
 }
 
 message DiscoverFeedsRequest
@@ -30,4 +31,15 @@ message SubscribeFeedRequest
 
 message SubscribeFeedResponse
 {
+}
+
+message GetFeedItemsRequest
+{
+    string FeedId = 1;
+    int32 Page = 2;
+}
+
+message GetFeedItemsResponse
+{
+    repeated FeedItem FeedItems = 1;
 }

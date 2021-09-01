@@ -114,6 +114,14 @@ namespace FeedReader.WebServer
             UserService.UnsubscribeUserEvent(userId, sessionId);
         }
 
+        public override async Task<GetFeedItemsResponse> GetFeedItems(GetFeedItemsRequest request, ServerCallContext context)
+        {
+            var feedItems = await FeedService.GetFeedItems(Guid.Parse(request.FeedId), request.Page);
+            var response = new GetFeedItemsResponse();
+            response.FeedItems.AddRange(feedItems.Select(f => f.ToProtocolFeedItem()));
+            return response;
+        }
+
         Guid GetUserId(ServerCallContext context)
         {
             return (Guid)context.UserState["userId"];

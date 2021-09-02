@@ -76,9 +76,12 @@
 .feed-about .about {
     line-height: 16px;
     color: var(--subtext-color);
-    text-overflow: ellipsis;
-    line-clamp: 3;
     height: 48px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .feed-about svg {

@@ -109,7 +109,19 @@ namespace FeedReader.ServerCore.Services
             }
 
             // Get the content from the uri.
-            var content = await HttpClient.GetStringAsync(uri);
+            string content = null;
+            try
+            {
+                content = await HttpClient.GetStringAsync(uri);
+            }
+            catch
+            {
+            }
+            if (string.IsNullOrEmpty(content))
+            {
+                return;
+            }
+
             var feed = await TryToParseFeedFromContentAsync(content);
             if (feed != null)
             {

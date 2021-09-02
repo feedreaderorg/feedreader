@@ -196,6 +196,7 @@ namespace FeedReader.WebClient.Models
                     f.Name = feed.Name;
                     f.SubscriptionName = feed.SubscriptionName;
                     f.TotalSubscribers = feed.TotalSubscribers;
+                    f.SiteLink = feed.SiteLink;
                 }
                 else
                 {

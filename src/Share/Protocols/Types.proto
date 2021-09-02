@@ -12,6 +12,7 @@ message FeedInfo
     string Description = 4;
     int32 TotalSubscribers = 5;
     string Id = 6;
+    string SiteLink = 7;
 }
 
 message FeedItem

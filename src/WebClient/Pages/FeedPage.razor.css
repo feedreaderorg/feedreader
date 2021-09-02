@@ -1,2 +1,105 @@
-﻿.feed-page {
+﻿.page-content {
+    display: flex;
+}
+
+.feed-items-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.right-side-bar {
+    display: flex;
+    flex-direction: column;
+    width: var(--right-side-bar-size);
+}
+
+.feed-description-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.feed-picture-and-name {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.feed-picture-and-name img {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.feed-picture-and-name .name {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.feed-stats {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 10px;
+}
+
+.feed-stats .stat {
+    flex: 1;
+}
+
+.feed-stats .count {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.feed-stats .label {
+    font-size: 10px;
+    margin-top: 4px;
+    color: var(--subtext-color);
+}
+
+.feed-about {
+    margin-top: 25px;
+    font-size: 14px;
+    border-top: 1px solid var(--gray-bg-color);
+    padding: 20px 0px 12px;
+}
+
+.feed-about .label {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.feed-about .about {
+    line-height: 16px;
+    color: var(--subtext-color);
+    text-overflow: ellipsis;
+    line-clamp: 3;
+    height: 48px;
+}
+
+.feed-about svg {
+    vertical-align: middle;
+}
+
+.feed-about a {
+    color: var(--link-color);
+}
+
+.site-info {
+    padding: var(--panel-padding);
+    padding-top: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--subtext-color);
+    font-size: 12px;
+    line-height: 24px;
+    justify-content: space-between;
+}
+
+.site-info a:hover {
+    color: var(--link-color);
 }

@@ -13,6 +13,7 @@ namespace FeedReader.WebClient.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int TotalSubscribers { get; set; }
+        public string SiteLink { get; set; }
         public List<FeedItem> FeedItems { get; set; }
         public event EventHandler OnStateChanged;
 

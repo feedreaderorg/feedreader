@@ -13,6 +13,8 @@ message FeedInfo
     int32 TotalSubscribers = 5;
     string Id = 6;
     string SiteLink = 7;
+    int32 TotalPosts = 8;
+    int32 TotalFavorites = 9;
 }
 
 message FeedItem

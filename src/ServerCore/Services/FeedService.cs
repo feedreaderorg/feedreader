@@ -314,7 +314,6 @@ namespace FeedReader.ServerCore.Services
                 feed.IconUri = parsedFeed.IconUri;
                 feed.Name = parsedFeed.Name;
                 feed.WebsiteLink = parsedFeed.WebsiteLink;
-                feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
                 feed.LastUpdatedTime = DateTime.UtcNow;
 
                 // Update feed items.
@@ -338,6 +337,10 @@ namespace FeedReader.ServerCore.Services
                         db.FeedItems.Add(parsedFeedItem);
                     }
                 }
+
+                // Update feed stat.
+                feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
+                feed.TotalPosts = await db.FeedItems.Where(f => f.FeedId == feed.Id).CountAsync();
 
                 // Save to db.
                 await db.SaveChangesAsync(cancellationToken);

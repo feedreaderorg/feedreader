@@ -13,6 +13,8 @@ namespace FeedReader.WebClient.Models
                 Description = f.Description,
                 IconUri = f.IconUri,
                 Name = f.Name,
+                TotalFavorites = f.TotalFavorites,
+                TotalPosts = f.TotalPosts,
                 TotalSubscribers = f.TotalSubscribers,
                 SiteLink = f.SiteLink
             };

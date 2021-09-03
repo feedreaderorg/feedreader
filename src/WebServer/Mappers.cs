@@ -14,6 +14,8 @@ namespace FeedReader.WebServer
                 Description = f.Description ?? string.Empty,
                 IconUri = f.IconUri ?? string.Empty,
                 Name = f.Name ?? string.Empty,
+                TotalFavorites = f.TotalFavorites,
+                TotalPosts = f.TotalPosts,
                 TotalSubscribers = f.TotalSubscribers,
                 SiteLink = f.WebsiteLink ?? string.Empty
             };

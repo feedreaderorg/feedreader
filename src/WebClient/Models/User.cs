@@ -195,6 +195,8 @@ namespace FeedReader.WebClient.Models
                     f.IconUri = feed.IconUri;
                     f.Name = feed.Name;
                     f.SubscriptionName = feed.SubscriptionName;
+                    f.TotalFavorites = feed.TotalFavorites;
+                    f.TotalPosts = feed.TotalPosts;
                     f.TotalSubscribers = feed.TotalSubscribers;
                     f.SiteLink = feed.SiteLink;
                 }

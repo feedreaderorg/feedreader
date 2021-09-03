@@ -223,6 +223,7 @@ namespace FeedReader.ServerCore.Processors
                     feed.FeedItems.Add(ParseFeedItem(itemNode));
                 }
             }
+            feed.TotalPosts = feed.FeedItems.Count;
             return feed;
         }
 

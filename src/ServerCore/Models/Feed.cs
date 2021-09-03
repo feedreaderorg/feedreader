@@ -30,6 +30,10 @@ namespace FeedReader.ServerCore.Models
 
         public int TotalSubscribers { get; set; }
 
+        public int TotalPosts { get; set; }
+
+        public int TotalFavorites { get; set; }
+
         public DateTime LastUpdatedTime { get; set; }
 
         public List<FeedItem> FeedItems { get; set; }

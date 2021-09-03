@@ -18,7 +18,7 @@ namespace FeedReader.WebClient.Models
             };
         }
 
-        public static FeedItem ToModelFeedItem(this Share.Protocols.FeedItem f)
+        public static FeedItem ToModelFeedItem(this Share.Protocols.FeedItem f, Feed feed)
         {
             return new FeedItem()
             {
@@ -28,7 +28,8 @@ namespace FeedReader.WebClient.Models
                 PublishTime = f.PublishTime.ToDateTime(),
                 Summary = f.Summary,
                 Title = f.Title,
-                TotalFavorites = f.TotalFavorites
+                TotalFavorites = f.TotalFavorites,
+                Feed = feed
             };
         }
     }

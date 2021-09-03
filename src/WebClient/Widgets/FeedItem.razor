@@ -1,0 +1,34 @@
+﻿<div class="feed-item panel">
+    <div class="head">
+        <span>Posted by</span>
+        <img src="@Item.Feed.IconUri"/>
+        <a href="/feed/@Item.Feed.SubscriptionName" class="feed-name">@Item.Feed.Name</a>
+        <span>@PublishTime</span>
+    </div>
+    <a  href="@Item.Link" target="_blank" class="body">
+        <div class="title-and-summary">
+            <div class="title">@Item.Title</div>
+            <div class="summary">@Item.Summary</div>
+        </div>
+        @if (!string.IsNullOrEmpty(Item.PictureUri))
+        {
+            <div class="picture">
+                <img src="@Item.PictureUri"/>
+            </div>
+        }
+    </a>
+    <div class="footer">
+        <div class="btn-border-only">
+            <i class="far fa-star"></i>
+            @Item.TotalFavorites
+        </div>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public Models.FeedItem Item { get; set; }
+
+    DateTime PublishTime => Item.PublishTime.ToLocalTime().AddMinutes(App.TimezoneOffsetInMinutes);
+}

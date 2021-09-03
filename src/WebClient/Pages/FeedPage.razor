@@ -11,15 +11,12 @@
         <h1>@Feed.Name</h1>
     </div>
     <div class="page-content">
-        <div class="feed-items-panel panel">
+        <div class="feed-items-panel">
             @if (Feed.FeedItems?.Count > 0)
             {
                 foreach (var feedItem in Feed.FeedItems)
                 {
-                    <div class="feed-item">
-                        <div>@feedItem.Title</div>
-                        <div>@feedItem.Summary</div>
-                    </div>
+                    <FeedItem Item=@feedItem/>
                 }
             }
         </div>

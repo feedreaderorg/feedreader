@@ -46,3 +46,15 @@ ul {
 .btn:hover {
     filter: brightness(0.9);
 }
+
+.btn-border-only {
+    user-select: none;
+    border: 1px solid var(--btn-bg-color);
+    cursor: pointer;
+    border-radius: 40px;
+}
+
+.btn-border-only:hover {
+    background-color: var(--btn-bg-color);
+    color: var(--btn-color);
+}

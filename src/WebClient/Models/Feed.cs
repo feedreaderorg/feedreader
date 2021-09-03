@@ -29,7 +29,7 @@ namespace FeedReader.WebClient.Models
             });
 
             // Update local cache.
-            FeedItems = response.FeedItems.Select(f => f.ToModelFeedItem()).ToList();
+            FeedItems = response.FeedItems.Select(f => f.ToModelFeedItem(this)).ToList();
             OnStateChanged?.Invoke(this, null);
         }
     }
@@ -43,5 +43,6 @@ namespace FeedReader.WebClient.Models
         public string Title { get; set; }
         public string PictureUri { get; set; }
         public int TotalFavorites { get; set; }
+        public Feed Feed { get; set; }
     }
 }

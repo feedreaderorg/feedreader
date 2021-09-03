@@ -32,6 +32,7 @@ namespace FeedReader.WebClient
             // Hook up current user state changed.
             App.CurrentUser.SetServerAddress(builder.HostEnvironment.BaseAddress);
             App.CurrentUser.OnStateChanged += async (s, e) => await js.InvokeAsync<string>("localStorage.setItem", "current-user", JsonConvert.SerializeObject(App.CurrentUser));
+            App.TimezoneOffsetInMinutes = await host.Services.GetRequiredService<IJSRuntime>().InvokeAsync<int>("eval", "-new Date().getTimezoneOffset()");
             await builder.Build().RunAsync();
         }
     }

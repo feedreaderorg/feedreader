@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FeedReader.ServerCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -93,6 +95,34 @@ namespace FeedReader.WebServer.Services
             context.Response.ContentType = file.MimeType;
             context.Response.ContentLength = file.Size;
             await context.Response.Body.WriteAsync(file.Content, 0, file.Content.Length);
+        }
+
+        public async Task ProcessImageProxyRequestAsync(HttpContext context)
+        {
+            var uri = context.Request.Query["uri"];
+            if (string.IsNullOrEmpty(uri))
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync("uri is required");
+            }
+
+            using (var httpClient = new HttpClient())
+            {
+                // create target message.
+                var res = await httpClient.GetAsync(uri);
+
+                // copy status code.
+                context.Response.StatusCode = (int)res.StatusCode;
+
+                // copy header.
+                foreach (var header in res.Content.Headers)
+                {
+                    context.Response.Headers[header.Key] = header.Value.ToArray();
+                }
+
+                // copy body.
+                await res.Content.CopyToAsync(context.Response.Body);
+            }
         }
     }
 }

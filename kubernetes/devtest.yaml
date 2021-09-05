@@ -58,6 +58,8 @@ spec:
               secretKeyRef:
                 name: feedreader-devtest-jwt-secret
                 key: key
+          - name: StaticServer
+            value: https://cdn.devtest.feedreader.org
 ---
 apiVersion: apps/v1
 kind: Deployment

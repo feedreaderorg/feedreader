@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 
 namespace FeedReader.WebServer
 {
     public static class Mappers
     {
+        public static string StaticServer { get; set; }
+
         public static Share.Protocols.FeedInfo ToProtocolFeedInfo(this ServerCore.Models.FeedInfo f)
         {
             var feedInfo = new Share.Protocols.FeedInfo()
@@ -12,7 +15,7 @@ namespace FeedReader.WebServer
                 Id = f.Id.ToString() ?? string.Empty,
                 SubscriptionName = f.SubscriptionName ?? string.Empty,
                 Description = f.Description ?? string.Empty,
-                IconUri = f.IconUri ?? string.Empty,
+                IconUri = (f.IconUri ?? string.Empty).ToSafeImageUri(),
                 Name = f.Name ?? string.Empty,
                 TotalFavorites = f.TotalFavorites,
                 TotalPosts = f.TotalPosts,
@@ -39,12 +42,17 @@ namespace FeedReader.WebServer
                 FeedId = f.FeedId.ToString() ?? string.Empty,
                 Id = f.Id.ToString() ?? string.Empty,
                 Link = f.Link ?? string.Empty,
-                PictureUri = f.PictureUri ?? string.Empty,
+                PictureUri = (f.PictureUri ?? string.Empty).ToSafeImageUri(),
                 PublishTime = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(f.PublishTime.ToUniversalTime()),
                 Summary = f.Summary ?? string.Empty,
                 Title = f.Title ?? string.Empty,
                 TotalFavorites = f.TotalFavorites
             };
+        }
+
+        static string ToSafeImageUri(this string str)
+        {
+            return str.ToLower().StartsWith("http://") ? $"{StaticServer}/imgproxy?uri={HttpUtility.UrlEncode(str)}" : str;
         }
     }
 }

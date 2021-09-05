@@ -34,6 +34,7 @@ namespace FeedReader.WebServer
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Mappers.StaticServer = configuration["StaticServer"];
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -57,6 +58,10 @@ namespace FeedReader.WebServer
                 else if (IsStartsWithSegments(context, "/file"))
                 {
                     return app.ApplicationServices.GetService<StaticFileService>().ProcessGetFileAsync(context);
+                }
+                else if (IsStartsWithSegments(context, "/imgproxy"))
+                {
+                    return app.ApplicationServices.GetService<StaticFileService>().ProcessImageProxyRequestAsync(context);
                 }
                 else
                 {

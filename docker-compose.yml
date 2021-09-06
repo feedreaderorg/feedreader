@@ -30,6 +30,14 @@ services:
     environment:
       - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader-messageserver;User Id=feedreader;Password=feedreader
 
+  textclassificationserver:
+    image: feedreader-textclassificationserver
+    build:
+      context: src/TextClassificationServer
+      dockerfile: Dockerfile
+    ports:
+      - 8090:80
+
   db:
     image: postgres:13.4
     environment:

@@ -11,6 +11,12 @@
     box-shadow: inset 0 6px 12px hsl(0deg 0% 56% / 8%);
     background-color: var(--left-side-bar-bg-color);
     padding: 0px var(--body-left-right-padding);
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.left::-webkit-scrollbar {
+    display: none;
 }
 
 .right {

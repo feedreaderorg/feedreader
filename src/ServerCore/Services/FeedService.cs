@@ -2,7 +2,9 @@ using FeedReader.ServerCore.Models;
 using FeedReader.ServerCore.Processors;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +24,18 @@ namespace FeedReader.ServerCore.Services
         IDbContextFactory<DbContext> DbFactory { get; set; }
         HttpClient HttpClient { get; set; }
         ILogger Logger { get; set; }
+        string TextClassificationServerAddress { get; }
+        int TextClassificationBatchSize { get; }
+        string[] TextClassificationLabels { get; }
 
-        public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient, ILogger<FeedService> logger)
+        public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient, ILogger<FeedService> logger, IConfiguration configuration)
         {
             DbFactory = dbFactory;
             HttpClient = httpClient;
             Logger = logger;
+            TextClassificationServerAddress = configuration["TextClassificationServer"];
+            TextClassificationBatchSize = int.Parse(configuration["TextClassificationBatchSize"]);
+            TextClassificationLabels = Enum.GetValues(typeof(FeedItemCategories)).Cast<FeedItemCategories>().Select(e => e.ToString().ToLower()).ToArray();
         }
 
         public async Task<List<FeedInfo>> DiscoverFeedsAsync(string query)
@@ -90,6 +98,52 @@ namespace FeedReader.ServerCore.Services
                     .OrderByDescending(f => f.PublishTime)
                     .Skip(page * PAGE_ITEMS_COUNT)
                     .Take(PAGE_ITEMS_COUNT).ToListAsync();
+            }
+        }
+
+        public async Task ClassifyFeedItemsAsync(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                using (var db = DbFactory.CreateDbContext())
+                {
+                    foreach (var feedItem in db.FeedItems.Where(f => string.IsNullOrEmpty(f.Category)).OrderByDescending(f => f.PublishTime).Take(TextClassificationBatchSize))
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        try
+                        {
+                            var content = new StringContent(JsonConvert.SerializeObject(new
+                            {
+                                content = feedItem.Content,
+                                labels = TextClassificationLabels
+                            }), UnicodeEncoding.UTF8, "application/json");
+
+                            Logger.LogInformation($"Classify for feed item {feedItem.Id}");
+                            var res = await HttpClient.PostAsync(TextClassificationServerAddress, content, cancellationToken);
+                            var result = JsonConvert.DeserializeObject<TextClassificationServerResult>(await res.Content.ReadAsStringAsync(cancellationToken));
+                            var category = result.Labels[Array.IndexOf(result.Scores, result.Scores.Max())];
+                            feedItem.Category = category;
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogError(ex, $"Classify for feed item {feedItem.Id} failed");
+                        }
+                    }
+
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        Logger.LogInformation($"Classify batch finished, update database");
+                        await db.SaveChangesAsync(cancellationToken);
+                    }
+                }
             }
         }
 
@@ -349,5 +403,13 @@ namespace FeedReader.ServerCore.Services
                 Logger.LogInformation($"Refresh feed: {feed.Uri} finished at {endTime}, elasped {(endTime - starTime).TotalSeconds} seconds");
             }
         }
+
+        #region TextClassificationServerResult
+        class TextClassificationServerResult
+        {
+            public string[] Labels { get; set; }
+            public float[] Scores { get; set; }
+        }
+        #endregion
     }
 }

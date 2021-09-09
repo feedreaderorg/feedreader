@@ -18,6 +18,7 @@ namespace FeedReader.TaskServer
             {
                 services.AddFeedReaderServerCoreServices(hostContext.Configuration);
                 services.AddHostedService<RefreshFeedTask>();
+                services.AddHostedService<FeedItemsClassificationTask>();
             });
         }
     }

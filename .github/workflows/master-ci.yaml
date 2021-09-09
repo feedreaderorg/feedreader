@@ -45,6 +45,14 @@ jobs:
           tags: docker.xyb.name/feedreader-devtest/messageserver:master-${{ github.sha }}
           push: true
 
+      - name: Build And Push Docker Image for textclassificationserver
+        uses: docker/build-push-action@v2
+        with:
+          context: src/TextClassificationServer
+          file: src/TextClassificationServer/Dockerfile
+          tags: docker.xyb.name/feedreader-devtest/textclassificationserver:master-${{ github.sha }}
+          push: true
+
       - uses: azure/k8s-set-context@v1
         with:
           kubeconfig: '${{ secrets.KUBECONFIG }}'

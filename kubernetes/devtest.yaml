@@ -61,34 +61,6 @@ spec:
           - name: StaticServer
             value: https://cdn.devtest.feedreader.org
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: feedreader-devtest-taskserver
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: feedreader-devtest-taskserver
-  template:
-    metadata:
-      labels:
-        app: feedreader-devtest-taskserver
-    spec:
-      imagePullSecrets:
-      - name: xyb-private-docker-registry
-      containers:
-      - name: feedreader-devtest-taskserver
-        image: docker.xyb.name/feedreader-devtest/taskserver
-        ports:
-        - containerPort: 80
-        env:
-          - name: ConnectionStrings__DbConnectionString
-            valueFrom:
-              secretKeyRef:
-                name: feedreader-devtest-db-secret
-                key: db-conns
----
 apiVersion: v1
 kind: Service
 metadata:

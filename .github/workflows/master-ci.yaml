@@ -57,5 +57,4 @@ jobs:
             kubernetes/devtest.yaml
           images: |
             docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
-            docker.xyb.name/feedreader-devtest/taskserver:master-${{ github.sha }}
             docker.xyb.name/feedreader-devtest/messageserver:master-${{ github.sha }}

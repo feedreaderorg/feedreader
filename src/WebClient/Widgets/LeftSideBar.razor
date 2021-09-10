@@ -18,11 +18,13 @@
 		<div class="section">
 			<div class="title">MY FEEDS</div>
 			<ul>
-				@foreach (var feed in CurrentUser.SubscribedFeeds)
+				@foreach (var item in UserSubscribedFeeds)
 				{
-					<a href="/feed/@feed.SubscriptionName">
-						<img src="@feed.IconUri"><span>@feed.Name</span>
-					</a>
+					<li>
+						<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
+							<img src="@item.ImgUri"><span>@item.Name</span>
+						</a>
+					</li>
 				}
 			</ul>
 		</div>
@@ -31,30 +33,14 @@
 		<div class="title">TOP FEEDS</div>
 		<ul>
 			<li>
-				<a href="/">
-					<img src="img/econmy.png"><span>Economy</span>
-				</a>
-				<a href="/">
-					<img src="img/entertainment.png"><span>Entertainment</span>
-				</a>
-				<a href="/">
-					<img src="img/health.png"><span>Health</span>
-				</a>
-				<a href="/">
-					<img src="img/lifestyle.png"><span>Lifestyle</span>
-				</a>
-				<a href="/">
-					<img src="img/politics.png"><span>Politics</span>
-				</a>
-				<a href="/">
-					<img src="img/sports.png"><span>Sports</span>
-				</a>
-				<a href="/">
-					<img src="img/technology.png"><span>Technology</span>
-				</a>
-				<a href="/">
-					<img src="img/more.png"><span>More</span>
-				</a>
+				@foreach (var item in FeedItemCategories)
+				{
+					<li>
+						<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
+							<img src="@item.ImgUri"><span>@item.Name</span>
+						</a>
+					</li>
+				}
 			</li>
 		</ul>
 	</div>
@@ -71,6 +57,10 @@
 	}
 
 	List<ActionItem> ActionItems { get; set; } = new List<ActionItem>();
+
+	List<ActionItem> UserSubscribedFeeds { get; set; }
+
+	List<ActionItem> FeedItemCategories { get; set; }
 
 	[CascadingParameter]
     public User CurrentUser { get; set; }
@@ -117,6 +107,83 @@
 			});
 		}
 
+		UserSubscribedFeeds = CurrentUser.SubscribedFeeds.Select(f => new ActionItem()
+		{
+			TargetUri = $"/feed/{f.SubscriptionName}",
+			ImgUri = f.IconUri,
+			Name = f.Name
+		}).ToList();
+
+		FeedItemCategories = new List<ActionItem>()
+		{
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/culture",
+				ImgUri = "img/culture.png",
+				Name = "Culture"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/economy",
+				ImgUri = "img/economy.png",
+				Name = "Economy"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/education",
+				ImgUri = "img/education.png",
+				Name = "Education"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/entertainment",
+				ImgUri = "img/entertainment.png",
+				Name = "Entertainment"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/health",
+				ImgUri = "img/health.png",
+				Name = "Health"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/politic",
+				ImgUri = "img/politic.png",
+				Name = "Politic"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/science",
+				ImgUri = "img/science.png",
+				Name = "Science"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/sociality",
+				ImgUri = "img/sociality.png",
+				Name = "sociality"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/sport",
+				ImgUri = "img/sport.png",
+				Name = "Sport"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/technology",
+				ImgUri = "img/technology.png",
+				Name = "Technology"
+			},
+			new ActionItem()
+			{
+				TargetUri = "/feed/category/other",
+				ImgUri = "img/other.png",
+				Name = "Other"
+			}
+		};
+
 		NavigationManager.LocationChanged += OnLocationChanged;
 		OnLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, false));
 	}
@@ -131,6 +198,14 @@
 		var realPath = NavigationManager.ToBaseRelativePath(args.Location);
 		var path = new PathString($"/{realPath}");
 		foreach (var item in ActionItems)
+		{
+			item.IsSelected = path.StartsWithSegments(item.TargetUri);
+		}
+		foreach (var item in UserSubscribedFeeds)
+		{
+			item.IsSelected = path.StartsWithSegments(item.TargetUri);
+		}
+		foreach (var item in FeedItemCategories)
 		{
 			item.IsSelected = path.StartsWithSegments(item.TargetUri);
 		}

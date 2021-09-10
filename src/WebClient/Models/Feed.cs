@@ -16,12 +16,13 @@ namespace FeedReader.WebClient.Models
         public int TotalPosts { get; set; }
         public int TotalSubscribers { get; set; }
         public string SiteLink { get; set; }
-        public List<FeedItem> FeedItems { get; set; }
+        public RangeEnabledObservableCollection<FeedItem> FeedItems { get; set; }
         public event EventHandler OnStateChanged;
 
         public async Task RefreshAsync()
         {
             // Todo: refresh feed info.
+            await RefreshInfoAsync();
 
             // Refresh feed items.
             var response = await App.CurrentUser.WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
@@ -31,8 +32,39 @@ namespace FeedReader.WebClient.Models
             });
 
             // Update local cache.
-            FeedItems = response.FeedItems.Select(f => f.ToModelFeedItem(this)).ToList();
+            FeedItems = new RangeEnabledObservableCollection<FeedItem>();
+            FeedItems.AddRange(response.FeedItems.Select(i =>
+            {
+                var f = i.ToModelFeedItem();
+                f.Feed = this;
+                return f;
+            }).ToList());
             OnStateChanged?.Invoke(this, null);
+        }
+
+        public async Task RefreshInfoAsync()
+        {
+            var response = await App.CurrentUser.WebServerApi.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
+            {
+                FeedId = Id
+            });
+
+            if (!string.IsNullOrEmpty(response.Feed.Id))
+            {
+                UpdateFromProtoclFeedInfo(response.Feed);
+            }
+        }
+
+        public void UpdateFromProtoclFeedInfo(Share.Protocols.FeedInfo feed)
+        {
+            Description = feed.Description;
+            IconUri = feed.IconUri;
+            Name = feed.Name;
+            SubscriptionName = feed.SubscriptionName;
+            TotalFavorites = feed.TotalFavorites;
+            TotalPosts = feed.TotalPosts;
+            TotalSubscribers = feed.TotalSubscribers;
+            SiteLink = feed.SiteLink;
         }
     }
 

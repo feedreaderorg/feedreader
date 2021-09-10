@@ -26,6 +26,8 @@ namespace FeedReader.WebClient.Models
         #region Properties
         string ServerAddress { get; set; }
 
+        Dictionary<string, RangeEnabledObservableCollection<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, RangeEnabledObservableCollection<FeedItem>>();
+
         public string Id { get; set; }
 
         public string Token { get; set; }
@@ -135,6 +137,24 @@ namespace FeedReader.WebClient.Models
             }
         }
 
+        public RangeEnabledObservableCollection<Models.FeedItem> GetFeedItemsByCategory(string category)
+        {
+            if (string.IsNullOrEmpty(category))
+            {
+                return null;
+            }
+            else
+            {
+                if (!FeedItemsCategories.ContainsKey(category))
+                {
+                    FeedItemsCategories.Add(category, new RangeEnabledObservableCollection<FeedItem>());
+                }
+
+                RefreshFeedItemsCategory(category);
+                return FeedItemsCategories[category];
+            }
+        }
+
         void Reset()
         {
             Token = "";
@@ -191,14 +211,7 @@ namespace FeedReader.WebClient.Models
                 if (f != null)
                 {
                     // Update existed feed.
-                    f.Description = feed.Description;
-                    f.IconUri = feed.IconUri;
-                    f.Name = feed.Name;
-                    f.SubscriptionName = feed.SubscriptionName;
-                    f.TotalFavorites = feed.TotalFavorites;
-                    f.TotalPosts = feed.TotalPosts;
-                    f.TotalSubscribers = feed.TotalSubscribers;
-                    f.SiteLink = feed.SiteLink;
+                    f.UpdateFromProtoclFeedInfo(feed);
                 }
                 else
                 {
@@ -212,6 +225,45 @@ namespace FeedReader.WebClient.Models
 
             // Notify user state has been changed.
             OnStateChanged?.Invoke(this, null);
+        }
+
+        async void RefreshFeedItemsCategory(string category)
+        {
+            var res = await WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
+            {
+                Category = category,
+                Page = 0
+            });
+
+            var feedItems = FeedItemsCategories[category];
+            var modelFeedItems = new List<FeedItem>();
+            foreach (var feedItem in res.FeedItems)
+            {
+                var item = feedItems.FirstOrDefault(f => f.Id == feedItem.Id);
+                if (item != null)
+                {
+                    // TODO: need update feed item.
+                    continue;
+                }
+
+                var modelFeedItem = feedItem.ToModelFeedItem();
+                var feed = SubscribedFeeds.Find(f => f.Id == feedItem.FeedId);
+                if (feed == null)
+                {
+                    modelFeedItem.Feed = new Feed() { Id = feedItem.FeedId };
+                    await modelFeedItem.Feed.RefreshInfoAsync();
+                }
+                else
+                {
+                    modelFeedItem.Feed = feed;
+                }
+                modelFeedItems.Add(modelFeedItem);
+            }
+
+            if (modelFeedItems.Count > 0)
+            {
+                feedItems.AddRange(modelFeedItems);
+            }
         }
 
         void OnUnauthenticatedException(string message)

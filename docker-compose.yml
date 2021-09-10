@@ -21,7 +21,7 @@ services:
       dockerfile: src/TaskServer/Dockerfile
     environment:
       - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
-      - TextClassificationServer=http://feedreader-devtest-textclassificationserver
+      - TextClassificationServer=http://textclassificationserver
       - TextClassificationBatchSize=10
 
   messageserver:

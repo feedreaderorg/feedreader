@@ -1,71 +1,84 @@
 ﻿@page "/feed"
+@page "/feed/category/{FeedItemsCategory}"
 @page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
 @implements IDisposable
 @inject NavigationManager NavigationManager
 
-@if (Feed != null)
-{
 <div class="feed-page">
     <div class="page-header">
-        <h1>@Feed.Name</h1>
+        @if (Feed != null)
+        {
+            <h1>@Feed.Name</h1>
+        }
+        else
+        {
+            <h1>@FeedItemsCategory</h1>
+        }
     </div>
     <div class="page-content">
         <div class="feed-items-panel">
-            @if (Feed.FeedItems?.Count > 0)
+            @if (FeedItems?.Count > 0)
             {
-                foreach (var feedItem in Feed.FeedItems)
+                foreach (var feedItem in FeedItems)
                 {
                     <FeedItem Item=@feedItem/>
                 }
             }
         </div>
-        <div class="right-side-bar">
-            <div class="feed-description-panel panel">
-                <div class="feed-picture-and-name">
-                    <img src="@Feed.IconUri"/>
-                    <div class="name">@Feed.Name</div>
+        @if (Feed != null)
+        {
+            <div class="right-side-bar">
+                <div class="feed-description-panel panel">
+                    <div class="feed-picture-and-name">
+                        <img src="@Feed.IconUri"/>
+                        <div class="name">@Feed.Name</div>
+                    </div>
+                    <div class="feed-stats">
+                        <div class="stat">
+                            <div class="count">@Feed.TotalSubscribers</div>
+                            <div class="label">Subscribers</div>
+                        </div>
+                       <div class="stat" style="text-align: center">
+                            <div class="count">@Feed.TotalPosts</div>
+                            <div class="label">Post</div>
+                        </div>
+                        <div class="stat" style="text-align: right">
+                            <div class="count">@Feed.TotalFavorites</div>
+                            <div class="label">Favorites</div>
+                        </div>
+                    </div>
+                    <div class="feed-about">
+                        <div class="label">ABOUT</div>
+                        <div class="about">@FeedDescription</div>
+                        <a href="@Feed.SiteLink" target="_blank">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>
+                            &nbsp;@Feed.SiteLink
+                        </a>
+                    </div>
                 </div>
-                <div class="feed-stats">
-                    <div class="stat">
-                        <div class="count">@Feed.TotalSubscribers</div>
-                        <div class="label">Subscribers</div>
-                    </div>
-                   <div class="stat" style="text-align: center">
-                        <div class="count">@Feed.TotalPosts</div>
-                        <div class="label">Post</div>
-                    </div>
-                    <div class="stat" style="text-align: right">
-                        <div class="count">@Feed.TotalFavorites</div>
-                        <div class="label">Favorites</div>
-                    </div>
-                </div>
-                <div class="feed-about">
-                    <div class="label">ABOUT</div>
-                    <div class="about">@FeedDescription</div>
-                    <a href="@Feed.SiteLink" target="_blank">
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>
-                        &nbsp;@Feed.SiteLink
-                    </a>
+                <div class="site-info">
+                    <a href="/terms">Terms of Use</a>
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/about"></a>
+                    <div class="copy-right">&copy;2021 FeedReader.org</div>
                 </div>
             </div>
-            <div class="site-info">
-                <a href="/terms">Terms of Use</a>
-                <a href="/privacy">Privacy Policy</a>
-                <a href="/about"></a>
-                <div class="copy-right">&copy;2021 FeedReader.org</div>
-            </div>
-        </div>
+        }
     </div>
 </div>
-}
 
 @code
 {
     [Parameter]
+    public string FeedItemsCategory { get; set; }
+
+    [Parameter]
     public string FeedSubscriptionName { get; set; }
 
     Feed Feed { get; set; }
+
+    RangeEnabledObservableCollection<Models.FeedItem> FeedItems { get; set; }
 
     string FeedDescription => string.IsNullOrEmpty(Feed.Description) ? "Nothing ..." : Feed.Description;
 
@@ -75,28 +88,62 @@
         {
             Feed.OnStateChanged -= OnFeedStateChanged;
         }
+
+        if (FeedItems != null)
+        {
+            FeedItems.CollectionChanged -= OnFeedItemsCollectionChanged;
+        }
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (Feed != null)
         {
             Feed.OnStateChanged -= OnFeedStateChanged;
+            Feed = null;
         }
 
-        Feed = App.CurrentUser.GetFeed(FeedSubscriptionName);
-        if (Feed == null)
+        if (FeedItems != null)
         {
-            NavigationManager.NavigateTo("/");
+            FeedItems.CollectionChanged -= OnFeedItemsCollectionChanged;
+            FeedItems = null;
         }
-        else
+
+        if (!string.IsNullOrEmpty(FeedSubscriptionName))
         {
-            Feed.OnStateChanged += OnFeedStateChanged;
-            _ = Feed.RefreshAsync();
+            Console.WriteLine("get feed items");
+            Feed = App.CurrentUser.GetFeed(FeedSubscriptionName);
+            if (Feed == null)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                FeedItems = Feed.FeedItems;
+                Feed.OnStateChanged += OnFeedStateChanged;
+                await Feed.RefreshAsync();
+            }
+        }
+        else if (!string.IsNullOrEmpty(FeedItemsCategory))
+        {
+            Console.WriteLine("get feed categories");
+            FeedItems = App.CurrentUser.GetFeedItemsByCategory(FeedItemsCategory);
+            FeedItems.CollectionChanged += OnFeedItemsCollectionChanged;
         }
     }
 
     void OnFeedStateChanged(object sender, EventArgs args)
+    {
+        if (FeedItems != null)
+        {
+            FeedItems.CollectionChanged -= OnFeedItemsCollectionChanged;
+        }
+        FeedItems = Feed.FeedItems;
+        Feed.OnStateChanged += OnFeedStateChanged;
+        StateHasChanged();
+    }
+
+    void OnFeedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
     {
         StateHasChanged();
     }

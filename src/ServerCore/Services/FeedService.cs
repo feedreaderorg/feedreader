@@ -34,7 +34,7 @@ namespace FeedReader.ServerCore.Services
             HttpClient = httpClient;
             Logger = logger;
             TextClassificationServerAddress = configuration["TextClassificationServer"];
-            TextClassificationBatchSize = int.Parse(configuration["TextClassificationBatchSize"]);
+            TextClassificationBatchSize = int.Parse(configuration["TextClassificationBatchSize"] ?? "0");
             TextClassificationLabels = Enum.GetValues(typeof(FeedItemCategories)).Cast<FeedItemCategories>().Select(e => e.ToString().ToLower()).ToArray();
         }
 
@@ -89,12 +89,32 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        public async Task<List<FeedItem>> GetFeedItems(Guid feedId, int page)
+        public async Task<FeedInfo> GetFeedInfoAsync(Guid feedId)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                return await db.FeedInfos.FindAsync(feedId);
+            }
+        }
+
+        public async Task<List<FeedItem>> GetFeedItemsByIdAsync(Guid feedId, int page)
         {
             using (var db = DbFactory.CreateDbContext())
             {
                 return await db.FeedItems
                     .Where(f => f.FeedId == feedId)
+                    .OrderByDescending(f => f.PublishTime)
+                    .Skip(page * PAGE_ITEMS_COUNT)
+                    .Take(PAGE_ITEMS_COUNT).ToListAsync();
+            }
+        }
+
+        public async Task<List<FeedItem>> GetFeedItemsByCategoryAsync(string category, int page)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                return await db.FeedItems
+                    .Where(f => f.Category == category)
                     .OrderByDescending(f => f.PublishTime)
                     .Skip(page * PAGE_ITEMS_COUNT)
                     .Take(PAGE_ITEMS_COUNT).ToListAsync();

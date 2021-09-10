@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -114,9 +115,43 @@ namespace FeedReader.WebServer
             UserService.UnsubscribeUserEvent(userId, sessionId);
         }
 
+        public override async Task<GetFeedInfoResponse> GetFeedInfo(GetFeedInfoRequest request, ServerCallContext context)
+        {
+            if (string.IsNullOrEmpty(request.FeedId))
+            {
+                throw new ArgumentException("FeedId can't be null", "FeedId");
+            }
+
+            var feedInfo = await FeedService.GetFeedInfoAsync(Guid.Parse(request.FeedId));
+            if (feedInfo == null)
+            {
+                return new GetFeedInfoResponse();
+            }
+            else
+            {
+                return new GetFeedInfoResponse()
+                {
+                    Feed = feedInfo.ToProtocolFeedInfo()
+                };
+            }
+        }
+
         public override async Task<GetFeedItemsResponse> GetFeedItems(GetFeedItemsRequest request, ServerCallContext context)
         {
-            var feedItems = await FeedService.GetFeedItems(Guid.Parse(request.FeedId), request.Page);
+            List<ServerCore.Models.FeedItem> feedItems;
+            switch (request.QueryCase)
+            {
+                case GetFeedItemsRequest.QueryOneofCase.FeedId:
+                    feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.Page);
+                    break;
+
+                case GetFeedItemsRequest.QueryOneofCase.Category:
+                    feedItems = await FeedService.GetFeedItemsByCategoryAsync(request.Category, request.Page);
+                    break;
+
+                default:
+                    throw new ArgumentException("Unsupported query", "Query");
+            }
             var response = new GetFeedItemsResponse();
             response.FeedItems.AddRange(feedItems.Select(f => f.ToProtocolFeedItem()));
             return response;

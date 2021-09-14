@@ -15,8 +15,6 @@
 {
     public static User CurrentUser { get; set; }
 
-    public static int TimezoneOffsetInMinutes { get; set; }
-
     protected override void OnInitialized()
     {
         CurrentUser.OnStateChanged += (s, e) => StateHasChanged();

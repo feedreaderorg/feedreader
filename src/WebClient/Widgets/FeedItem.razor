@@ -3,7 +3,7 @@
         <span>Posted by</span>
         <img src="@Item.Feed.IconUri"/>
         <a href="/feed/@Item.Feed.SubscriptionName" class="feed-name">@Item.Feed.Name</a>
-        <span>@PublishTime</span>
+        <span>@Item.PublishTime.ToLocalTime()</span>
     </div>
     <a  href="@Item.Link" target="_blank" class="body">
         <div class="title-and-summary">
@@ -29,6 +29,4 @@
 {
     [Parameter]
     public Models.FeedItem Item { get; set; }
-
-    DateTime PublishTime => Item.PublishTime.ToLocalTime().AddMinutes(App.TimezoneOffsetInMinutes);
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FeedReader.ServerCore.Models;
+using System;
 
 namespace FeedReader.ServerCore
 {
@@ -12,9 +13,18 @@ namespace FeedReader.ServerCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().Property(f => f.RegistrationTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
             modelBuilder.Entity<UserOAuthIds>().HasKey(u => new { u.OAuthIssuer, u.OAuthId });
 
             modelBuilder.Entity<FeedSubscription>().HasKey(f => new { f.UserId, f.FeedId });
+
+            modelBuilder.Entity<FeedInfo>().Property(f => f.RegistrationTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+            modelBuilder.Entity<FeedInfo>().Property(f => f.LastUpdatedTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+            modelBuilder.Entity<FeedItem>().Property(f => f.PublishTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+            modelBuilder.Entity<File>().Property(f => f.CreationTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         }
 
         public DbSet<File> Files { get; set; }

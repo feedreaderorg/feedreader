@@ -136,9 +136,17 @@ namespace FeedReader.ServerCore.Services
 
                         try
                         {
+                            var contentForTextClassification = string.IsNullOrEmpty(feedItem.Content) ? feedItem.Summary : feedItem.Content;
+                            if (string.IsNullOrEmpty(contentForTextClassification))
+                            {
+                                // TODO: feed item has neither content nor summary. Because parser bug? Log it ...
+                                Logger.LogWarning($"Feed item {feedItem.Id} has neither content nor summary, ignore for classification.");
+                                continue;
+                            }
+
                             var content = new StringContent(JsonConvert.SerializeObject(new
                             {
-                                content = feedItem.Content,
+                                content = contentForTextClassification,
                                 labels = TextClassificationLabels
                             }), UnicodeEncoding.UTF8, "application/json");
 

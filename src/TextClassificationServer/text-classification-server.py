@@ -15,10 +15,17 @@ class AiServerHandler(BaseHTTPRequestHandler):
             return
 
         length = int(self.headers.get('content-length'))
-        message = json.loads(self.rfile.read(length))
+        payload = self.rfile.read(length)
+        message = json.loads(payload)
 
         content = message["content"]
         labels = message["labels"]
+
+        if content is None or labels is None:
+            print(f'received invalid payload: {payload}')
+            self.send_response(400)
+            self.end_headers()
+            return
 
         prediction = self.classifier(content, labels)
 

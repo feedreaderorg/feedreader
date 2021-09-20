@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FeedReader.ServerCore.Models
@@ -39,5 +40,19 @@ namespace FeedReader.ServerCore.Models
 
         public Guid FeedId { get; set; }
         public FeedInfo Feed { get; set; }
+    }
+
+    [Index(nameof(UserId), IsUnique = false)]
+    public class Favorite
+    {
+        public Guid UserId { get; set; }
+        public User User { get; set; }
+
+        public Guid FeedItemId { get; set; }
+        public FeedItem FeedItem { get; set; }
+
+        [Required]
+        public Guid FeedInfoId { get; set; }
+        public FeedInfo FeedInfo { get; set; }
     }
 }

@@ -80,6 +80,19 @@ namespace FeedReader.WebServer
             return response;
         }
 
+        public override async Task<FavoriteFeedItemResponse> FavoriteFeedItem(FavoriteFeedItemRequest request, ServerCallContext context)
+        {
+            if (request.Favorite)
+            {
+                await UserService.FavoriteFeedItemAsync(GetUserId(context), Guid.Parse(request.FeedItemId));
+            }
+            else
+            {
+                await UserService.UnFavoriteFeedItemAsync(GetUserId(context), Guid.Parse(request.FeedItemId));
+            }
+            return new FavoriteFeedItemResponse();
+        }
+
         public override async Task<SubscribeFeedResponse> SubscribeFeed(SubscribeFeedRequest request, ServerCallContext context)
         {
             if (request.Subscribe)

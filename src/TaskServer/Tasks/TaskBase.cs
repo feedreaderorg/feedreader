@@ -28,7 +28,7 @@ namespace FeedReader.TaskServer.Tasks
         public Task StartAsync(CancellationToken cancellationToken)
         {
             CancellationTokenSource = new CancellationTokenSource();
-            InternalTask = DoTaskAsync(CancellationTokenSource.Token);
+            InternalTask = Task.Run(async ()=> await DoTaskAsync(CancellationTokenSource.Token));
             return Task.CompletedTask;
         }
 

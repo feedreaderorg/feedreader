@@ -17,7 +17,7 @@ namespace FeedReader.ServerCore
 
             modelBuilder.Entity<UserOAuthIds>().HasKey(u => new { u.OAuthIssuer, u.OAuthId });
 
-            modelBuilder.Entity<FeedSubscription>().HasKey(f => new { f.UserId, f.FeedId });
+            modelBuilder.Entity<Favorite>().HasKey(f => new { f.UserId, f.FeedItemId });
 
             modelBuilder.Entity<FeedInfo>().Property(f => f.RegistrationTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
             modelBuilder.Entity<FeedInfo>().Property(f => f.LastUpdatedTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
@@ -25,6 +25,8 @@ namespace FeedReader.ServerCore
             modelBuilder.Entity<FeedItem>().Property(f => f.PublishTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
             modelBuilder.Entity<File>().Property(f => f.CreationTime).HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+            modelBuilder.Entity<FeedSubscription>().HasKey(f => new { f.UserId, f.FeedId });
         }
 
         public DbSet<File> Files { get; set; }
@@ -33,6 +35,7 @@ namespace FeedReader.ServerCore
         public DbSet<FeedInfo> FeedInfos { get; set; }
         public DbSet<FeedSubscription> FeedSubscriptions { get; set; }
         public DbSet<FeedItem> FeedItems { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
     }
 
     public class DesignTimeFeedReaderDbFactory : Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<DbContext>

@@ -63,6 +63,16 @@ namespace FeedReader.WebClient.Models
             RefreshWebServerApi();
         }
 
+        public async Task FavoriteFeedItemAsync(FeedItem feedItem)
+        {
+            await WebServerApi.FavoriteFeedItemAsync(new Share.Protocols.FavoriteFeedItemRequest()
+            {
+                FeedItemId = feedItem.Id,
+                Favorite = true
+            });
+            ++feedItem.TotalFavorites;
+        }
+
         public async Task LoginAsync(string token)
         {
             var response = await AuthServerApi.LoginAsync(new Share.Protocols.LoginRequest()

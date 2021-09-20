@@ -8,10 +8,11 @@ option csharp_namespace = "FeedReader.Share.Protocols";
 service WebServerApi
 {
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
-    rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
-    rpc SubscribeEvents(google.protobuf.Empty) returns (stream Event);
+    rpc FavoriteFeedItem(FavoriteFeedItemRequest) returns (FavoriteFeedItemResponse);
     rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
     rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
+    rpc SubscribeEvents(google.protobuf.Empty) returns (stream Event);
+    rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
 }
 
 message DiscoverFeedsRequest
@@ -24,13 +25,13 @@ message DiscoverFeedsResponse
     repeated FeedInfo Feeds = 1;
 }
 
-message SubscribeFeedRequest
+message FavoriteFeedItemRequest
 {
-    string FeedId = 1;
-    bool Subscribe = 2;
+    string FeedItemId = 1;
+    bool Favorite = 2;
 }
 
-message SubscribeFeedResponse
+message FavoriteFeedItemResponse
 {
 }
 
@@ -56,4 +57,14 @@ message GetFeedItemsRequest
 message GetFeedItemsResponse
 {
     repeated FeedItem FeedItems = 1;
+}
+
+message SubscribeFeedRequest
+{
+    string FeedId = 1;
+    bool Subscribe = 2;
+}
+
+message SubscribeFeedResponse
+{
 }

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -131,6 +133,28 @@ namespace FeedReader.ServerCore
         public static Guid Md5HashToGuid(this string str)
         {
             return new Guid(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(str)));
+        }
+
+        public static void UpdateEntity<TEntity>(this DbContext context, Expression<Func<TEntity>> updateExpression, string keyFieldName = "Id")
+        {
+            var memberInitExpression = updateExpression.Body as MemberInitExpression;
+            if (memberInitExpression == null)
+            {
+                throw new ArgumentException("Update expression must be a member initialization");
+            }
+
+            var entity = updateExpression.Compile().Invoke();
+            context.Attach(entity);
+
+            var updatedPropNames = memberInitExpression.Bindings.Select(b => b.Member.Name);
+            foreach (var propName in updatedPropNames)
+            {
+                if (propName == keyFieldName)
+                {
+                    continue;
+                }
+                context.Entry(entity).Property(propName).IsModified = true;
+            }
         }
     }
 }

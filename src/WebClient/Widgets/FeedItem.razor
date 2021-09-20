@@ -18,7 +18,7 @@
         }
     </a>
     <div class="footer">
-        <div class="btn-border-only">
+        <div class="btn-border-only" @onclick="OnFavorite">
             <i class="far fa-star"></i>
             @Item.TotalFavorites
         </div>
@@ -29,4 +29,9 @@
 {
     [Parameter]
     public Models.FeedItem Item { get; set; }
+
+    async Task OnFavorite()
+    {
+        await App.CurrentUser.FavoriteFeedItemAsync(Item);
+    }
 }

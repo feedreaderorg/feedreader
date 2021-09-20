@@ -18,6 +18,43 @@ namespace FeedReader.ServerCore.Services
             DbFactory = dbFactory;
         }
 
+        public async Task FavoriteFeedItemAsync(Guid userId, Guid feedItemId)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                var favorite = await db.Favorites.FirstOrDefaultAsync(f => f.UserId == userId && f.FeedItemId == feedItemId);
+                if (favorite == null)
+                {
+                    var feedId = await db.FeedItems.Where(f => f.Id == feedItemId).Select(f => f.FeedId).FirstOrDefaultAsync();
+                    if (feedId == Guid.Empty)
+                    {
+                        throw new KeyNotFoundException();
+                    }
+
+                    db.Favorites.Add(new Favorite()
+                    {
+                        FeedItemId = feedItemId,
+                        UserId = userId,
+                        FeedInfoId = feedId
+                    });
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task UnFavoriteFeedItemAsync(Guid userId, Guid feedItemId)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                var favorite = await db.Favorites.FirstOrDefaultAsync(f => f.UserId == userId && f.FeedItemId == feedItemId);
+                if (favorite != null)
+                {
+                    db.Favorites.Remove(favorite);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
         public async Task SubscribeFeed(Guid userId, Guid feedId)
         {
             using (var db = DbFactory.CreateDbContext())

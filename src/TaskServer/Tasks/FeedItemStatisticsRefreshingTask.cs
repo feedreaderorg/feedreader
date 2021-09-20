@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace FeedReader.TaskServer.Tasks
 {
-    public class RefreshFeedTask : TaskBase
+    public class FeedItemStatisticsRefreshingTask : TaskBase
     {
         FeedService FeedService { get; set; }
-        
-        public RefreshFeedTask(FeedService feedService, ILogger<RefreshFeedTask> logger)
-            : base("RefreshFeedTask", TimeSpan.FromMinutes(5), logger)
+
+        public FeedItemStatisticsRefreshingTask(FeedService feedService, ILogger<FeedItemStatisticsRefreshingTask> logger)
+            : base("FeedItemStatisticsRefreshingTask", TimeSpan.FromHours(1), logger)
         {
             FeedService = feedService;
         }
 
         protected override Task DoTaskOnceAsync(CancellationToken cancellationToken)
         {
-            return FeedService.RefreshFeedsAsync(cancellationToken);
+            return FeedService.RefreshFeedItemStatisticsAsync(cancellationToken);
         }
     }
 }

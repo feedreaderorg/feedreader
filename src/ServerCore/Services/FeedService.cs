@@ -123,10 +123,14 @@ namespace FeedReader.ServerCore.Services
 
         public async Task ClassifyFeedItemsAsync(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            bool classifySuccess = true;
+
+            while (classifySuccess && !cancellationToken.IsCancellationRequested)
             {
                 using (var db = DbFactory.CreateDbContext())
                 {
+                    classifySuccess = false;
+
                     foreach (var feedItem in db.FeedItems.Where(f => string.IsNullOrEmpty(f.Category)).OrderByDescending(f => f.PublishTime).Take(TextClassificationBatchSize))
                     {
                         if (cancellationToken.IsCancellationRequested)
@@ -141,20 +145,24 @@ namespace FeedReader.ServerCore.Services
                             {
                                 // TODO: feed item has neither content nor summary. Because parser bug? Log it ...
                                 Logger.LogWarning($"Feed item {feedItem.Id} has neither content nor summary, ignore for classification.");
-                                continue;
+                                feedItem.Category = "_NOT_AVAILABLE_";
+                            }
+                            else
+                            {
+                                var content = new StringContent(JsonConvert.SerializeObject(new
+                                {
+                                    content = contentForTextClassification,
+                                    labels = TextClassificationLabels
+                                }), UnicodeEncoding.UTF8, "application/json");
+
+                                Logger.LogInformation($"Classify for feed item {feedItem.Id}");
+                                var res = await HttpClient.PostAsync(TextClassificationServerAddress, content, cancellationToken);
+                                var result = JsonConvert.DeserializeObject<TextClassificationServerResult>(await res.Content.ReadAsStringAsync(cancellationToken));
+                                var category = result.Labels[Array.IndexOf(result.Scores, result.Scores.Max())];
+                                feedItem.Category = category;
                             }
 
-                            var content = new StringContent(JsonConvert.SerializeObject(new
-                            {
-                                content = contentForTextClassification,
-                                labels = TextClassificationLabels
-                            }), UnicodeEncoding.UTF8, "application/json");
-
-                            Logger.LogInformation($"Classify for feed item {feedItem.Id}");
-                            var res = await HttpClient.PostAsync(TextClassificationServerAddress, content, cancellationToken);
-                            var result = JsonConvert.DeserializeObject<TextClassificationServerResult>(await res.Content.ReadAsStringAsync(cancellationToken));
-                            var category = result.Labels[Array.IndexOf(result.Scores, result.Scores.Max())];
-                            feedItem.Category = category;
+                            classifySuccess = true;
                         }
                         catch (TaskCanceledException)
                         {
@@ -166,12 +174,58 @@ namespace FeedReader.ServerCore.Services
                         }
                     }
 
-                    if (!cancellationToken.IsCancellationRequested)
+                    if (classifySuccess && !cancellationToken.IsCancellationRequested)
                     {
                         Logger.LogInformation($"Classify batch finished, update database");
                         await db.SaveChangesAsync(cancellationToken);
                     }
                 }
+            }
+        }
+
+        public async Task RefreshFeedItemStatisticsAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                const int PAGE_COUNT = 100;
+                int page = 0;
+
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    using (var db = DbFactory.CreateDbContext())
+                    {
+                        int actualCount = 0;
+
+                        foreach (var feedItemId in db.FeedItems.Select(f => f.Id).Skip(page * PAGE_COUNT).Take(PAGE_COUNT).ToArray())
+                        {
+                            ++actualCount;
+
+                            var totalFavorites = await db.Favorites.CountAsync(f => f.FeedItemId == feedItemId);
+                            db.UpdateEntity(() => new FeedItem()
+                            {
+                                Id = feedItemId,
+                                TotalFavorites = totalFavorites
+                            });
+                        }
+
+                        await db.SaveChangesAsync(cancellationToken);
+                        Logger.LogInformation($"RefreshFeedItemStatisticsAsync page: {page}, actualCount: {actualCount}.");
+
+                        if (actualCount < PAGE_COUNT)
+                        {
+                            break;
+                        }
+
+                        ++page;
+                    }
+                }
+            }
+            catch (TaskCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"RefreshFeedItemStatisticsAsync failed.");
             }
         }
 
@@ -421,9 +475,10 @@ namespace FeedReader.ServerCore.Services
                 }
 
                 // Update feed stat.
+                feed.TotalFavorites = await db.Favorites.CountAsync(f => f.FeedInfoId == feed.Id);
                 feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
                 feed.TotalPosts = await db.FeedItems.Where(f => f.FeedId == feed.Id).CountAsync();
-
+                
                 // Save to db.
                 await db.SaveChangesAsync(cancellationToken);
                 

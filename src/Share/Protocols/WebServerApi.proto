@@ -9,6 +9,7 @@ service WebServerApi
 {
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc FavoriteFeedItem(FavoriteFeedItemRequest) returns (FavoriteFeedItemResponse);
+    rpc GetFavorites(GetFavoritesRequest) returns (GetFavoritesResponse);
     rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
     rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
     rpc SubscribeEvents(google.protobuf.Empty) returns (stream Event);
@@ -23,6 +24,16 @@ message DiscoverFeedsRequest
 message DiscoverFeedsResponse
 {
     repeated FeedInfo Feeds = 1;
+}
+
+message GetFavoritesRequest
+{
+    int32 Page = 1;
+}
+
+message GetFavoritesResponse
+{
+    repeated FeedItem FeedItems = 1;
 }
 
 message FavoriteFeedItemRequest

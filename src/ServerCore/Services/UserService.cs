@@ -10,12 +10,29 @@ namespace FeedReader.ServerCore.Services
 {
     public class UserService
     {
+        const int PAGE_ITEMS_COUNT = 50;
+
         IDbContextFactory<DbContext> DbFactory { get; set; }
         ConcurrentDictionary<Guid, List<Session>> UserEventCallbacks { get; set; } = new ConcurrentDictionary<Guid, List<Session>>();
 
         public UserService(IDbContextFactory<DbContext> dbFactory)
         {
             DbFactory = dbFactory;
+        }
+
+        public async Task<List<FeedItem>> GetFavoritesAsync(Guid userId, int page)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                return await db.Favorites
+                    .Include(f => f.FeedItem)
+                    .Where(f => f.UserId == userId)
+                    .Select(f => f.FeedItem)
+                    .OrderByDescending(f => f.PublishTime)
+                    .Skip(page * PAGE_ITEMS_COUNT)
+                    .Take(PAGE_ITEMS_COUNT)
+                    .ToListAsync();
+            }
         }
 
         public async Task FavoriteFeedItemAsync(Guid userId, Guid feedItemId)

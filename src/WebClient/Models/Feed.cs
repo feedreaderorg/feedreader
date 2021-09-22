@@ -38,7 +38,7 @@ namespace FeedReader.WebClient.Models
                 var f = i.ToModelFeedItem();
                 f.Feed = this;
                 return f;
-            }).ToList());
+            }), (f1, f2) => f1.PublishTime.DescCompareTo(f2.PublishTime));
             OnStateChanged?.Invoke(this, null);
         }
 

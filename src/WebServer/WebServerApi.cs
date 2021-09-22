@@ -128,6 +128,14 @@ namespace FeedReader.WebServer
             UserService.UnsubscribeUserEvent(userId, sessionId);
         }
 
+        public override async Task<GetFavoritesResponse> GetFavorites(GetFavoritesRequest request, ServerCallContext context)
+        {
+            var favorites = await UserService.GetFavoritesAsync(GetUserId(context), request.Page);
+            var response = new GetFavoritesResponse();
+            response.FeedItems.AddRange(favorites.Select(f => f.ToProtocolFeedItem()));
+            return response;
+        }
+
         public override async Task<GetFeedInfoResponse> GetFeedInfo(GetFeedInfoRequest request, ServerCallContext context)
         {
             if (string.IsNullOrEmpty(request.FeedId))

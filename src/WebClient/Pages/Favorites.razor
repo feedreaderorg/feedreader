@@ -1,15 +1,42 @@
 ﻿@page "/favorites"
 @layout LeftSideBarLayout
+@implements IDisposable
 
-<div class="add-page">
+<div class="favorites-page">
 	<div class="page-header">
 		<h1>My favorites</h1>
 	</div>
-	<div class="panel">
-		Bla bla bla ...
+	<div class="page-content">
+		<div class="feed-items-panel">
+			@if (CurrentUser.Favorites.Count > 0)
+            {
+                foreach (var feedItem in CurrentUser.Favorites)
+                {
+                    <FeedItem Item=@feedItem/>
+                }
+            }
+		</div>
 	</div>
 </div>
 
-@code {
+@code
+{
+	[CascadingParameter]
+	User CurrentUser { get; set; }
 
+	protected override void OnInitialized()
+	{
+		CurrentUser.Favorites.CollectionChanged += OnFavoritesChanged;
+		_ = CurrentUser.RefreshFavoritesAsync();
+	}
+
+	public void Dispose()
+	{
+		CurrentUser.Favorites.CollectionChanged -= OnFavoritesChanged;
+	}
+
+	void OnFavoritesChanged(object sender, NotifyCollectionChangedEventArgs args)
+    {
+        StateHasChanged();
+    }
 }

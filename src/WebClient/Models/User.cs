@@ -28,6 +28,8 @@ namespace FeedReader.WebClient.Models
 
         Dictionary<string, RangeEnabledObservableCollection<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, RangeEnabledObservableCollection<FeedItem>>();
 
+        public RangeEnabledObservableCollection<FeedItem> Favorites { get; } = new RangeEnabledObservableCollection<FeedItem>();
+
         public string Id { get; set; }
 
         public string Token { get; set; }
@@ -147,6 +149,15 @@ namespace FeedReader.WebClient.Models
             }
         }
 
+        public async Task RefreshFavoritesAsync()
+        {
+            var res = await WebServerApi.GetFavoritesAsync(new Share.Protocols.GetFavoritesRequest()
+            {
+                Page = 0
+            });
+            await UpdateListFeedItemsAsync(Favorites, res.FeedItems);
+        }
+
         public RangeEnabledObservableCollection<Models.FeedItem> GetFeedItemsByCategory(string category)
         {
             if (string.IsNullOrEmpty(category))
@@ -160,7 +171,7 @@ namespace FeedReader.WebClient.Models
                     FeedItemsCategories.Add(category, new RangeEnabledObservableCollection<FeedItem>());
                 }
 
-                RefreshFeedItemsCategory(category);
+                _ = RefreshFeedItemsCategoryAsync(category);
                 return FeedItemsCategories[category];
             }
         }
@@ -237,19 +248,22 @@ namespace FeedReader.WebClient.Models
             OnStateChanged?.Invoke(this, null);
         }
 
-        async void RefreshFeedItemsCategory(string category)
+        async Task RefreshFeedItemsCategoryAsync(string category)
         {
             var res = await WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
             {
                 Category = category,
                 Page = 0
             });
+            await UpdateListFeedItemsAsync(FeedItemsCategories[category], res.FeedItems);
+        }
 
-            var feedItems = FeedItemsCategories[category];
+        async Task UpdateListFeedItemsAsync(RangeEnabledObservableCollection<FeedItem> feedItemList, IEnumerable<Share.Protocols.FeedItem> protocolFeedItems)
+        {
             var modelFeedItems = new List<FeedItem>();
-            foreach (var feedItem in res.FeedItems)
+            foreach (var feedItem in protocolFeedItems)
             {
-                var item = feedItems.FirstOrDefault(f => f.Id == feedItem.Id);
+                var item = feedItemList.FirstOrDefault(f => f.Id == feedItem.Id);
                 if (item != null)
                 {
                     // TODO: need update feed item.
@@ -272,7 +286,7 @@ namespace FeedReader.WebClient.Models
 
             if (modelFeedItems.Count > 0)
             {
-                feedItems.AddRange(modelFeedItems);
+                feedItemList.AddRange(modelFeedItems, (f1, f2) => f1.PublishTime.DescCompareTo(f2.PublishTime));
             }
         }
 

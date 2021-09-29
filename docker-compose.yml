@@ -37,6 +37,8 @@ services:
     build:
       context: src/TextClassificationServer
       dockerfile: Dockerfile
+      args:
+        FROM_IMG: huggingface/transformers-pytorch-cpu
     ports:
       - 8090:80
 

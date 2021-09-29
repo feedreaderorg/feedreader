@@ -46,7 +46,7 @@ namespace FeedReader.ServerCore.Processors
             return null;
         }
 
-        public abstract FeedInfo TryParseFeed();
+        public abstract FeedInfo TryParseFeed(bool parseItems);
 
         protected string TryGetImageUrl(string content)
         {
@@ -171,7 +171,7 @@ namespace FeedReader.ServerCore.Processors
             throw new NotImplementedException();
         }
 
-        public override FeedInfo TryParseFeed()
+        public override FeedInfo TryParseFeed(bool parseItems)
         {
             throw new NotImplementedException();
         }
@@ -185,7 +185,7 @@ namespace FeedReader.ServerCore.Processors
             throw new NotImplementedException();
         }
 
-        public override FeedInfo TryParseFeed()
+        public override FeedInfo TryParseFeed(bool parseItems)
         {
             throw new NotImplementedException();
         }
@@ -199,7 +199,7 @@ namespace FeedReader.ServerCore.Processors
             FeedXmlNS.AddNamespace("content", "http://purl.org/rss/1.0/modules/content/");
         }
 
-        public override FeedInfo TryParseFeed()
+        public override FeedInfo TryParseFeed(bool parseItems)
         {
             // Parse channel. As spec, every feed has only one channel.
             var channelNode = FeedXml.SelectSingleNode("/rss/channel");
@@ -214,16 +214,19 @@ namespace FeedReader.ServerCore.Processors
             };
 
             // Parse feed items.
-            feed.FeedItems = new List<FeedItem>();
-            var itemNodes = FeedXml.SelectNodes("/rss/channel/item");
-            if (itemNodes != null)
+            if (parseItems)
             {
-                foreach (XmlNode itemNode in itemNodes)
+                feed.FeedItems = new List<FeedItem>();
+                var itemNodes = FeedXml.SelectNodes("/rss/channel/item");
+                if (itemNodes != null)
                 {
-                    feed.FeedItems.Add(ParseFeedItem(itemNode));
+                    foreach (XmlNode itemNode in itemNodes)
+                    {
+                        feed.FeedItems.Add(ParseFeedItem(itemNode));
+                    }
                 }
+                feed.TotalPosts = feed.FeedItems.Count;
             }
-            feed.TotalPosts = feed.FeedItems.Count;
             return feed;
         }
 

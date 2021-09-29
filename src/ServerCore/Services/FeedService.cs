@@ -258,7 +258,7 @@ namespace FeedReader.ServerCore.Services
                 return;
             }
 
-            var feed = await TryToParseFeedFromContentAsync(content);
+            var feed = await TryToParseFeedFromContentAsync(content, parseItems: false);
             if (feed != null)
             {
                 feed.Id = Guid.NewGuid();
@@ -285,6 +285,7 @@ namespace FeedReader.ServerCore.Services
                         {
                             db.FeedInfos.Add(feed);
                             await db.SaveChangesAsync();
+                            _ = RefreshFeedsAsync(feed.Id, default(CancellationToken));
                         }
                         else
                         {
@@ -346,9 +347,9 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        async Task<FeedInfo> TryToParseFeedFromContentAsync(string content, CancellationToken cancellationToken = default(CancellationToken))
+        async Task<FeedInfo> TryToParseFeedFromContentAsync(string content, bool parseItems, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var feed = FeedParser.TryCreateFeedParser(content)?.TryParseFeed();
+            var feed = FeedParser.TryCreateFeedParser(content)?.TryParseFeed(parseItems);
             if (feed != null)
             {
                 if (string.IsNullOrEmpty(feed.IconUri))
@@ -439,7 +440,7 @@ namespace FeedReader.ServerCore.Services
                     return;
                 }
 
-                var parsedFeed = await TryToParseFeedFromContentAsync(content, cancellationToken);
+                var parsedFeed = await TryToParseFeedFromContentAsync(content, parseItems: true, cancellationToken);
                 if (parsedFeed == null)
                 {
                     feed.LastParseError = "Parse feed failed.";
@@ -478,10 +479,10 @@ namespace FeedReader.ServerCore.Services
                 feed.TotalFavorites = await db.Favorites.CountAsync(f => f.FeedInfoId == feed.Id);
                 feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
                 feed.TotalPosts = await db.FeedItems.Where(f => f.FeedId == feed.Id).CountAsync();
-                
+
                 // Save to db.
                 await db.SaveChangesAsync(cancellationToken);
-                
+                                
                 DateTime endTime = DateTime.Now;
                 Logger.LogInformation($"Refresh feed: {feed.Uri} finished at {endTime}, elasped {(endTime - starTime).TotalSeconds} seconds");
             }

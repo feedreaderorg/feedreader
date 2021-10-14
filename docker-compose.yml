@@ -12,7 +12,7 @@ services:
       - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
       - FeedReaderJwtSecret=fake-feedreader-jwt-secret
     ports:
-        - 80:80
+        - 8089:80
 
   taskserver:
     image: feedreader-taskserver

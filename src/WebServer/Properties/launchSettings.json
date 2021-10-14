@@ -2,7 +2,7 @@
     "profiles": {
         "WebgServer": {
             "commandName": "Project",
-            "applicationUrl": "http://localhost",
+            "applicationUrl": "http://localhost:8089",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }

@@ -42,6 +42,8 @@ namespace FeedReader.WebClient.Models
 
         public List<Feed> SubscribedFeeds { get; set; } = new List<Feed>();
 
+        public List<Feed> AllFeeds { get; set; } = new List<Feed>();
+
         public WebServerApiClient WebServerApi { get; set; }
 
         [Inject]
@@ -144,8 +146,12 @@ namespace FeedReader.WebClient.Models
             }
             else
             {
-                // TODO: return feed which is not subscribed by this user.
-                return SubscribedFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
+                var feed = SubscribedFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
+                if (feed == null)
+                {
+                    feed = AllFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
+                }
+                return feed;
             }
         }
 
@@ -233,11 +239,25 @@ namespace FeedReader.WebClient.Models
                 {
                     // Update existed feed.
                     f.UpdateFromProtoclFeedInfo(feed);
+                    f.IsSubscribed = true;
                 }
                 else
                 {
                     // Add new feed.
-                    SubscribedFeeds.Add(feed.ToModelFeed());
+                    var tmp = feed.ToModelFeed();
+                    tmp.IsSubscribed = true;
+                    SubscribedFeeds.Add(tmp);
+                }
+
+                // Save a copy in all feeds.
+                f = AllFeeds.FirstOrDefault(f => f.Id == feed.Id);
+                if (f != null)
+                {
+                    f.UpdateFromProtoclFeedInfo(feed);
+                }
+                else
+                {
+                    AllFeeds.Add(feed.ToModelFeed());
                 }
             }
 

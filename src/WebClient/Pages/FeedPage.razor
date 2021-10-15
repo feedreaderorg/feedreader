@@ -10,6 +10,14 @@
         @if (Feed != null)
         {
             <h1>@Feed.Name</h1>
+            @if (Feed.IsSubscribed)
+            {
+                <ActionButton Text="Unsubscribe" OnClick="Unsubscribe"/>
+            }
+            else
+            {
+                <ActionButton Text="Subscribe" OnClick="Subscribe"/>
+            }
         }
         else
         {
@@ -70,6 +78,9 @@
 
 @code
 {
+    [CascadingParameter]
+    User CurrentUser { get; set; }
+
     [Parameter]
     public string FeedItemsCategory { get; set; }
 
@@ -146,5 +157,15 @@
     void OnFeedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
     {
         StateHasChanged();
+    }
+
+    async Task Unsubscribe()
+    {
+        await CurrentUser.UnsubscribeFeedAsync(Feed);
+    }
+
+    async Task Subscribe()
+    {
+        await CurrentUser.SubscribeFeedAsync(Feed);
     }
 }

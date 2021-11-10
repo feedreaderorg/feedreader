@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>FeedReader.Share</AssemblyName>
     <RootNamespace>FeedReader.Share</RootNamespace>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Protobuf Include="Protocols\AuthServerApi.proto" GrpcServices="Both" />
@@ -11,9 +11,9 @@
     <Protobuf Include="Protocols\WebServerApi.proto" GrpcServices="Both" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.17.3" />
-    <PackageReference Include="Grpc.Core" Version="2.39.1" />
-    <PackageReference Include="Grpc.Tools" Version="2.39.1">
+    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
+    <PackageReference Include="Grpc.Core" Version="2.41.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.41.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

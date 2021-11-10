@@ -2,12 +2,12 @@
     <PropertyGroup>
         <AssemblyName>FeedReader.WebServer</AssemblyName>
         <RootNamespace>FeedReader.WebServer</RootNamespace>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
-      <PackageReference Include="Grpc.AspNetCore.Web" Version="2.39.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.9" />
+      <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+      <PackageReference Include="Grpc.AspNetCore.Web" Version="2.40.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ServerCore\ServerCore.csproj" />

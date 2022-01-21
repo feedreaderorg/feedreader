@@ -5,11 +5,23 @@
     <base href="/"/>
     <link rel="icon" href="img/logo.64x64.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" type="text/css" rel="stylesheet">
     <link href="FeedReader.WebClient.styles.css" type="text/css" rel="stylesheet">
 </head>
-<body>
-    <div id="app"></div>
+<body class="d-flex">
+    <div id="app" class="d-flex flex-grow-1">
+        <div class="d-flex flex-grow-1 align-items-center">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <div class="fs-4 mb-2">Loading...</div>
+                <div class="progress">
+                    <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>

@@ -56,17 +56,93 @@
 		public bool IsSelected { get; set; }
 	}
 
-	List<ActionItem> ActionItems { get; set; } = new List<ActionItem>();
+	List<ActionItem> ActionItems { get; set; }
 
 	List<ActionItem> UserSubscribedFeeds { get; set; }
 
-	List<ActionItem> FeedItemCategories { get; set; }
+	List<ActionItem> FeedItemCategories { get; } = new List<ActionItem>()
+	{
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/culture",
+			ImgUri = "img/culture.png",
+			Name = "Culture"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/economy",
+			ImgUri = "img/economy.png",
+			Name = "Economy"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/education",
+			ImgUri = "img/education.png",
+			Name = "Education"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/entertainment",
+			ImgUri = "img/entertainment.png",
+			Name = "Entertainment"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/health",
+			ImgUri = "img/health.png",
+			Name = "Health"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/politic",
+			ImgUri = "img/politic.png",
+			Name = "Politic"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/science",
+			ImgUri = "img/science.png",
+			Name = "Science"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/sociality",
+			ImgUri = "img/sociality.png",
+			Name = "sociality"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/sport",
+			ImgUri = "img/sport.png",
+			Name = "Sport"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/technology",
+			ImgUri = "img/technology.png",
+			Name = "Technology"
+		},
+		new ActionItem()
+		{
+			TargetUri = "/feed/category/other",
+			ImgUri = "img/other.png",
+			Name = "Other"
+		}
+	};
 
 	[CascadingParameter]
-    public User CurrentUser { get; set; }
+	public User CurrentUser { get; set; }
 
 	protected override void OnInitialized()
 	{
+		NavigationManager.LocationChanged += OnLocationChanged;
+		OnLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, false));
+	}
+
+	protected override void OnParametersSet()
+	{
+		ActionItems = new List<ActionItem>();
+
 		ActionItems.Add(new ActionItem()
 		{
 			TargetUri = "/",
@@ -113,79 +189,6 @@
 			ImgUri = f.IconUri,
 			Name = f.Name
 		}).ToList();
-
-		FeedItemCategories = new List<ActionItem>()
-		{
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/culture",
-				ImgUri = "img/culture.png",
-				Name = "Culture"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/economy",
-				ImgUri = "img/economy.png",
-				Name = "Economy"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/education",
-				ImgUri = "img/education.png",
-				Name = "Education"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/entertainment",
-				ImgUri = "img/entertainment.png",
-				Name = "Entertainment"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/health",
-				ImgUri = "img/health.png",
-				Name = "Health"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/politic",
-				ImgUri = "img/politic.png",
-				Name = "Politic"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/science",
-				ImgUri = "img/science.png",
-				Name = "Science"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/sociality",
-				ImgUri = "img/sociality.png",
-				Name = "sociality"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/sport",
-				ImgUri = "img/sport.png",
-				Name = "Sport"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/technology",
-				ImgUri = "img/technology.png",
-				Name = "Technology"
-			},
-			new ActionItem()
-			{
-				TargetUri = "/feed/category/other",
-				ImgUri = "img/other.png",
-				Name = "Other"
-			}
-		};
-
-		NavigationManager.LocationChanged += OnLocationChanged;
-		OnLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, false));
 	}
 
 	public void Dispose()
@@ -197,18 +200,28 @@
 	{
 		var realPath = NavigationManager.ToBaseRelativePath(args.Location);
 		var path = new PathString($"/{realPath}");
-		foreach (var item in ActionItems)
+
+		if (ActionItems != null)
 		{
-			item.IsSelected = path.StartsWithSegments(item.TargetUri);
+			foreach (var item in ActionItems)
+			{
+				item.IsSelected = path.StartsWithSegments(item.TargetUri);
+			}
 		}
-		foreach (var item in UserSubscribedFeeds)
+
+		if (UserSubscribedFeeds != null)
 		{
-			item.IsSelected = path.StartsWithSegments(item.TargetUri);
+			foreach (var item in UserSubscribedFeeds)
+			{
+				item.IsSelected = path.StartsWithSegments(item.TargetUri);
+			}
 		}
+
 		foreach (var item in FeedItemCategories)
 		{
 			item.IsSelected = path.StartsWithSegments(item.TargetUri);
 		}
+
 		StateHasChanged();
 	}
 }

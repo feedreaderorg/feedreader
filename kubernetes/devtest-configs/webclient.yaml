@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webclient
+  namespace: feedreader-devtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webclient
+  template:
+    metadata:
+      labels:
+        app: webclient
+    spec:
+      imagePullSecrets:
+      - name: xyb-private-docker-registry
+      containers:
+      - name: webclient
+        image: docker.xyb.name/feedreader-devtest/webclient:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: Blazor_Environment
+          value: devtest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webclient
+  namespace: feedreader-devtest
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: webclient
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webclient
+  namespace: feedreader-devtest
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+  - hosts:
+    - devtest.feedreader.org
+    secretName: webclient-https-secret
+  rules:
+  - host: devtest.feedreader.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: webclient
+            port:
+              number: 80

@@ -1,0 +1,7 @@
+server {
+    location / {
+        root /app/wwwroot;
+        add_header "Blazor-Environment" ${Blazor_Environment};
+        try_files $uri $uri/ /index.html =404;
+    }
+}

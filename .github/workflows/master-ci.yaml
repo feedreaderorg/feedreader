@@ -9,7 +9,22 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup DotNet Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Publish
+        run: dotnet publish -c Release --no-build
 
       - name: Setup Docker Build
         uses: docker/setup-buildx-action@v1
@@ -21,12 +36,20 @@ jobs:
           username: ${{ secrets.DOCKER_REPOSITORY_USERNAME }}
           password: ${{ secrets.DOCKER_REPOSITORY_PASSWORD }}
 
+      - name: Build And Push Docker Image for webclient
+        uses: docker/build-push-action@v2
+        with:
+          context: src/WebClient/
+          file: src/WebClient/Dockerfile
+          tags: docker.xyb.name/feedreader-devtest/webclient:latest,docker.xyb.name/feedreader-devtest/webclient:master-${{ github.sha }}
+          push: true
+
       - name: Build And Push Docker Image for webserver
         uses: docker/build-push-action@v2
         with:
           context: .
           file: src/WebServer/Dockerfile
-          tags: docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
+          tags: docker.xyb.name/feedreader-devtest/webserver:latest,docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
           push: true
 
       - name: Build And Push Docker Image for taskserver
@@ -62,7 +85,10 @@ jobs:
         with:
           namespace: feedreader-devtest
           manifests: |
+            kubernetes/devtest-configs/webclient.yaml
+            kubernetes/devtest-configs/webserver.yaml
             kubernetes/devtest.yaml
           images: |
+            docker.xyb.name/feedreader-devtest/webclient:master-${{ github.sha }}
             docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
             docker.xyb.name/feedreader-devtest/messageserver:master-${{ github.sha }}

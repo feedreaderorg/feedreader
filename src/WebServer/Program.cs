@@ -45,6 +45,14 @@ namespace FeedReader.WebServer
 
             var grpc = services.AddGrpc();
             grpc.AddServiceOptions<WebServerApi>(configure => configure.Interceptors.Add<WebServerApiInterceptor>());
+
+            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+            }));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,10 +93,12 @@ namespace FeedReader.WebServer
 
             app.UseGrpcWeb();
 
+            app.UseCors();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<AuthServerApi>().EnableGrpcWeb();
-                endpoints.MapGrpcService<WebServerApi>().EnableGrpcWeb();
+                endpoints.MapGrpcService<AuthServerApi>().EnableGrpcWeb().RequireCors("AllowAll");
+                endpoints.MapGrpcService<WebServerApi>().EnableGrpcWeb().RequireCors("AllowAll");
                 endpoints.MapFallbackToFile("/index.html");
             });
         }

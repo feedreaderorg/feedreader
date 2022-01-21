@@ -30,7 +30,7 @@ namespace FeedReader.WebClient
             }
 
             // Hook up current user state changed.
-            App.CurrentUser.SetServerAddress(builder.HostEnvironment.BaseAddress);
+            App.CurrentUser.SetServerAddress(builder.Configuration["api_server_address"]);
             App.CurrentUser.OnStateChanged += async (s, e) => await js.InvokeAsync<string>("localStorage.setItem", "current-user", JsonConvert.SerializeObject(App.CurrentUser));
             await builder.Build().RunAsync();
         }

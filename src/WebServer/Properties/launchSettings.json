@@ -1,8 +1,8 @@
 {
     "profiles": {
-        "WebgServer": {
+        "WebServer": {
             "commandName": "Project",
-            "applicationUrl": "http://localhost:8089",
+            "applicationUrl": "http://localhost:5001",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }

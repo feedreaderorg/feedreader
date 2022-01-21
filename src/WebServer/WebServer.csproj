@@ -11,6 +11,5 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ServerCore\ServerCore.csproj" />
-      <ProjectReference Include="..\WebClient\WebClient.csproj" />
     </ItemGroup>
 </Project>

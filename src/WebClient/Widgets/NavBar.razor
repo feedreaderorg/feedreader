@@ -3,12 +3,7 @@
         <img src="img/logo.svg"/>
         <span>FeedReader</span>
     </a>
-    <div class="toolbar">
-        @if (CurrentUser.Role != UserRole.Guest)
-        {
-            <a href="/profile"><img src="@CurrentUser.AvatarUri" /></a>
-        }
-    </div>
+    <div class="toolbar"></div>
 </div>
 
 @code

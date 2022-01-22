@@ -1,4 +1,5 @@
 ﻿@page "/add"
+@inherits LoginRequiredPageBase
 @layout LeftSideBarLayout
 
 <div class="add-page">
@@ -60,9 +61,6 @@
 
 @code
 {
-	[CascadingParameter]
-	User CurrentUser { get; set; }
-
 	List<Feed> Feeds { get; set; }
 
 	int SearchingCount { get; set; }

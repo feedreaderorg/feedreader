@@ -3,7 +3,7 @@
 @page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
 @implements IDisposable
-@inject NavigationManager NavigationManager
+@inherits LoginRequiredPageBase
 
 <div class="feed-page">
     <div class="page-header">
@@ -78,9 +78,6 @@
 
 @code
 {
-    [CascadingParameter]
-    User CurrentUser { get; set; }
-
     [Parameter]
     public string FeedItemsCategory { get; set; }
 

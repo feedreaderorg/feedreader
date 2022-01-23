@@ -1,17 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal
 WORKDIR /app
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
-WORKDIR /src
-COPY . .
-WORKDIR /src/src/WebServer
-RUN dotnet build -c Release -o /app/build
-
-FROM build AS publish
-WORKDIR /src/src/WebServer
-RUN dotnet publish -c Release -o /app/publish
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
+COPY bin/Release/net6.0/publish /app
 ENTRYPOINT ["dotnet", "FeedReader.WebServer.dll"]

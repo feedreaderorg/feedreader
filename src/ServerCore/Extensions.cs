@@ -156,5 +156,20 @@ namespace FeedReader.ServerCore
                 context.Entry(entity).Property(propName).IsModified = true;
             }
         }
+
+        public static Uri GetHttpsVersion(this Uri uri)
+        {
+            if (uri.Scheme == Uri.UriSchemeHttp && uri.IsDefaultPort)
+            {
+                var ub = new UriBuilder(uri);
+                ub.Scheme = Uri.UriSchemeHttps;
+                ub.Port = 443;
+                return ub.Uri;
+            }
+            else
+            {
+                return uri;
+            }
+        }
     }
 }

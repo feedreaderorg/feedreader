@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: feedreader-devtest-taskserver
+  name: taskserver
+  namespace: feedreader-devtest
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: feedreader-devtest-taskserver
+      app: taskserver
   template:
     metadata:
       labels:
-        app: feedreader-devtest-taskserver
+        app: taskserver
     spec:
       imagePullSecrets:
       - name: xyb-private-docker-registry
       containers:
-      - name: feedreader-devtest-taskserver
-        image: docker.xyb.name/feedreader-devtest/taskserver
-        ports:
-        - containerPort: 80
+      - name: taskserver
+        image: docker.xyb.name/feedreader-devtest/taskserver:latest
+        imagePullPolicy: Always
         env:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:

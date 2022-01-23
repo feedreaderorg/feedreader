@@ -1,6 +1,5 @@
 using FeedReader.ServerCore.Models;
 using FeedReader.ServerCore.Processors;
-using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace FeedReader.ServerCore.Services
 {
@@ -27,6 +25,7 @@ namespace FeedReader.ServerCore.Services
         string TextClassificationServerAddress { get; }
         int TextClassificationBatchSize { get; }
         string[] TextClassificationLabels { get; }
+        private FeedProcessor FeedProcessor { get; }
 
         public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient, ILogger<FeedService> logger, IConfiguration configuration)
         {
@@ -36,6 +35,7 @@ namespace FeedReader.ServerCore.Services
             TextClassificationServerAddress = configuration["TextClassificationServer"];
             TextClassificationBatchSize = int.Parse(configuration["TextClassificationBatchSize"] ?? "0");
             TextClassificationLabels = Enum.GetValues(typeof(FeedItemCategories)).Cast<FeedItemCategories>().Select(e => e.ToString().ToLower()).ToArray();
+            FeedProcessor = new FeedProcessor(HttpClient);
         }
 
         public async Task<List<FeedInfo>> DiscoverFeedsAsync(string query)
@@ -50,14 +50,11 @@ namespace FeedReader.ServerCore.Services
             if (Uri.TryCreate(query, UriKind.Absolute, out uri))
             {
                 // Try to get from https if this is http.
-                var httpsUri = GetHttpsUri(uri);
-                if (httpsUri != null)
+                var httpsUri = uri.GetHttpsVersion();
+                await TryToDiscoverFeedsFromUriAsync(httpsUri, feeds);
+                if (feeds.Count > 0)
                 {
-                    await TryToDiscoverFeedsFromUriAsync(httpsUri, feeds);
-                    if (feeds.Count > 0)
-                    {
-                        return feeds;
-                    }
+                    return feeds;
                 }
 
                 if (httpsUri != uri)
@@ -258,7 +255,7 @@ namespace FeedReader.ServerCore.Services
                 return;
             }
 
-            var feed = await TryToParseFeedFromContentAsync(content, parseItems: false);
+            var feed = await FeedProcessor.TryToParseFeedFromContent(content, parseItems: false);
             if (feed != null)
             {
                 feed.Id = Guid.NewGuid();
@@ -347,77 +344,11 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        async Task<FeedInfo> TryToParseFeedFromContentAsync(string content, bool parseItems, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var feed = FeedParser.TryCreateFeedParser(content)?.TryParseFeed(parseItems);
-            if (feed != null)
-            {
-                if (string.IsNullOrEmpty(feed.IconUri))
-                {
-                    Uri websiteUri;
-                    if (Uri.TryCreate(feed.WebsiteLink, UriKind.Absolute, out websiteUri))
-                    {
-                        var httpsUri = GetHttpsUri(websiteUri);
-                        if (httpsUri != null)
-                        {
-                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(httpsUri, cancellationToken);
-                        }
-
-                        if (string.IsNullOrEmpty(feed.IconUri) && httpsUri != websiteUri)
-                        {
-                            feed.IconUri = await TryToGetIconUriFromWebsiteUriAsync(websiteUri, cancellationToken);
-                        }
-                    }
-                }
-            }
-            return feed;
-        }
+        
 
         Task TryToDiscoverFeedsFromHtmlAsync(string content, List<FeedInfo> feeds)
         {
             return Task.CompletedTask;
-        }
-
-        async Task<string> TryToGetIconUriFromWebsiteUriAsync(Uri uri, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var link = uri.ToString();
-                var web = new HtmlWeb();
-                var html = await web.LoadFromWebAsync(link, cancellationToken);
-                var el = html.DocumentNode.SelectSingleNode("/html/head/link[@rel='apple-touch-icon' and @href]") ??
-                         html.DocumentNode.SelectSingleNode("/html/head/link[@rel='shortcut icon' and @href]") ??
-                         html.DocumentNode.SelectSingleNode("/html/head/link[@rel='icon' and @href]");
-                if (el != null)
-                {
-                    var uriBuilder = new UriBuilder(link);
-                    uriBuilder.Path = el.Attributes["href"].Value;
-                    return uriBuilder.ToString();
-                }
-            }
-            catch
-            {
-            }
-            return null;
-        }
-
-        Uri GetHttpsUri(Uri uri)
-        {
-            if (uri.Scheme == Uri.UriSchemeHttps)
-            {
-                return uri;
-            }
-            else if (uri.Scheme == Uri.UriSchemeHttp && uri.IsDefaultPort)
-            {
-                var ub = new UriBuilder(uri);
-                ub.Scheme = Uri.UriSchemeHttps;
-                ub.Port = 443;
-                return ub.Uri;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         async Task RefreshFeedsAsync(Guid feedId, CancellationToken cancellationToken)
@@ -440,7 +371,7 @@ namespace FeedReader.ServerCore.Services
                     return;
                 }
 
-                var parsedFeed = await TryToParseFeedFromContentAsync(content, parseItems: true, cancellationToken);
+                var parsedFeed = await FeedProcessor.TryToParseFeedFromContent(content, parseItems: true, cancellationToken);
                 if (parsedFeed == null)
                 {
                     feed.LastParseError = "Parse feed failed.";

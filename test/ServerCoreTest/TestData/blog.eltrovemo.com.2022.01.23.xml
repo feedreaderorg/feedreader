@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- Download url: https://blog.eltrovemo.com/feed/ -->
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+	<channel>
+		<title>Video Breakthroughs</title>
+		<atom:link href="https://blog.eltrovemo.com/feed/" rel="self" type="application/rss+xml" />
+		<link>https://blog.eltrovemo.com</link>
+		<description>Innovation explorations by Nicolas Weil</description>
+		<lastBuildDate>Mon, 15 Nov 2021 18:30:50 +0000</lastBuildDate>
+		<language>en-US</language>
+		<sy:updatePeriod>
+			hourly
+		</sy:updatePeriod>
+		<sy:updateFrequency>
+			1
+		</sy:updateFrequency>
+
+		<item>
+			<title>Core technologies for streaming workflows, in 2021 and beyond</title>
+			<link>https://blog.eltrovemo.com/1912/core-technologies-for-streaming-workflows-in-2021-and-beyond/</link>
+			<comments>https://blog.eltrovemo.com/1912/core-technologies-for-streaming-workflows-in-2021-and-beyond/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Wed, 08 Sep 2021 03:33:00 +0000</pubDate>
+			<category><![CDATA[CDN]]></category>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[Encoding]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Players]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Standards]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[5G-MBS]]></category>
+			<category><![CDATA[A/B Watermarking]]></category>
+			<category><![CDATA[AV1]]></category>
+			<category><![CDATA[CMAF]]></category>
+			<category><![CDATA[CMCD]]></category>
+			<category><![CDATA[CMSD]]></category>
+			<category><![CDATA[Content Steering]]></category>
+			<category><![CDATA[CPIX]]></category>
+			<category><![CDATA[DVB-MABR]]></category>
+			<category><![CDATA[EME]]></category>
+			<category><![CDATA[HESP]]></category>
+			<category><![CDATA[Ingest]]></category>
+			<category><![CDATA[Interstitials]]></category>
+			<category><![CDATA[JPEG XS]]></category>
+			<category><![CDATA[LCEVC]]></category>
+			<category><![CDATA[LL-DASH]]></category>
+			<category><![CDATA[LL-HLS]]></category>
+			<category><![CDATA[Low Latency]]></category>
+			<category><![CDATA[MPEG-H]]></category>
+			<category><![CDATA[MSE]]></category>
+			<category><![CDATA[Multi-CDN]]></category>
+			<category><![CDATA[Open Caching]]></category>
+			<category><![CDATA[Patch Manifests]]></category>
+			<category><![CDATA[QUIC]]></category>
+			<category><![CDATA[RIST]]></category>
+			<category><![CDATA[SGAI]]></category>
+			<category><![CDATA[SRT]]></category>
+			<category><![CDATA[Timed Metadata Track]]></category>
+			<category><![CDATA[VVC]]></category>
+			<guid isPermaLink="false">https://blog.eltrovemo.com/?p=1912</guid>
+
+			<description><![CDATA[In 2016, CMAF standardization was just beginning, carrying the promise of simplified workflows and improved CDN caching efficiency. Where are we now with this industry change? Which other major streaming technologies emerged at the same time? Which ones will be crucial for the next five years to come? Let's take a look at it...]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1912/core-technologies-for-streaming-workflows-in-2021-and-beyond/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>EBU BroadThinking 2016 &#8211; The Year When Broadcasters Became Multidisciplinary Scientists</title>
+			<link>https://blog.eltrovemo.com/1865/ebu-broadthinking-2016-the-year-when-broadcasters-became-multidisciplinary-scientists/</link>
+			<comments>https://blog.eltrovemo.com/1865/ebu-broadthinking-2016-the-year-when-broadcasters-became-multidisciplinary-scientists/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Thu, 27 Oct 2016 23:20:50 +0000</pubDate>
+			<category><![CDATA[Broadcast]]></category>
+			<category><![CDATA[Open Source]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Players]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[CMAF]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[HbbTV]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[Platform]]></category>
+			<category><![CDATA[recommendation]]></category>
+			<category><![CDATA[SAND]]></category>
+			<category><![CDATA[subtitling]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1865</guid>
+
+			<description><![CDATA[At EBU BroadThinking 2016, we conscientized that producing a modern multiscreen video experience isn't just about embracing the most mature emerging technologies, year after year, in a smooth granular evolution. Nowadays it actually requires mastering a lot of expertise that are less and less native to broadcasters, all kinds of high-end activities like big data analysis, complex IT/network deployments, fine-grain ABR heuristics mastering, panoramic video, user behavior analysis, security policies enforcement or cloud applications development [and a lot more].]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1865/ebu-broadthinking-2016-the-year-when-broadcasters-became-multidisciplinary-scientists/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>Open Media day @ FOSDEM&#8217;16</title>
+			<link>https://blog.eltrovemo.com/1795/open-media-day-fosdem16/</link>
+			<comments>https://blog.eltrovemo.com/1795/open-media-day-fosdem16/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Tue, 09 Feb 2016 21:09:20 +0000</pubDate>
+			<category><![CDATA[Broadcast]]></category>
+			<category><![CDATA[Frameworks]]></category>
+			<category><![CDATA[Open Source]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Players]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[client-side repackaging]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[EBU-TT-D]]></category>
+			<category><![CDATA[FOSDEM]]></category>
+			<category><![CDATA[frameworks]]></category>
+			<category><![CDATA[HEVC]]></category>
+			<category><![CDATA[javascript]]></category>
+			<category><![CDATA[MP4]]></category>
+			<category><![CDATA[open-source]]></category>
+			<category><![CDATA[production tools]]></category>
+			<category><![CDATA[subtitles]]></category>
+			<category><![CDATA[video mixing]]></category>
+			<category><![CDATA[video players]]></category>
+			<category><![CDATA[workflow]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1795</guid>
+
+			<description>
+				<![CDATA[For those who don't know it, FOSDEM is one of the legendary European events of the open source community, where free beer meets lightning talks, tech lectures and hacking sessions. It's a crowdy 2-days event in Bruxelles, with lots of open source developers having different focuses, from Linux to databases, virtualization, security or programming languages... and of course media! 
+Let's take a look at some OTT &#038; workflow oriented projects that were presented during the Open Media devroom program.]]>
+			</description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1795/open-media-day-fosdem16/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>EBU BroadThinking 2014: Forget Multiscreen, We Are Heading Towards ONE Screen</title>
+			<link>https://blog.eltrovemo.com/1492/ebu-broadthinking-2014/</link>
+			<comments>https://blog.eltrovemo.com/1492/ebu-broadthinking-2014/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Tue, 30 Sep 2014 23:11:15 +0000</pubDate>
+			<category><![CDATA[Broadcast]]></category>
+			<category><![CDATA[CDN]]></category>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[Encoding]]></category>
+			<category><![CDATA[Open Source]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Second-Screen]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[Augmented]]></category>
+			<category><![CDATA[CENC]]></category>
+			<category><![CDATA[cloud]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[HbbTV]]></category>
+			<category><![CDATA[HEVC]]></category>
+			<category><![CDATA[HTML5]]></category>
+			<category><![CDATA[hybrid]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[QOS]]></category>
+			<category><![CDATA[second-screen]]></category>
+			<category><![CDATA[subtitling]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1492</guid>
+
+			<description><![CDATA[This year the EBU BroadThinking Conference was sounding like a holistic swirl, a milestone in the trend of technology to define sets that are greater than the sum of their parts, through creative evolution. « Where Broadcast Meets BroadBand », you get some interesting fusion effect occurring and diluting the traditional boundaries of the screens, with the handheld devices being part of the big screen experience or extending it rather than trying to scalp it, in an environment where all the devices converge towards a restricted set of standards rather than tracing their own line.]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1492/ebu-broadthinking-2014/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>The new frontiers of OTT delivery: Multicast, P2P &#038; Hybrid</title>
+			<link>https://blog.eltrovemo.com/1336/the-new-frontiers-of-ott-delivery-multicast-p2p-hybrid/</link>
+			<comments>https://blog.eltrovemo.com/1336/the-new-frontiers-of-ott-delivery-multicast-p2p-hybrid/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Sun, 02 Feb 2014 04:45:42 +0000</pubDate>
+			<category><![CDATA[CDN]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[multicast]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[P2P]]></category>
+			<category><![CDATA[UDP]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1336</guid>
+
+			<description><![CDATA[4K streaming, mobile broadcasting for the crowd, generalized delinearization, worldwide video events... #ott delivery is just multiplying the challenges, as customers' expectations are raising each day in terms of video fast-start, instant channel switching, lack of buffer and high frame size/rate - on all devices in all network conditions. To answer those challenges, OTT delivery answer today is basically more unicast sessions, more servers, more peering - and less and less guarantee of satisfying end-user experience as long as there is no specific end-to-end paid agreement to guarantee that the path will be provisioned from the origin server up to the video device. Even in this ideal scheme, the device might still suffer from poor wireless conditions which jeopardize the experience. So, how do we deal with all this stack of potential problems: do we stick to the aging receipts, rely blindly on Moore's law and perpetuate a hopeless #cdn weapons race? Or do we try to find smarter ways to make the OTT growth reach a sustainable delivery model ?]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1336/the-new-frontiers-of-ott-delivery-multicast-p2p-hybrid/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>[IBC 2013 Report] MPEG-DASH Ecosystem Status</title>
+			<link>https://blog.eltrovemo.com/1218/mpeg-dash-ecosystem-status/</link>
+			<comments>https://blog.eltrovemo.com/1218/mpeg-dash-ecosystem-status/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Tue, 01 Oct 2013 22:19:09 +0000</pubDate>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[Encoding]]></category>
+			<category><![CDATA[Frameworks]]></category>
+			<category><![CDATA[Open Source]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[cloud]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[flash]]></category>
+			<category><![CDATA[HEVC]]></category>
+			<category><![CDATA[javascript]]></category>
+			<category><![CDATA[QOS]]></category>
+			<category><![CDATA[server-side repackaging]]></category>
+			<category><![CDATA[video encoders]]></category>
+			<category><![CDATA[video servers]]></category>
+			<category><![CDATA[workflow]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1218</guid>
+
+			<description>
+				<![CDATA[While most of IBC's buzz was generated by the shiny #hevc + 4K couple, it was a good occasion to stand back from the hype and measure how one of the most important video standards (at least for the #ott world) had spread over the industry since last year. MPEG-DASH is not sexy (let's remember that it's basically a collection of XML schemes), it's a bit boring (as it's usually demonstrated with the Big Buck Bunny that you saw not less than 2.000 times) and it's complex - but once you go past those defaults, you might find that its potential to simplify your workflows and boost the profitability of your video service is high...
+And that's precisely what the industry has finally understood: video distributors want to streamline their workflows and save their storage budgets by reducing the number of output formats, they search for ways to build long term strategies with evolutive solutions - and all of this implies rolling away from proprietary #abr solutions like Smooth Streaming, HLS, HDS and the now defunct Widevine WVM proprietary packaging format (rest in peace), DASH's first victim.]]>
+			</description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1218/mpeg-dash-ecosystem-status/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>[IBC 2013 Talk] The Future of OTT Platforms</title>
+			<link>https://blog.eltrovemo.com/1178/the-future-of-ott-platforms/</link>
+			<comments>https://blog.eltrovemo.com/1178/the-future-of-ott-platforms/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Wed, 18 Sep 2013 22:03:45 +0000</pubDate>
+			<category><![CDATA[Frameworks]]></category>
+			<category><![CDATA[Open Source]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[cloud]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[FIMS]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[server-side repackaging]]></category>
+			<category><![CDATA[SOA]]></category>
+			<category><![CDATA[transcoding farms]]></category>
+			<category><![CDATA[video encoders]]></category>
+			<category><![CDATA[workflow]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1178</guid>
+
+			<description><![CDATA[Today many content providers must change of OTT platform after the first implementation of their service (or even before first deployment) because it's a dead end : either the platform is deceptive in terms of overall features coverage or missing sub-features, or it doesn't evolve quickly enough compared to the competitive pressure of premium OTT markets. And we can't really blame the content providers for this, as it's always a very difficult decision to take when you have to choose your OTT platform service/solution provider: you are pressured by the competition and you need a fast time-to-market, and in the same time you would like to ensure long-term platform evolution capacity and technical control on it. Usually you end up with the solution offering the quickest time-to-market - or pretending so. You also end up with feature zones unfinished or finally covered with the help a third party solution - thus clearly challenging the idea of decent one-stop-shop OTT platform provider...]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1178/the-future-of-ott-platforms/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+		<item>
+			<title>EBU BroadThinking 2013 &#8211; the state of the art rendezvous for OTT and Hybrid TV // DAY 2 &#038; DEMOS Report</title>
+			<link>https://blog.eltrovemo.com/1081/ebu-broadthinking-2013-the-state-of-the-art-rendez-vous-for-ott-and-hybrid-tv-day-2-demos-report/</link>
+			<comments>https://blog.eltrovemo.com/1081/ebu-broadthinking-2013-the-state-of-the-art-rendez-vous-for-ott-and-hybrid-tv-day-2-demos-report/#comments</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Mon, 01 Apr 2013 21:01:28 +0000</pubDate>
+			<category><![CDATA[Broadcast]]></category>
+			<category><![CDATA[CDN]]></category>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[Encoding]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Second-Screen]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[broadcast workflow]]></category>
+			<category><![CDATA[cloud]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[hybrid]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[QOS]]></category>
+			<category><![CDATA[second-screen]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1081</guid>
+
+			<description><![CDATA[Nothing was more welcome after day 1 of EBU BroadThinking 2013 than a good night of sleep, in order to reset the tech hype counters and make some mental room for two new sessions on broadcasters' CDNs and the latest advances of #hybrid platforms. What would be the best broadcasters' CDN architectures today, what would be their smartest (green) evolutions, would CDN-Federation standards finally bring interop reality over hopes, what would be the most advanced deployments and future of HbbTV, how it compares with YouView in the UK : day 2 agenda was looking quite attractive - and indeed the presentations were packed with valuable informations and experience feedbacks.]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1081/ebu-broadthinking-2013-the-state-of-the-art-rendez-vous-for-ott-and-hybrid-tv-day-2-demos-report/feed/</wfw:commentRss>
+			<slash:comments>2</slash:comments>
+
+
+		</item>
+		<item>
+			<title>EBU BroadThinking 2013 &#8211; the state of the art rendezvous for OTT and Hybrid TV // DAY 1 Report</title>
+			<link>https://blog.eltrovemo.com/1015/ebu-broadthinking-2013-the-state-of-the-art-rendez-vous-for-ott-and-hybrid-day-1-report/</link>
+			<comments>https://blog.eltrovemo.com/1015/ebu-broadthinking-2013-the-state-of-the-art-rendez-vous-for-ott-and-hybrid-day-1-report/#comments</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Sat, 30 Mar 2013 17:18:51 +0000</pubDate>
+			<category><![CDATA[Broadcast]]></category>
+			<category><![CDATA[CDN]]></category>
+			<category><![CDATA[Curations]]></category>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[Encoding]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Second-Screen]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[broadcast workflow]]></category>
+			<category><![CDATA[cloud]]></category>
+			<category><![CDATA[CUDA]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[hybrid]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[QOS]]></category>
+			<category><![CDATA[server-side repackaging]]></category>
+			<category><![CDATA[transcoding farms]]></category>
+			<category><![CDATA[workflow]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=1015</guid>
+
+			<description>
+				<![CDATA[Geneva in late March doesn't feel as wild as a Las Vegas boulevard, but still there was a reasonable amount of gaming excitement at the EBU headquarters, where several events were following each other, beginning with a #dash Interoperability Forum meeting which was closely followed by the BroadThinking event, where industry actors and broadcasters come to show off their latest implementations advances and/or share the results of their real-life deployments or research studies. A good way of managing the transition between TV Connect and NAB...
+Where Broadcast meets Broadband : that's the promise of the EBU's hybrid event which flies between industry competition, standardization efforts and broadcasters' realpolitik - all wrapped in a warm and funny ambiance provided by the various speakers and the EBU team. The 2013 edition was a major success because it allowed the participants to get a rather good idea of the general trends of the industry, and at the same time to go deep in technology when needed, while having opportunities to discover edge tech demos on the lobby attending the conference room.]]>
+			</description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/1015/ebu-broadthinking-2013-the-state-of-the-art-rendez-vous-for-ott-and-hybrid-day-1-report/feed/</wfw:commentRss>
+			<slash:comments>2</slash:comments>
+
+
+		</item>
+		<item>
+			<title>Player, encoding &#038; repackaging strategies for multiscreen OTT projects</title>
+			<link>https://blog.eltrovemo.com/969/player-encoding-strategies-for-your-multiscreen-diffusion-projects/</link>
+			<comments>https://blog.eltrovemo.com/969/player-encoding-strategies-for-your-multiscreen-diffusion-projects/#respond</comments>
+
+			<dc:creator><![CDATA[Nicolas Weil]]></dc:creator>
+			<pubDate>Sun, 03 Feb 2013 19:03:15 +0000</pubDate>
+			<category><![CDATA[DRM]]></category>
+			<category><![CDATA[Encoding]]></category>
+			<category><![CDATA[OTT]]></category>
+			<category><![CDATA[Repackaging]]></category>
+			<category><![CDATA[Streaming]]></category>
+			<category><![CDATA[Workflow]]></category>
+			<category><![CDATA[ABR]]></category>
+			<category><![CDATA[DASH]]></category>
+			<category><![CDATA[multiscreen]]></category>
+			<category><![CDATA[server-side repackaging]]></category>
+			<guid isPermaLink="false">http://blog.eltrovemo.com/?p=969</guid>
+
+			<description><![CDATA[Last December, I was speaking (in French - did my best for the English subtitles) during a webinar organized by DBee, which topic was "How to address the challenges of #multiscreen diffusion"...]]></description>
+
+			<wfw:commentRss>https://blog.eltrovemo.com/969/player-encoding-strategies-for-your-multiscreen-diffusion-projects/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+
+
+		</item>
+	</channel>
+</rss>

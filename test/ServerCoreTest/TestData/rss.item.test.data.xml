@@ -1,0 +1,22 @@
+﻿<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:admin="http://webns.net/mvcb/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>
+			<![CDATA[ Rss Item Test Data ]]>
+		</title>
+		<link>http://fake.a.b.c</link>
+		<description/>
+		<item>
+			<title>C++20 Concurrency — Part 2: jthreads--Gajendra Gulgulia</title>
+			<link>https://isocpp.org//blog/2022/01/cpp20-concurrency-part-2-jthreads-gajendra-gulgulia</link>
+			<guid>https://isocpp.org//blog/2022/01/cpp20-concurrency-part-2-jthreads-gajendra-gulgulia</guid>
+			<description>
+				<![CDATA[ <p> More convenience.</p> <blockquote> <h3> <a href="https://ggulgulia.medium.com/c-20-concurrency-part-2-jthreads-f531a4d43c2f">C++20 Concurrency &mdash; Part 2: jthreads</a></h3> <p> by&nbsp;Gajendra Gulgulia</p> </blockquote> <p> From the article:</p> <blockquote> <p> In this part of the issue, I&rsquo;ll discuss about the new std::jthread that helps us avoid the boilerplate code for joining the conventional std::thread in the first section. In the end, I&rsquo;ll also mention about the std::swap algorithm&rsquo;s specialization introduced in C++20 to swap the underlying thread handles associated with std::jthread ...</p> </blockquote> ]]>
+			</description>
+			<dc:subject>
+				<![CDATA[ News, Articles & Books, ]]>
+			</dc:subject>
+			<pubDate>Fri, 14 Jan 2022 21:35:22 +0000</pubDate>
+			<dc:creator>Adrien Hamelin</dc:creator>
+		</item>
+	</channel>
+</rss>

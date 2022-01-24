@@ -1,6 +1,7 @@
 ﻿using FeedReader.ServerCore.Models;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -81,6 +82,7 @@ namespace FeedReader.ServerCore.Processors
             {
                 content = HtmlTagRegex.Replace(content, string.Empty);
                 content = WhiteSpaceRegex.Replace(content, " ").Trim();
+                content = WebUtility.HtmlDecode(content);
                 if (content.Length > 500)
                 {
                     content = content.Substring(0, 500);

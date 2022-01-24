@@ -106,6 +106,15 @@ namespace FeedReader.WebServer
             return new SubscribeFeedResponse();
         }
 
+        public override async Task<UpdateFeedSubscriptionResponse> UpdateFeedSubscription(UpdateFeedSubscriptionRequest request, ServerCallContext context)
+        {
+            var userId = GetUserId(context);
+            var feedId = Guid.Parse(request.FeedId);
+            var lastedReadedTime = request.LastReadedTime.ToDateTime();
+            await UserService.UpdateFeedSubscription(userId, feedId, lastedReadedTime);
+            return new UpdateFeedSubscriptionResponse();
+        }
+
         public override async Task SubscribeEvents(Empty request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             var userId = GetUserId(context);

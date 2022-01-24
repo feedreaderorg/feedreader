@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +16,7 @@ namespace FeedReader.WebClient.Models
         public int TotalSubscribers { get; set; }
         public string SiteLink { get; set; }
         public bool IsSubscribed { get; set; }
+        public DateTime LastReadedTime { get; set; }
         public RangeEnabledObservableCollection<FeedItem> FeedItems { get; set; }
         public event EventHandler OnStateChanged;
 
@@ -66,6 +66,10 @@ namespace FeedReader.WebClient.Models
             TotalPosts = feed.TotalPosts;
             TotalSubscribers = feed.TotalSubscribers;
             SiteLink = feed.SiteLink;
+            if (feed.LastReadedTime != null)
+            {
+                LastReadedTime = feed.LastReadedTime.ToDateTime();
+            }
         }
     }
 

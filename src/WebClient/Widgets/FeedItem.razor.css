@@ -38,6 +38,10 @@
     font-weight: 700;
 }
 
+.readed .body .title-and-summary .title {
+    font-weight: normal !important;
+}
+
 .body .title-and-summary .summary {
     margin-top: 8px;
     color: var(--subtext-color);

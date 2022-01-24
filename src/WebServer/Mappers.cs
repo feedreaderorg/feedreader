@@ -20,7 +20,7 @@ namespace FeedReader.WebServer
                 TotalFavorites = f.TotalFavorites,
                 TotalPosts = f.TotalPosts,
                 TotalSubscribers = f.TotalSubscribers,
-                SiteLink = f.WebsiteLink ?? string.Empty
+                SiteLink = f.WebsiteLink ?? string.Empty,
             };
             return feedInfo;
         }
@@ -31,7 +31,11 @@ namespace FeedReader.WebServer
             {
                 Id = u.Id.ToString()
             };
-            user.SubscribedFeeds.AddRange(u.SubscribedFeeds.Select(f => f.Feed.ToProtocolFeedInfo()));
+            user.SubscribedFeeds.AddRange(u.SubscribedFeeds.Select(f => {
+                var feed = f.Feed.ToProtocolFeedInfo();
+                feed.LastReadedTime = f.LastReadedTime.ToProtocolTime();
+                return feed;
+            }));
             return user;
         }
 
@@ -43,11 +47,20 @@ namespace FeedReader.WebServer
                 Id = f.Id.ToString() ?? string.Empty,
                 Link = f.Link ?? string.Empty,
                 PictureUri = (f.PictureUri ?? string.Empty).ToSafeImageUri(),
-                PublishTime = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(f.PublishTime.ToUniversalTime()),
+                PublishTime = f.PublishTime.ToProtocolTime(),
                 Summary = f.Summary ?? string.Empty,
                 Title = f.Title ?? string.Empty,
                 TotalFavorites = f.TotalFavorites
             };
+        }
+
+        public static Google.Protobuf.WellKnownTypes.Timestamp ToProtocolTime(this DateTime f)
+        {
+            if (f == default(DateTime))
+            {
+                f = DateTime.SpecifyKind(f, DateTimeKind.Utc);
+            }
+            return Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(f);
         }
 
         static string ToSafeImageUri(this string str)

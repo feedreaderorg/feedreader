@@ -1,4 +1,4 @@
-﻿<div class="feed-item panel">
+﻿<div class="feed-item panel @(IsReaded ? "readed" : "")">
     <div class="head">
         <span>Posted by</span>
         <img src="@Item.Feed.IconUri"/>
@@ -29,6 +29,8 @@
 {
     [Parameter]
     public Models.FeedItem Item { get; set; }
+
+    private bool IsReaded => Item.Feed.LastReadedTime >= Item.PublishTime;
 
     async Task OnFavorite()
     {

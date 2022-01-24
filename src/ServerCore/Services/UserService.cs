@@ -78,7 +78,7 @@ namespace FeedReader.ServerCore.Services
             {
                 if (await db.FeedSubscriptions.FindAsync(userId, feedId) == null)
                 {
-                    db.FeedSubscriptions.Add(new Models.FeedSubscription()
+                    db.FeedSubscriptions.Add(new FeedSubscription()
                     {
                         UserId = userId,
                         FeedId = feedId,
@@ -137,6 +137,26 @@ namespace FeedReader.ServerCore.Services
                     }
                 }
             }
+        }
+
+        public async Task UpdateFeedSubscription(Guid userId, Guid feedId, DateTime? lastReadedTime)
+        {
+            using (var db = await DbFactory.CreateDbContextAsync())
+            {
+                var subscription = await db.FeedSubscriptions.Include(f => f.Feed).FirstOrDefaultAsync(s => s.UserId == userId && s.FeedId == feedId);
+                if (subscription == null)
+                {
+                    throw new KeyNotFoundException();
+                }
+
+                if (lastReadedTime != null)
+                {
+                    subscription.LastReadedTime = lastReadedTime.Value;
+                }
+
+                await db.SaveChangesAsync();
+            }
+            UserStateUpdated(userId);
         }
 
         async void UserStateUpdated(Guid userId)

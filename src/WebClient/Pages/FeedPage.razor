@@ -13,6 +13,7 @@
             @if (Feed.IsSubscribed)
             {
                 <ActionButton Text="Unsubscribe" OnClick="Unsubscribe"/>
+                <ActionButton Text="Mark as readed" OnClick="MakeAsReaded" />
             }
             else
             {
@@ -164,5 +165,10 @@
     async Task Subscribe()
     {
         await CurrentUser.SubscribeFeedAsync(Feed);
+    }
+
+    private async Task MakeAsReaded()
+    {
+        await CurrentUser.MarkFeedAsReaded(Feed);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
@@ -121,6 +122,26 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = true,
             });
+        }
+
+        public async Task MarkFeedAsReaded(Feed feed)
+        {
+            var feedInSubscription = SubscribedFeeds.Find(f => f.Id == feed.Id);
+            if (feedInSubscription == null)
+            {
+                return;
+            }
+
+            var lastFeedItem = feedInSubscription.FeedItems.OrderByDescending(f => f.PublishTime).FirstOrDefault();
+            if (lastFeedItem != null)
+            {
+                feedInSubscription.LastReadedTime = feed.LastReadedTime = lastFeedItem.PublishTime;
+                await WebServerApi.UpdateFeedSubscriptionAsync(new Share.Protocols.UpdateFeedSubscriptionRequest()
+                {
+                    FeedId = feed.Id.ToString(),
+                    LastReadedTime = feed.LastReadedTime.ToTimestamp(),
+                });
+            }
         }
 
         public async Task UnsubscribeFeedAsync(Feed feed)

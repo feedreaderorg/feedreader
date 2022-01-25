@@ -9,7 +9,6 @@
 ::deep .panel {
     background-color: var(--panel-bg-color);
     padding: var(--panel-padding);
-    margin: 16px;
     box-shadow: 0 0 12px rgb(61 99 140 / 8%);
     border-radius: 12px;
 }

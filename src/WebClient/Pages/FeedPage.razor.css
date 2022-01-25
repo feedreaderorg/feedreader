@@ -1,10 +1,15 @@
-﻿.page-content {
-    display: flex;
-}
-
-.page-header {
+﻿.page-header {
     display: flex;
     align-items: center;
+    position: fixed;
+    height: 58px;
+    left: var(--left-side-bar-size);
+    right: 0px;
+}
+
+.page-content {
+    display: flex;
+    margin-top: 58px;
 }
 
 ::deep .page-header .btn {

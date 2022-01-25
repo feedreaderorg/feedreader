@@ -1,0 +1,130 @@
+﻿
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+@typeparam T
+
+@if (ActiveFetch != null)
+{
+    <Virtualize Items="@ActiveFetch.Items" Context="item">
+        @ItemsTemplate(@item)
+    </Virtualize>
+
+    @if (ActiveFetch.IsLoading)
+    {
+        @LoadingTemplate
+    }
+
+    <div @ref="LastItemIndicator" style="height:1px"></div>
+}
+
+@code
+{
+    public delegate Task<IEnumerable<E>> ItemsRequestDelegate<E>(int startIndex, int count, CancellationToken cancellationToken);
+
+    private FetchContext ActiveFetch { get; set; }
+    private IJSObjectReference JsModule { get; set; }
+    private DotNetObjectReference<InfiniteScrolling<T>> CurrentComponent { get; set; }
+    private IJSObjectReference JsInstance { get; set; }
+    private ElementReference LastItemIndicator { get; set; }
+    private CancellationTokenSource CancellationTokenSource { get; set; }
+
+    [Parameter]
+    public ItemsRequestDelegate<T> ItemsProvider { get; set; }
+
+    [Parameter]
+    public RenderFragment<T> ItemsTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment LoadingTemplate { get; set; }
+
+    [JSInvokable]
+    public async Task LoadMoreItems()
+    {
+        var activeFetch = ActiveFetch;
+        if (activeFetch.IsLoading || activeFetch.IsStopped)
+        {
+            return;
+        }
+
+        activeFetch.IsLoading = true;
+        try
+        {
+            CancellationTokenSource ??= new CancellationTokenSource();
+
+            // Allow UI to display the loading template.
+            StateHasChanged();
+            try
+            {
+                const int count = 10;
+                var newItems = await ItemsProvider(activeFetch.Items.Count, count, CancellationTokenSource.Token);
+                activeFetch.Items.AddRange(newItems);
+                // await JsInstance.InvokeVoidAsync("onNewItems");
+                if (newItems.Count() < 10)
+                {
+                    // No more items, stop more fetching.
+                    activeFetch.IsStopped = true;
+                }
+            }
+            catch (OperationCanceledException ex) when (ex.CancellationToken == CancellationTokenSource.Token)
+            {
+                // Operation is cancelled, that's fine.
+            }
+        }
+        finally
+        {
+            activeFetch.IsLoading = false;
+        }
+
+        if (activeFetch == ActiveFetch)
+        {
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ActiveFetch = new FetchContext();
+        await LoadMoreItems();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CurrentComponent = DotNetObjectReference.Create(this);
+            JsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/infinite-scrolling.js");
+            JsInstance = await JsModule.InvokeAsync<IJSObjectReference>("initialize", LastItemIndicator, CurrentComponent);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (CancellationTokenSource != null)
+        {
+            CancellationTokenSource.Dispose();
+        }
+
+        if (JsInstance != null)
+        {
+            await JsInstance.InvokeVoidAsync("dispose");
+            await JsInstance.DisposeAsync();
+        }
+
+        if (JsModule != null)
+        {
+            await JsModule.DisposeAsync();
+        }
+
+        if (CurrentComponent != null)
+        {
+            CurrentComponent.Dispose();
+        }
+    }
+
+    private class FetchContext
+    {
+        public bool IsLoading { get; set; }
+        public bool IsStopped { get; set; }
+        public List<T> Items { get; set; } = new();
+    }
+}

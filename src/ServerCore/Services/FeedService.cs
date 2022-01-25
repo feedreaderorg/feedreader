@@ -17,8 +17,6 @@ namespace FeedReader.ServerCore.Services
 {
     public class FeedService
     {
-        const int PAGE_ITEMS_COUNT = 50;
-
         IDbContextFactory<DbContext> DbFactory { get; set; }
         HttpClient HttpClient { get; set; }
         ILogger Logger { get; set; }
@@ -94,27 +92,27 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        public async Task<List<FeedItem>> GetFeedItemsByIdAsync(Guid feedId, int page)
+        public async Task<List<FeedItem>> GetFeedItemsByIdAsync(Guid feedId, int startIndex, int count)
         {
             using (var db = DbFactory.CreateDbContext())
             {
                 return await db.FeedItems
                     .Where(f => f.FeedId == feedId)
                     .OrderByDescending(f => f.PublishTime)
-                    .Skip(page * PAGE_ITEMS_COUNT)
-                    .Take(PAGE_ITEMS_COUNT).ToListAsync();
+                    .Skip(startIndex)
+                    .Take(count).ToListAsync();
             }
         }
 
-        public async Task<List<FeedItem>> GetFeedItemsByCategoryAsync(string category, int page)
+        public async Task<List<FeedItem>> GetFeedItemsByCategoryAsync(string category, int startIndex, int count)
         {
             using (var db = DbFactory.CreateDbContext())
             {
                 return await db.FeedItems
                     .Where(f => f.Category == category)
                     .OrderByDescending(f => f.PublishTime)
-                    .Skip(page * PAGE_ITEMS_COUNT)
-                    .Take(PAGE_ITEMS_COUNT).ToListAsync();
+                    .Skip(startIndex)
+                    .Take(count).ToListAsync();
             }
         }
 

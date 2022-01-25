@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace FeedReader.WebClient.Models
         public string SiteLink { get; set; }
         public bool IsSubscribed { get; set; }
         public DateTime LastReadedTime { get; set; }
-        public RangeEnabledObservableCollection<FeedItem> FeedItems { get; set; }
+        private List<FeedItem> FeedItems { get; set; } = new List<FeedItem>();
         public event EventHandler OnStateChanged;
 
         public async Task RefreshAsync()
@@ -29,17 +31,12 @@ namespace FeedReader.WebClient.Models
             var response = await App.CurrentUser.WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
             {
                 FeedId = Id,
-                Page = 0
+                StartIndex = 0,
+                Count = 50,
             });
 
             // Update local cache.
-            FeedItems = new RangeEnabledObservableCollection<FeedItem>();
-            FeedItems.AddRange(response.FeedItems.Select(i =>
-            {
-                var f = i.ToModelFeedItem();
-                f.Feed = this;
-                return f;
-            }), (f1, f2) => f1.PublishTime.DescCompareTo(f2.PublishTime));
+            await GetFeedItems(startIndex: 0, count: 50);
             OnStateChanged?.Invoke(this, null);
         }
 
@@ -70,6 +67,56 @@ namespace FeedReader.WebClient.Models
             {
                 LastReadedTime = feed.LastReadedTime.ToDateTime();
             }
+        }
+
+        public async Task<IEnumerable<FeedItem>> GetFeedItems(int startIndex, int count)
+        {
+            while (FeedItems.Count < startIndex + count)
+            {
+                var response = await App.CurrentUser.WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
+                {
+                    FeedId = Id,
+                    StartIndex = startIndex,
+                    Count = 50,
+                });
+                var newItems = response.FeedItems.Select(i =>
+                {
+                    var f = i.ToModelFeedItem();
+                    f.Feed = this;
+                    return f;
+                });
+                FeedItems.AddRange(newItems);
+                FeedItems = FeedItems.DistinctBy(f => f.Id).OrderByDescending(f => f.PublishTime).ToList();
+                if (newItems.Count() < 50)
+                {
+                    break;
+                }
+            }
+
+            if (startIndex >= FeedItems.Count)
+            {
+                return new List<FeedItem>();
+            }
+            else
+            {
+                count = Math.Min(FeedItems.Count - startIndex, count);
+                return FeedItems.GetRange(startIndex, count);
+            }
+        }
+
+        public async Task MarkAsReaded()
+        {
+            if (FeedItems.Count == 0)
+            {
+                return;
+            }
+
+            LastReadedTime = FeedItems.First().PublishTime;
+            await App.CurrentUser.WebServerApi.UpdateFeedSubscriptionAsync(new Share.Protocols.UpdateFeedSubscriptionRequest()
+            {
+                FeedId = Id.ToString(),
+                LastReadedTime = LastReadedTime.ToTimestamp(),
+            });
         }
     }
 

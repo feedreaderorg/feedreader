@@ -1,7 +1,6 @@
 ﻿@page "/favorites"
 @inherits LoginRequiredPageBase
 @layout LeftSideBarLayout
-@implements IDisposable
 
 <div class="favorites-page">
 	<div class="page-header">
@@ -19,22 +18,3 @@
 		</div>
 	</div>
 </div>
-
-@code
-{
-	protected override void OnInitialized()
-	{
-		CurrentUser.Favorites.CollectionChanged += OnFavoritesChanged;
-		_ = CurrentUser.RefreshFavoritesAsync();
-	}
-
-	public void Dispose()
-	{
-		CurrentUser.Favorites.CollectionChanged -= OnFavoritesChanged;
-	}
-
-	void OnFavoritesChanged(object sender, NotifyCollectionChangedEventArgs args)
-    {
-        StateHasChanged();
-    }
-}

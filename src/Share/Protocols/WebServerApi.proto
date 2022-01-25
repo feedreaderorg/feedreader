@@ -64,7 +64,8 @@ message GetFeedItemsRequest
         string FeedId = 1;
         string Category = 3;
 	}
-    int32 Page = 2;
+    int32 StartIndex = 2;
+    int32 Count = 4;
 }
 
 message GetFeedItemsResponse

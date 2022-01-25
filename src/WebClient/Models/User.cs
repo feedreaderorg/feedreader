@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
@@ -27,9 +26,9 @@ namespace FeedReader.WebClient.Models
         #region Properties
         string ServerAddress { get; set; }
 
-        Dictionary<string, RangeEnabledObservableCollection<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, RangeEnabledObservableCollection<FeedItem>>();
+        Dictionary<string, List<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, List<FeedItem>>();
 
-        public RangeEnabledObservableCollection<FeedItem> Favorites { get; } = new RangeEnabledObservableCollection<FeedItem>();
+        public List<FeedItem> Favorites { get; } = new List<FeedItem>();
 
         public string Id { get; set; }
 
@@ -124,26 +123,6 @@ namespace FeedReader.WebClient.Models
             });
         }
 
-        public async Task MarkFeedAsReaded(Feed feed)
-        {
-            var feedInSubscription = SubscribedFeeds.Find(f => f.Id == feed.Id);
-            if (feedInSubscription == null)
-            {
-                return;
-            }
-
-            var lastFeedItem = feedInSubscription.FeedItems.OrderByDescending(f => f.PublishTime).FirstOrDefault();
-            if (lastFeedItem != null)
-            {
-                feedInSubscription.LastReadedTime = feed.LastReadedTime = lastFeedItem.PublishTime;
-                await WebServerApi.UpdateFeedSubscriptionAsync(new Share.Protocols.UpdateFeedSubscriptionRequest()
-                {
-                    FeedId = feed.Id.ToString(),
-                    LastReadedTime = feed.LastReadedTime.ToTimestamp(),
-                });
-            }
-        }
-
         public async Task UnsubscribeFeedAsync(Feed feed)
         {
             feed = SubscribedFeeds.Find(f => f.Id == feed.Id);
@@ -185,7 +164,7 @@ namespace FeedReader.WebClient.Models
             await UpdateListFeedItemsAsync(Favorites, res.FeedItems);
         }
 
-        public RangeEnabledObservableCollection<Models.FeedItem> GetFeedItemsByCategory(string category)
+        public List<Models.FeedItem> GetFeedItemsByCategory(string category)
         {
             if (string.IsNullOrEmpty(category))
             {
@@ -195,7 +174,7 @@ namespace FeedReader.WebClient.Models
             {
                 if (!FeedItemsCategories.ContainsKey(category))
                 {
-                    FeedItemsCategories.Add(category, new RangeEnabledObservableCollection<FeedItem>());
+                    FeedItemsCategories.Add(category, new List<FeedItem>());
                 }
 
                 _ = RefreshFeedItemsCategoryAsync(category);
@@ -294,12 +273,13 @@ namespace FeedReader.WebClient.Models
             var res = await WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
             {
                 Category = category,
-                Page = 0
+                StartIndex = 0,
+                Count = 50,
             });
             await UpdateListFeedItemsAsync(FeedItemsCategories[category], res.FeedItems);
         }
 
-        async Task UpdateListFeedItemsAsync(RangeEnabledObservableCollection<FeedItem> feedItemList, IEnumerable<Share.Protocols.FeedItem> protocolFeedItems)
+        async Task UpdateListFeedItemsAsync(List<FeedItem> feedItemList, IEnumerable<Share.Protocols.FeedItem> protocolFeedItems)
         {
             var modelFeedItems = new List<FeedItem>();
             foreach (var feedItem in protocolFeedItems)
@@ -327,7 +307,7 @@ namespace FeedReader.WebClient.Models
 
             if (modelFeedItems.Count > 0)
             {
-                feedItemList.AddRange(modelFeedItems, (f1, f2) => f1.PublishTime.DescCompareTo(f2.PublishTime));
+                feedItemList.AddRange(modelFeedItems);
             }
         }
 

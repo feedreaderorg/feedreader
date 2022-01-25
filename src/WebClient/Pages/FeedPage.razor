@@ -2,10 +2,9 @@
 @page "/feed/category/{FeedItemsCategory}"
 @page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
-@implements IDisposable
 @inherits LoginRequiredPageBase
 
-<div class="feed-page">
+<div class="feed-page d-flex flex-grow-1 flex-column">
     <div class="page-header">
         @if (Feed != null)
         {
@@ -13,7 +12,7 @@
             @if (Feed.IsSubscribed)
             {
                 <ActionButton Text="Unsubscribe" OnClick="Unsubscribe"/>
-                <ActionButton Text="Mark as readed" OnClick="MakeAsReaded" />
+                <ActionButton Text="Mark as readed" OnClick="@Feed.MarkAsReaded" />
             }
             else
             {
@@ -25,15 +24,16 @@
             <h1>@FeedItemsCategory</h1>
         }
     </div>
-    <div class="page-content">
-        <div class="feed-items-panel">
-            @if (FeedItems?.Count > 0)
-            {
-                foreach (var feedItem in FeedItems)
-                {
-                    <FeedItem Item=@feedItem/>
-                }
-            }
+    <div class="page-content flex-grow-1">
+        <div class="feed-items-panel d-flex flex-column align-items-center">
+            <InfiniteScrolling ItemsProvider="@LoadFeedItems" Context="feedItem">
+                <ItemsTemplate>
+                    <FeedItem Item=@feedItem />
+                </ItemsTemplate>
+                <LoadingTemplate>
+                    <img class="my-2" src="img/loading-buffering.gif" style="width: 32px; height: 32px;" />
+                </LoadingTemplate>
+            </InfiniteScrolling>
         </div>
         @if (Feed != null)
         {
@@ -87,40 +87,17 @@
 
     Feed Feed { get; set; }
 
-    RangeEnabledObservableCollection<Models.FeedItem> FeedItems { get; set; }
-
     string FeedDescription => string.IsNullOrEmpty(Feed.Description) ? "Nothing ..." : Feed.Description;
-
-    public void Dispose()
-    {
-        if (Feed != null)
-        {
-            Feed.OnStateChanged -= OnFeedStateChanged;
-        }
-
-        if (FeedItems != null)
-        {
-            FeedItems.CollectionChanged -= OnFeedItemsCollectionChanged;
-        }
-    }
 
     protected override async Task OnParametersSetAsync()
     {
         if (Feed != null)
         {
-            Feed.OnStateChanged -= OnFeedStateChanged;
             Feed = null;
-        }
-
-        if (FeedItems != null)
-        {
-            FeedItems.CollectionChanged -= OnFeedItemsCollectionChanged;
-            FeedItems = null;
         }
 
         if (!string.IsNullOrEmpty(FeedSubscriptionName))
         {
-            Console.WriteLine("get feed items");
             Feed = App.CurrentUser.GetFeed(FeedSubscriptionName);
             if (Feed == null)
             {
@@ -128,33 +105,9 @@
             }
             else
             {
-                FeedItems = Feed.FeedItems;
-                Feed.OnStateChanged += OnFeedStateChanged;
                 await Feed.RefreshAsync();
             }
         }
-        else if (!string.IsNullOrEmpty(FeedItemsCategory))
-        {
-            Console.WriteLine("get feed categories");
-            FeedItems = App.CurrentUser.GetFeedItemsByCategory(FeedItemsCategory);
-            FeedItems.CollectionChanged += OnFeedItemsCollectionChanged;
-        }
-    }
-
-    void OnFeedStateChanged(object sender, EventArgs args)
-    {
-        if (FeedItems != null)
-        {
-            FeedItems.CollectionChanged -= OnFeedItemsCollectionChanged;
-        }
-        FeedItems = Feed.FeedItems;
-        Feed.OnStateChanged += OnFeedStateChanged;
-        StateHasChanged();
-    }
-
-    void OnFeedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
-    {
-        StateHasChanged();
     }
 
     async Task Unsubscribe()
@@ -167,8 +120,21 @@
         await CurrentUser.SubscribeFeedAsync(Feed);
     }
 
-    private async Task MakeAsReaded()
+    private async Task<IEnumerable<Models.FeedItem>> LoadFeedItems(int startIndex, int count, CancellationToken cancellationToken)
     {
-        await CurrentUser.MarkFeedAsReaded(Feed);
+        if (!string.IsNullOrEmpty(FeedItemsCategory))
+        {
+            var items = App.CurrentUser.GetFeedItemsByCategory(FeedItemsCategory);
+            if (startIndex < items.Count)
+            {
+                count = Math.Min(items.Count - startIndex, count);
+                return items.GetRange(startIndex, count);
+            }
+        }
+        else if (Feed != null)
+        {
+            return await Feed.GetFeedItems(startIndex, count);
+        }
+        return new List<Models.FeedItem>();
     }
 }

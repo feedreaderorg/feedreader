@@ -168,15 +168,24 @@ namespace FeedReader.WebServer
 
         public override async Task<GetFeedItemsResponse> GetFeedItems(GetFeedItemsRequest request, ServerCallContext context)
         {
+            if (request.StartIndex < 0)
+            {
+                throw new ArgumentException("'StartIndex' can't be less than 0.");
+            }
+            if (request.Count < 1 || request.Count > 50)
+            {
+                throw new ArgumentException("'Count' must be between 1 to 50.");
+            }
+
             List<ServerCore.Models.FeedItem> feedItems;
             switch (request.QueryCase)
             {
                 case GetFeedItemsRequest.QueryOneofCase.FeedId:
-                    feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.Page);
+                    feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.StartIndex, request.Count);
                     break;
 
                 case GetFeedItemsRequest.QueryOneofCase.Category:
-                    feedItems = await FeedService.GetFeedItemsByCategoryAsync(request.Category, request.Page);
+                    feedItems = await FeedService.GetFeedItemsByCategoryAsync(request.Category, request.StartIndex, request.Count);
                     break;
 
                 default:

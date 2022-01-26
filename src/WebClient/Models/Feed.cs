@@ -19,6 +19,7 @@ namespace FeedReader.WebClient.Models
         public string SiteLink { get; set; }
         public bool IsSubscribed { get; set; }
         public DateTime LastReadedTime { get; set; }
+        public string RssUri { get; set; }
         private List<FeedItem> FeedItems { get; set; } = new List<FeedItem>();
         public event EventHandler OnStateChanged;
 
@@ -63,6 +64,7 @@ namespace FeedReader.WebClient.Models
             TotalPosts = feed.TotalPosts;
             TotalSubscribers = feed.TotalSubscribers;
             SiteLink = feed.SiteLink;
+            RssUri = feed.RssUri;
             if (feed.LastReadedTime != null)
             {
                 LastReadedTime = feed.LastReadedTime.ToDateTime();

@@ -27,6 +27,12 @@
     box-shadow: 0 0 8px hsl(0deg 0% 89% / 60%);
     padding: 10px 24px;
     background-color: var(--panel-bg-color);
+    height: 58px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    left: var(--left-side-bar-size);
+    right: 0px;
 }
 
 ::deep .page-header h1 {
@@ -34,4 +40,10 @@
     font-family: Arial;
     font-size: 22px;
     font-weight: 700;
+}
+
+::deep .page-content {
+    display: flex;
+    margin-top: 58px;
+    padding: 1rem;
 }

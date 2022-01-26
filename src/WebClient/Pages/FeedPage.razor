@@ -1,139 +1,101 @@
-﻿@page "/feed"
-@page "/feed/category/{FeedItemsCategory}"
-@page "/feed/{FeedSubscriptionName}"
+﻿@page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
 @inherits LoginRequiredPageBase
 
 <div class="feed-page d-flex flex-grow-1 flex-column">
-    <div class="page-header mb-3">
-        @if (Feed != null)
+    <div class="page-header">
+        <h1>@Feed.Name</h1>
+        @if (Feed.IsSubscribed)
         {
-            <h1>@Feed.Name</h1>
-            @if (Feed.IsSubscribed)
-            {
-                <ActionButton Text="Unsubscribe" OnClick="Unsubscribe"/>
-                <ActionButton Text="Mark as readed" OnClick="@Feed.MarkAsReaded" />
-            }
-            else
-            {
-                <ActionButton Text="Subscribe" OnClick="Subscribe"/>
-            }
+            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unsubscribe" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
+            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Mark as readed" OnClick="@Feed.MarkAsReaded" />
         }
         else
         {
-            <h1>@FeedItemsCategory</h1>
+            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Subscribe" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))"/>
         }
     </div>
-    <div class="page-content flex-grow-1 pt-3">
-        <div class="feed-items-panel d-flex flex-column align-items-center mx-3">
-            <InfiniteScrolling ItemsProvider="@LoadFeedItems" Context="feedItem">
+    <div class="page-content">
+        <div class="feed-items-panel d-flex col flex-column me-3">
+            <InfiniteScrolling ItemsProvider="@((startIndex, count, _) => Feed.GetFeedItems(startIndex, count))" Context="feedItem">
                 <ItemsTemplate>
-                    <div class="mb-3">
-                        <FeedItem Item=@feedItem />
-                    </div>
+                    <FeedItem ClassName="mb-3" Item=@feedItem />
                 </ItemsTemplate>
                 <LoadingTemplate>
-                    <img class="my-2" src="img/loading-buffering.gif" style="width: 32px; height: 32px;" />
+                    <div class="d-flex justify-content-center">
+                        <img class="my-2" src="img/loading-buffering.gif" style="width: 32px; height: 32px;" />
+                    </div>
                 </LoadingTemplate>
             </InfiniteScrolling>
         </div>
-        @if (Feed != null)
-        {
-            <div class="right-side-bar me-3 mb-3">
-                <div class="feed-description-panel panel">
-                    <div class="feed-picture-and-name">
-                        <img src="@Feed.IconUri"/>
-                        <div class="name">@Feed.Name</div>
+        <div class="right-side-bar mb-3">
+            <div class="feed-description-panel panel">
+                <div class="feed-picture-and-name">
+                    <img src="@Feed.IconUri"/>
+                    <div class="name">@Feed.Name</div>
+                </div>
+                <div class="feed-stats">
+                    <div class="stat">
+                        <div class="count">@Feed.TotalSubscribers</div>
+                        <div class="label">Subscribers</div>
                     </div>
-                    <div class="feed-stats">
-                        <div class="stat">
-                            <div class="count">@Feed.TotalSubscribers</div>
-                            <div class="label">Subscribers</div>
-                        </div>
-                        <div class="stat" style="text-align: center">
-                            <div class="count">@Feed.TotalPosts</div>
-                            <div class="label">Post</div>
-                        </div>
-                        <div class="stat" style="text-align: right">
-                            <div class="count">@Feed.TotalFavorites</div>
-                            <div class="label">Favorites</div>
-                        </div>
+                    <div class="stat" style="text-align: center">
+                        <div class="count">@Feed.TotalPosts</div>
+                        <div class="label">Post</div>
                     </div>
-                    <div class="feed-about">
-                        <div class="label">ABOUT</div>
-                        <div class="about">@FeedDescription</div>
-                        <a href="@Feed.SiteLink" target="_blank">Website</a>
+                    <div class="stat" style="text-align: right">
+                        <div class="count">@Feed.TotalFavorites</div>
+                        <div class="label">Favorites</div>
                     </div>
                 </div>
-                <div class="site-info">
-                    <a href="/terms">Terms of Use</a>
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/about"></a>
-                    <div class="copy-right">&copy;2021 FeedReader.org</div>
+                <div class="feed-about">
+                    <div class="label">ABOUT</div>
+                    <div class="about">@Feed.Description</div>
+                    <div class="actions container">
+                        <div class="row gap-2">
+                            @if (!string.IsNullOrEmpty(Feed.RssUri))
+                            {
+                                <a href="@Feed.RssUri" target="_blank" class="btn btn-primary btn-sm col">
+                                    <i class="bi bi-rss" /> Rss
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(Feed.SiteLink))
+                            {
+                                <a href="@Feed.SiteLink" target="_blank" class="btn btn-primary btn-sm col">
+                                   <i class="bi bi-box-arrow-up-right" /> Website
+                                </a>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-        }
+            <div class="site-info">
+                <a href="/terms">Terms of Use</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/about"></a>
+                <div class="copy-right">&copy;2021 FeedReader.org</div>
+            </div>
+        </div>
     </div>
 </div>
 
 @code
 {
     [Parameter]
-    public string FeedItemsCategory { get; set; }
-
-    [Parameter]
     public string FeedSubscriptionName { get; set; }
 
-    Feed Feed { get; set; }
-
-    string FeedDescription => string.IsNullOrEmpty(Feed.Description) ? "Nothing ..." : Feed.Description;
+    private Feed Feed { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Feed != null)
+        Feed = App.CurrentUser.GetFeed(FeedSubscriptionName);
+        if (Feed == null)
         {
-            Feed = null;
+            NavigationManager.NavigateTo("/");
         }
-
-        if (!string.IsNullOrEmpty(FeedSubscriptionName))
+        else
         {
-            Feed = App.CurrentUser.GetFeed(FeedSubscriptionName);
-            if (Feed == null)
-            {
-                NavigationManager.NavigateTo("/");
-            }
-            else
-            {
-                await Feed.RefreshAsync();
-            }
+            await Feed.RefreshAsync();
         }
-    }
-
-    async Task Unsubscribe()
-    {
-        await CurrentUser.UnsubscribeFeedAsync(Feed);
-    }
-
-    async Task Subscribe()
-    {
-        await CurrentUser.SubscribeFeedAsync(Feed);
-    }
-
-    private async Task<IEnumerable<Models.FeedItem>> LoadFeedItems(int startIndex, int count, CancellationToken cancellationToken)
-    {
-        if (!string.IsNullOrEmpty(FeedItemsCategory))
-        {
-            var items = App.CurrentUser.GetFeedItemsByCategory(FeedItemsCategory);
-            if (startIndex < items.Count)
-            {
-                count = Math.Min(items.Count - startIndex, count);
-                return items.GetRange(startIndex, count);
-            }
-        }
-        else if (Feed != null)
-        {
-            return await Feed.GetFeedItems(startIndex, count);
-        }
-        return new List<Models.FeedItem>();
     }
 }

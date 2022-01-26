@@ -14,9 +14,15 @@ else if (string.IsNullOrEmpty(OAuthProvider))
     <div class="login">
         <div class="wrapper">
             <div class="title">Welcome back</div>
-            <a class="btn" href="@microsoftLoginUri"><img src="img/microsoft.svg"><span>Continue with Microsoft</span></a>
-            <a class="btn"><img src="img/google.svg"><span>Continue with Google</span></a>
-            <div class="term">By continuing, you agree to FeedReader &nbsp;<br /><a href="/terms">Terms of Service</a>,&nbsp;<a href="/privacy">Privacy Policy</a></div>
+            <div class="vstack gap-2">
+                <a class="btn btn-primary" href="@microsoftLoginUri">
+                    <i class="bi bi-microsoft" /> Continue with Microsoft
+                </a>
+                <a class="btn btn-primary">
+                    <i class="bi bi-google" /> Continue with Google
+                </a>
+            </div>
+            <div class="term text-muted mt-3">By continuing, you agree to FeedReader &nbsp;<br /><a href="/terms">Terms of Service</a>,&nbsp;<a href="/privacy">Privacy Policy</a></div>
         </div>
     </div>
 }

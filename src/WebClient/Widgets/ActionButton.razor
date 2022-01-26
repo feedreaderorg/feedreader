@@ -1,10 +1,13 @@
-﻿<div class="btn @(IsDoing ? "disabled" : "")" @onclick="@OnClickInternal">
+﻿<div class="@ClassName btn @(IsDoing ? "disabled" : "")" @onclick="@OnClickInternal">
     <img src="img/loading-buffering.gif" style="@(IsDoing ? "display:block" : "display:none")"/>
     <div style="@(IsDoing ? "visibility:hidden" : "visibility:visible")">@Text</div>
 </div>
 
 @code
 {
+    [Parameter]
+    public string ClassName { get; set; }
+
     [Parameter]
     public string Text { get; set; }
 

@@ -1,24 +1,10 @@
 ﻿@inject NavigationManager NavigationManager
 
-<div class="left-side-bar">
-	<div class="section">
-		<ul>
-			@foreach (var item in ActionItems)
-			{
-				<li>
-					<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
-						<img src="@item.ImgUri"><span>@item.Name</span>
-					</a>
-				</li>
-			}
-		</ul>
-	</div>
-	@if (CurrentUser.SubscribedFeeds.Count > 0)
-	{
+<div class="left-side-bar d-flex flex-column flex-grow-1">
+	<div class="flex-grow-1">
 		<div class="section">
-			<div class="title">MY FEEDS</div>
 			<ul>
-				@foreach (var item in UserSubscribedFeeds)
+				@foreach (var item in ActionItems)
 				{
 					<li>
 						<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
@@ -28,24 +14,35 @@
 				}
 			</ul>
 		</div>
-	}
-	<div class="section">
-		<div class="title">TOP FEEDS</div>
+		@if (CurrentUser.SubscribedFeeds.Count > 0)
+		{
+			<div class="section">
+				<div class="title">MY FEEDS</div>
+				<ul>
+
+					@foreach (var item in UserSubscribedFeeds)
+					{
+						<li>
+							<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
+								<img src="@item.ImgUri"><span>@item.Name</span>
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</div>
+	<hr/>
+	<div class="bottom">
 		<ul>
 			<li>
-				@foreach (var item in FeedItemCategories)
-				{
-					<li>
-						<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
-							<img src="@item.ImgUri"><span>@item.Name</span>
-						</a>
-					</li>
-				}
+				<a href="/logout">
+					<img src="/img/logout.png"><span>Log out</span>
+				</a>
 			</li>
 		</ul>
 	</div>
 </div>
-
 @code
 {
 	class ActionItem
@@ -60,76 +57,6 @@
 
 	List<ActionItem> UserSubscribedFeeds { get; set; }
 
-	List<ActionItem> FeedItemCategories { get; } = new List<ActionItem>()
-	{
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/culture",
-			ImgUri = "img/culture.png",
-			Name = "Culture"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/economy",
-			ImgUri = "img/economy.png",
-			Name = "Economy"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/education",
-			ImgUri = "img/education.png",
-			Name = "Education"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/entertainment",
-			ImgUri = "img/entertainment.png",
-			Name = "Entertainment"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/health",
-			ImgUri = "img/health.png",
-			Name = "Health"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/politic",
-			ImgUri = "img/politic.png",
-			Name = "Politic"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/science",
-			ImgUri = "img/science.png",
-			Name = "Science"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/sociality",
-			ImgUri = "img/sociality.png",
-			Name = "sociality"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/sport",
-			ImgUri = "img/sport.png",
-			Name = "Sport"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/technology",
-			ImgUri = "img/technology.png",
-			Name = "Technology"
-		},
-		new ActionItem()
-		{
-			TargetUri = "/feed/category/other",
-			ImgUri = "img/other.png",
-			Name = "Other"
-		}
-	};
-
 	[CascadingParameter]
 	public User CurrentUser { get; set; }
 
@@ -141,54 +68,50 @@
 
 	protected override void OnParametersSet()
 	{
-		ActionItems = new List<ActionItem>();
-
-		ActionItems.Add(new ActionItem()
+		ActionItems = new List<ActionItem>()
 		{
-			TargetUri = "/",
-			ImgUri = "img/home.png",
-			Name = "Home",
-		});
+			new ActionItem()
+			{
+				TargetUri = "/",
+				ImgUri = "img/home.png",
+				Name = "Home",
+			}
+		};
 
 		if (CurrentUser.Role == UserRole.Guest)
 		{
 			ActionItems.Add(new ActionItem()
-			{
-				TargetUri = "/login",
-				ImgUri = "img/login.png",
-				Name = "Login",
-			});
+				{
+					TargetUri = "/login",
+					ImgUri = "img/login.png",
+					Name = "Login",
+				});
 		}
 		else
 		{
 			ActionItems.Add(new ActionItem()
-			{
-				TargetUri = "/favorites",
-				ImgUri = "img/favorite.png",
-				Name = "My favorites",
-			});
+				{
+					TargetUri = "/favorites",
+					ImgUri = "img/favorite.png",
+					Name = "My favorites",
+				});
+		}
 
-			ActionItems.Add(new ActionItem()
+		UserSubscribedFeeds = new List<ActionItem>()
+		{
+			new ActionItem()
 			{
 				TargetUri = "/add",
 				ImgUri = "img/add.png",
 				Name = "Add feed",
-			});
-
-			ActionItems.Add(new ActionItem()
-			{
-				TargetUri = "/logout",
-				ImgUri = "img/logout.png",
-				Name = "Log out",
-			});
-		}
-
-		UserSubscribedFeeds = CurrentUser.SubscribedFeeds.Select(f => new ActionItem()
+			}
+		};
+		UserSubscribedFeeds.AddRange(CurrentUser.SubscribedFeeds.Select(f => new ActionItem()
 		{
 			TargetUri = $"/feed/{f.SubscriptionName}",
 			ImgUri = f.IconUri,
 			Name = f.Name
-		}).ToList();
+		}));
 	}
 
 	public void Dispose()
@@ -215,11 +138,6 @@
 			{
 				item.IsSelected = path.StartsWithSegments(item.TargetUri);
 			}
-		}
-
-		foreach (var item in FeedItemCategories)
-		{
-			item.IsSelected = path.StartsWithSegments(item.TargetUri);
 		}
 
 		StateHasChanged();

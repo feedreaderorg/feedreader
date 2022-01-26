@@ -29,20 +29,8 @@ ul {
     margin: 0px;
 }
 
-.btn {
-    user-select: none;
-    background-color: var(--btn-bg-color);
-    color: var(--btn-color);
-    cursor: pointer;
-    border-radius: 40px;
-}
-
 .btn.disabled {
     cursor: not-allowed;
-}
-
-.btn:hover {
-    filter: brightness(0.9);
 }
 
 .btn-border-only {
@@ -55,4 +43,19 @@ ul {
 .btn-border-only:hover {
     background-color: var(--btn-bg-color);
     color: var(--btn-color);
+}
+
+.btn-primary {
+    background-color: var(--btn-bg-color);
+    border-color: var(--btn-bg-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--btn-bg-color);
+    border-color: var(--btn-bg-color);
+    filter: brightness(0.9);
+}
+
+.progress-bar {
+    background-color: var(--btn-bg-color);
 }

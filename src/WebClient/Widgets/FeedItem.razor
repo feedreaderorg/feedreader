@@ -1,4 +1,4 @@
-﻿<div class="feed-item panel @(IsReaded ? "readed" : "")">
+﻿<div class="feed-item @ClassName panel @(IsReaded ? "readed" : "")">
     <div class="head">
         <span>Posted by</span>
         <img src="@Item.Feed.IconUri"/>
@@ -27,6 +27,9 @@
 
 @code
 {
+    [Parameter]
+    public string ClassName { get; set;  }
+
     [Parameter]
     public Models.FeedItem Item { get; set; }
 

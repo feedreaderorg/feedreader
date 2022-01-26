@@ -6,10 +6,6 @@
                 break;
             }
         }
-    }, {
-        root: findClosestScrollContainer(lastItemIndicator),
-        rootMargin: '0px',
-        threshold: 0
     });
 
     observer.observe(lastItemIndicator);
@@ -23,15 +19,4 @@
             observer.observe(lastIndicator);
         },
     };
-}
-
-function findClosestScrollContainer(element) {
-    while (element) {
-        const style = getComputedStyle(element);
-        if (style.overflowY !== 'visible') {
-            return element;
-        }
-        element = element.parentElement;
-    }
-    return null;
 }

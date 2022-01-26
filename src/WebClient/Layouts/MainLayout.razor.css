@@ -1,5 +1,6 @@
 .main-layout {
     padding-top: var(--navbar-hight);
+    overflow-x: hidden;
 }
 
 .main-layout .page {
@@ -11,4 +12,11 @@
     padding: var(--panel-padding);
     box-shadow: 0 0 12px rgb(61 99 140 / 8%);
     border-radius: 12px;
+}
+
+@media (max-width: 1200px) {
+    ::deep .panel {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
 }

@@ -13,6 +13,7 @@
     padding: 0px var(--body-left-right-padding);
     overflow: scroll;
     scrollbar-width: none;
+    z-index: 1;
 }
 
 .left::-webkit-scrollbar {
@@ -21,6 +22,7 @@
 
 .right {
     margin-left: var(--left-side-bar-size);
+    overflow-x: hidden;
 }
 
 ::deep .page-header {
@@ -46,4 +48,25 @@
     display: flex;
     margin-top: 58px;
     padding: 1rem;
+}
+
+@media (max-width: 1200px) {
+    .left {
+        display: none !important;
+        width: 100%;
+    }
+    .left.show {
+        display: flex !important;
+    }
+    .right {
+        margin-left: 0 !important;
+    }
+
+    ::deep .page-header {
+        left: 0 !important;
+    }
+
+    ::deep .page-content {
+        padding: 1rem 0;
+    }
 }

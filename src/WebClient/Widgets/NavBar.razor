@@ -1,8 +1,10 @@
+@inject IJSRuntime JSRuntime
+
 <div class="navbar">
-    <a class="logo" href="/">
-        <img src="img/logo.svg"/>
-        <span>FeedReader</span>
-    </a>
+    <div class="logo" href="/">
+        <div @onclick="ToggleLeftSideBar"><img src="img/logo.svg"/></div>
+        <a href="/">FeedReader</a>
+    </div>
     <div class="toolbar"></div>
 </div>
 
@@ -10,4 +12,9 @@
 {
     [CascadingParameter]
     public User CurrentUser { get; set; }
+
+    private void ToggleLeftSideBar()
+    {
+        JSRuntime.InvokeVoidAsync("toggleLeftSideBar");
+    }
 }

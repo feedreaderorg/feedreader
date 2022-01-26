@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>FeedReader</title>
     <base href="/" />
     <link rel="icon" href="img/logo.64x64.png">
@@ -11,7 +12,7 @@
     <link href="FeedReader.WebClient.styles.css" type="text/css" rel="stylesheet">
 </head>
 <body class="d-flex">
-    <div id="app" class="d-flex flex-grow-1">
+    <div id="app" class="d-flex flex-grow-1" style="overflow-x: hidden">
         <div class="d-flex flex-grow-1 align-items-center">
             <div class="col-2"></div>
             <div class="col-8">
@@ -24,5 +25,16 @@
         </div>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        function toggleLeftSideBar() {
+            var dom = document.getElementById("left-side-bar");
+            var classList = dom.classList;
+            classList.contains("show") ? classList.remove("show") : classList.add("show");
+        }
+
+        function hideLeftSideBar() {
+            document.getElementById("left-side-bar").classList.remove("show");
+        }
+    </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 ﻿<div class="feed-item @ClassName panel @(IsReaded ? "readed" : "")">
-    <div class="head">
-        <span>Posted by</span>
-        <img src="@Item.Feed.IconUri"/>
+    <div class="head text-nowrap">
+        <span class="d-none d-lg-block me-1">Posted by</span>
+        <img class="me-1" src="@Item.Feed.IconUri"/>
         <a href="/feed/@Item.Feed.SubscriptionName" class="feed-name">@Item.Feed.Name</a>
         <span>@Item.PublishTime.ToLocalTime()</span>
     </div>

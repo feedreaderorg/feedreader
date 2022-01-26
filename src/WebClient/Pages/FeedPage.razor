@@ -4,19 +4,20 @@
 
 <div class="feed-page d-flex flex-grow-1 flex-column">
     <div class="page-header">
-        <h1>@Feed.Name</h1>
+        <h1 class="text-nowrap text-truncate">@Feed.Name</h1>
+        <div class="flex-grow-1 flex-lg-grow-0" />
         @if (Feed.IsSubscribed)
         {
-            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unsubscribe" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
-            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Mark as readed" OnClick="@Feed.MarkAsReaded" />
+            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
+            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="@Feed.MarkAsReaded" />
         }
         else
         {
-            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Subscribe" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))"/>
+            <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Follow" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))"/>
         }
     </div>
     <div class="page-content">
-        <div class="feed-items-panel d-flex col flex-column me-3">
+        <div class="feed-items-panel d-flex flex-column pe-lg-3">
             <InfiniteScrolling ItemsProvider="@((startIndex, count, _) => Feed.GetFeedItems(startIndex, count))" Context="feedItem">
                 <ItemsTemplate>
                     <FeedItem ClassName="mb-3" Item=@feedItem />

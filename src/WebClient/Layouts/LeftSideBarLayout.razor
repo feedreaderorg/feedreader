@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 @layout MainLayout
 
 <div class="left-side-bar-layout d-flex">
-	<div class="left d-flex">
+	<div id="left-side-bar" class="left d-flex" @onclick="@(() => JSRuntime.InvokeVoidAsync("hideLeftSideBar"))">
 		<LeftSideBar/>
 	</div>
 	<div class="right d-flex flex-grow-1">

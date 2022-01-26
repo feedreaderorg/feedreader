@@ -1,7 +1,12 @@
-﻿.right-side-bar {
+﻿.feed-page {
+    overflow-x: hidden;
+}
+
+.right-side-bar {
     display: flex;
     flex-direction: column;
-    width: var(--right-side-bar-size);
+    min-width: var(--right-side-bar-size);
+    max-width: var(--right-side-bar-size);
 }
 
 .feed-description-panel {
@@ -87,4 +92,17 @@
 
 .site-info a:hover {
     color: var(--link-color);
+}
+
+.feed-items-panel {
+    width: calc(100% - var(--right-side-bar-size));
+}
+
+@media (max-width: 1200px) {
+    .right-side-bar {
+        display: none;
+    }
+    .feed-items-panel {
+        width: 100% !important;
+    }
 }

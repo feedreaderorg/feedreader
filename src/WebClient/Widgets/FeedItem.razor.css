@@ -10,7 +10,6 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    margin: 0px 6px;
 }
 
 .head .feed-name {
@@ -30,6 +29,7 @@
     flex-direction: column;
     flex: 1;
     margin-right: 8px;
+    overflow: hidden;
 }
 
 .body .title-and-summary .title {
@@ -57,6 +57,10 @@
     border-radius: 8px;
 }
 
+.body {
+    height: 124px;
+}
+
 .footer {
     display: flex;
     margin-top: 8px;
@@ -70,4 +74,11 @@
 
 .btn-border-only i {
     margin-right: 4px;
+}
+
+
+@media (max-width: 1200px) {
+    .body img {
+        width: 100px !important;
+    }
 }

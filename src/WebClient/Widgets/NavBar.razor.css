@@ -23,7 +23,7 @@
     border-radius: 50%;
 }
 
-.logo span {
+.logo a {
     margin-left: var(--left-side-button-text-margin-left);
     color: #ffffff;
     font-size: 22px;

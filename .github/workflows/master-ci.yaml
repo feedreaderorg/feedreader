@@ -63,14 +63,6 @@ jobs:
           tags: docker.xyb.name/feedreader-devtest/taskserver:latest,docker.xyb.name/feedreader-devtest/taskserver:master-${{ github.sha }}
           push: true
 
-      - name: Build And Push Docker Image for messageserver
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: src/MessageServer/Dockerfile
-          tags: docker.xyb.name/feedreader-devtest/messageserver:master-${{ github.sha }}
-          push: true
-
       - name: Build And Push Docker Image for textclassificationserver
         uses: docker/build-push-action@v2
         with:
@@ -94,4 +86,3 @@ jobs:
           images: |
             docker.xyb.name/feedreader-devtest/webclient:master-${{ github.sha }}
             docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
-            docker.xyb.name/feedreader-devtest/messageserver:master-${{ github.sha }}

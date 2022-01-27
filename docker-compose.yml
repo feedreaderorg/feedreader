@@ -34,14 +34,6 @@ services:
       - TextClassificationServer=http://textclassificationserver
       - TextClassificationBatchSize=10
 
-  messageserver:
-    image: feedreader-messageserver
-    build:
-      context: .
-      dockerfile: src/MessageServer/Dockerfile
-    environment:
-      - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader-messageserver;User Id=feedreader;Password=feedreader
-
   textclassificationserver:
     image: feedreader-textclassificationserver
     build:

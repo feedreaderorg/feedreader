@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCore", "src\ServerCor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskServer", "src\TaskServer\TaskServer.csproj", "{330C00DF-F381-4E05-ABC1-24CA4B9B0894}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageServer", "src\MessageServer\MessageServer.csproj", "{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{277DF4D9-B036-422B-A564-E902E5FB140B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCoreTest", "test\ServerCoreTest\ServerCoreTest.csproj", "{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}"
@@ -45,10 +43,6 @@ Global
 		{330C00DF-F381-4E05-ABC1-24CA4B9B0894}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{330C00DF-F381-4E05-ABC1-24CA4B9B0894}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{330C00DF-F381-4E05-ABC1-24CA4B9B0894}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0B37C74-B1CC-4C85-8EF5-AA243E1416E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU

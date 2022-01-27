@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 
@@ -52,6 +53,8 @@ namespace FeedReader.ServerCore.Models
         public DateTime LastUpdatedTime { get; set; }
 
         public List<FeedItem> FeedItems { get; set; }
+
+        public NpgsqlTsVector SearchVector { get; set; }
     }
 
     [Index(nameof(Category), IsUnique = false)]

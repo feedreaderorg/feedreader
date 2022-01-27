@@ -17,6 +17,14 @@ namespace FeedReader.ServerCore
             modelBuilder.Entity<Favorite>().HasKey(f => new { f.UserId, f.FeedItemId });
 
             modelBuilder.Entity<FeedSubscription>().HasKey(f => new { f.UserId, f.FeedId });
+
+            modelBuilder.Entity<FeedInfo>().HasGeneratedTsVectorColumn(
+                    p => p.SearchVector,
+                    "english",
+                    p => new { p.Name, p.SubscriptionName, p.Description }
+                )
+                .HasIndex(p => p.SearchVector)
+                .HasMethod("GIN");
         }
 
         public DbSet<File> Files { get; set; }

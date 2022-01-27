@@ -42,6 +42,10 @@ namespace FeedReader.ServerCore.Services
 
             // Normalize query string.
             query = query.Trim().TrimEnd('/');
+            if (string.IsNullOrEmpty(query))
+            {
+                return feeds;
+            }
 
             // Treat it as uri.
             Uri uri;
@@ -59,6 +63,15 @@ namespace FeedReader.ServerCore.Services
                 {
                     // Ok, try uri directly.
                     await TryToDiscoverFeedsFromUriAsync(uri, feeds);
+                }
+                return feeds;
+            }
+            else
+            {
+                // Search in name and description.
+                using (var db = await DbFactory.CreateDbContextAsync())
+                {
+                    feeds = db.FeedInfos.Where(f => f.SearchVector.Matches(query)).ToList();
                 }
             }
 

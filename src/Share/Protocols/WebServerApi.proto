@@ -13,7 +13,6 @@ service WebServerApi
     rpc GetFavorites(GetFavoritesRequest) returns (GetFavoritesResponse);
     rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
     rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
-    rpc SubscribeEvents(google.protobuf.Empty) returns (stream Event);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
     rpc UpdateFeedSubscription(UpdateFeedSubscriptionRequest) returns (UpdateFeedSubscriptionResponse);
 }

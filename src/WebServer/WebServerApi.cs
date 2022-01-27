@@ -115,28 +115,6 @@ namespace FeedReader.WebServer
             return new UpdateFeedSubscriptionResponse();
         }
 
-        public override async Task SubscribeEvents(Empty request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            var userId = GetUserId(context);
-            var sessionId = context.GetHashCode();
-            UserService.SubscribeUserEvent(userId, sessionId, async user =>
-            {
-                try
-                {
-                    await responseStream.WriteAsync(new Event()
-                    {
-                        User = user.ToProtocolUser()
-                    });
-                }
-                catch
-                {
-                }
-            });
-
-            await Task.Delay(60 * 1000);
-            UserService.UnsubscribeUserEvent(userId, sessionId);
-        }
-
         public override async Task<GetFavoritesResponse> GetFavorites(GetFavoritesRequest request, ServerCallContext context)
         {
             var favorites = await UserService.GetFavoritesAsync(GetUserId(context), request.Page);

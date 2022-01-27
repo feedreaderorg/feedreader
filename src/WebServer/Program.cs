@@ -87,8 +87,6 @@ namespace FeedReader.WebServer
                 }
             });
 
-            app.UseBlazorFrameworkFiles();
-
             app.UseRouting();
 
             app.UseGrpcWeb();

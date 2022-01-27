@@ -211,21 +211,6 @@ namespace FeedReader.WebClient.Models
                 var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
                 var grpcChannel = GrpcChannel.ForAddress(ServerAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
                 WebServerApi = new WebServerApiClient(grpcChannel.Intercept(new GrpcInterceptor(OnUnauthenticatedException)));
-                SubscribeEvents();
-            }
-        }
-
-        async void SubscribeEvents()
-        {
-            var events = WebServerApi.SubscribeEvents(new Google.Protobuf.WellKnownTypes.Empty());
-            while (await events.ResponseStream.MoveNext(default(CancellationToken)))
-            {
-                switch (events.ResponseStream.Current.EventCase)
-                {
-                    case Share.Protocols.Event.EventOneofCase.User:
-                        UpdateUser(events.ResponseStream.Current.User);
-                        break;
-                }
             }
         }
 

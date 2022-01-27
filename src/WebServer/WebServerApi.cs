@@ -147,12 +147,29 @@ namespace FeedReader.WebServer
 
         public override async Task<GetFeedInfoResponse> GetFeedInfo(GetFeedInfoRequest request, ServerCallContext context)
         {
-            if (string.IsNullOrEmpty(request.FeedId))
+            ServerCore.Models.FeedInfo feedInfo = null;
+            switch (request.KeyCase)
             {
-                throw new ArgumentException("FeedId can't be null", "FeedId");
+                case GetFeedInfoRequest.KeyOneofCase.FeedId:
+                    if (string.IsNullOrEmpty(request.FeedId))
+                    {
+                        throw new ArgumentException("FeedId can't be empty", "FeedId");
+                    }
+                    feedInfo = await FeedService.GetFeedInfoById(Guid.Parse(request.FeedId));
+                    break;
+
+                case GetFeedInfoRequest.KeyOneofCase.SubscriptionName:
+                    if (string.IsNullOrEmpty(request.SubscriptionName))
+                    {
+                        throw new ArgumentException("SubscriptionName can't be empty", "FeedId");
+                    }
+                    feedInfo = await FeedService.GetFeedInfoBySubscriptionName(request.SubscriptionName);
+                    break;
+
+                default:
+                    throw new ArgumentException();
             }
 
-            var feedInfo = await FeedService.GetFeedInfoAsync(Guid.Parse(request.FeedId));
             if (feedInfo == null)
             {
                 return new GetFeedInfoResponse();

@@ -50,7 +50,10 @@ message FavoriteFeedItemResponse
 
 message GetFeedInfoRequest
 {
-    string FeedId = 1;
+    oneof Key {
+        string FeedId = 1;
+        string SubscriptionName = 2;
+    }
 }
 
 message GetFeedInfoResponse

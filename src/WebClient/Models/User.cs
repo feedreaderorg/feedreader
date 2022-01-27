@@ -42,8 +42,6 @@ namespace FeedReader.WebClient.Models
 
         public List<Feed> SubscribedFeeds { get; set; } = new List<Feed>();
 
-        public List<Feed> AllFeeds { get; set; } = new List<Feed>();
-
         public WebServerApiClient WebServerApi { get; set; }
 
         [Inject]
@@ -138,7 +136,7 @@ namespace FeedReader.WebClient.Models
             });
         }
 
-        public Feed GetFeed(string feedSubscriptionName)
+        public async Task<Feed> GetFeed(string feedSubscriptionName)
         {
             if (string.IsNullOrWhiteSpace(feedSubscriptionName))
             {
@@ -149,7 +147,16 @@ namespace FeedReader.WebClient.Models
                 var feed = SubscribedFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
                 if (feed == null)
                 {
-                    feed = AllFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
+                    try
+                    {
+                        feed = (await WebServerApi.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
+                        {
+                            SubscriptionName = feedSubscriptionName
+                        })).Feed.ToModelFeed();
+                    }
+                    catch
+                    {
+                    }
                 }
                 return feed;
             }
@@ -247,17 +254,6 @@ namespace FeedReader.WebClient.Models
                     var tmp = feed.ToModelFeed();
                     tmp.IsSubscribed = true;
                     SubscribedFeeds.Add(tmp);
-                }
-
-                // Save a copy in all feeds.
-                f = AllFeeds.FirstOrDefault(f => f.Id == feed.Id);
-                if (f != null)
-                {
-                    f.UpdateFromProtoclFeedInfo(feed);
-                }
-                else
-                {
-                    AllFeeds.Add(feed.ToModelFeed());
                 }
             }
 

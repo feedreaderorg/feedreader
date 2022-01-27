@@ -55,6 +55,7 @@
 .feed img {
     width: 64px;
     height: 64px;
+    border-radius: 50%;
 }
 
 .feed .name {
@@ -62,8 +63,14 @@
 }
 
 .feed .description, .feed .statics {
-    font-size: 13px;
     color: var(--subtext-color);
+}
+
+.feed .description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 
 .feed .statics i {
@@ -74,4 +81,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.feed:hover {
+    background-color: var(--left-side-bar-bg-color);
 }

@@ -97,11 +97,19 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        public async Task<FeedInfo> GetFeedInfoAsync(Guid feedId)
+        public async Task<FeedInfo> GetFeedInfoById(Guid feedId)
         {
-            using (var db = DbFactory.CreateDbContext())
+            using (var db = await DbFactory.CreateDbContextAsync())
             {
                 return await db.FeedInfos.FindAsync(feedId);
+            }
+        }
+
+        public async Task<FeedInfo> GetFeedInfoBySubscriptionName(string subscriptionName)
+        {
+            using (var db = await DbFactory.CreateDbContextAsync())
+            {
+                return await db.FeedInfos.FirstOrDefaultAsync(f => f.SubscriptionName == subscriptionName);
             }
         }
 

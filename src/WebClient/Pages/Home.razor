@@ -3,59 +3,53 @@
 @layout LeftSideBarLayout
 
 <div class="add-page flex-grow-1">
-	<div class="page-content">
-		<div class="panel flex-grow-1">
+	<div class="page-content flex-column">
+		<div class="panel flex-grow-1 mb-3">
 			<div class="search">
-				<Search Placeholder="Search RSS link" InputChanged="@OnSearchRssChanged" />
+				<Search Placeholder="Search by link, name, description ..." InputChanged="@OnSearchRssChanged" />
 			</div>
 		</div>
-	</div>
-	@if (SearchingCount != 0)
-	{
-		<div class="panel waitting">
-			<img src="img/loading-buffering.gif"/>
-		</div>
-	}
-	else if (Feeds != null)
-	{
-		var index = 0;
-		<div class="panel feeds">
-			@foreach (var g in Feeds.GroupBy(f => index++ / 2))
-			{
-				<div class="row">
-				@foreach (var feed in g)
+		@if (SearchingCount != 0)
+		{
+			<div class="panel waitting">
+				<img src="img/loading-buffering.gif"/>
+			</div>
+		}
+		else if (Feeds != null)
+		{
+			var index = 0;
+			<div class="panel feeds mb-3">
+				@foreach (var g in Feeds.GroupBy(f => index++ / 2))
 				{
-					<div class="feed-wrapper">
-						<div class="feed">
-							<img src="@feed.IconUri" />
-							<div class="content">
-								<div class="name">@feed.Name</div>
-								<div class="description">@feed.Description</div>
-								<div class="toolbar">
-									<div class="statics"><i class="far fa-user"></i>@feed.TotalSubscribers</div>
-									<div class="actions">
-										@if (CurrentUser.SubscribedFeeds.Find(f => f.Id == feed.Id) == null)
-										{
-											<ActionButton Text="subscribe" OnClick="@(() => Subscribe(feed))"/>
-										}
-										else
-										{
-											<ActionButton Text="unsubscribe" OnClick="@(() => Unsubscribe(feed))"/>
-										}
+					<div class="row">
+					@foreach (var feed in g)
+					{
+						<div class="feed-wrapper">
+							<a class="feed" href="@($"/feed/{feed.SubscriptionName}")">
+								<img src="@feed.IconUri" />
+								<div class="content vstack gap-2">
+									<div class="name">@feed.Name</div>
+									<div class="description">@feed.Description</div>
+									<div class="toolbar">
+										<div class="statics hstack gap-3">
+											<div><i class="bi bi-people" />@feed.TotalSubscribers</div>
+											<div><i class="bi bi-newspaper" />@feed.TotalPosts</div>
+											<div><i class="bi bi-star-fill" />@feed.TotalFavorites</div>
+										</div>
 									</div>
 								</div>
-							</div>
+							</a>
 						</div>
+					}
+					@if (g.Count() % 2 == 1)
+					{
+						<div class="feed-wrapper"/>
+					}
 					</div>
 				}
-				@if (g.Count() % 2 == 1)
-				{
-					<div class="feed-wrapper"/>
-				}
-				</div>
-			}
-		</div>
-	}
+			</div>
+		}
+	</div>
 </div>
 
 @code

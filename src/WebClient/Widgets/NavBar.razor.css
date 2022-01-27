@@ -14,6 +14,8 @@
 .logo {
     display: flex;
     align-items: center;
+    color: #ffffff;
+    font-size: 22px;
 }
 
 .logo img, .navbar .toolbar img {
@@ -21,12 +23,7 @@
     height: var(--left-side-button-image-size);
     border: 2px solid var(--main-text-bg-color);
     border-radius: 50%;
-}
-
-.logo a {
-    margin-left: var(--left-side-button-text-margin-left);
-    color: #ffffff;
-    font-size: 22px;
+    margin-right: var(--left-side-button-text-margin-left);
 }
 
 .toolbar {

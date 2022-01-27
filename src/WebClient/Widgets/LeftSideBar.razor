@@ -1,34 +1,28 @@
-﻿@inject NavigationManager NavigationManager
-
-<div class="left-side-bar d-flex flex-column flex-grow-1">
+﻿<div class="left-side-bar d-flex flex-column flex-grow-1">
 	<div class="flex-grow-1">
-		<div class="section">
-			<ul>
-				@foreach (var item in ActionItems)
-				{
-					<li>
-						<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
-							<img src="@item.ImgUri"><span>@item.Name</span>
-						</a>
-					</li>
-				}
-			</ul>
+		<div class="section vstack gap-3">
+			<NavLink href="/" Match="NavLinkMatch.All">
+				<img src="img/home.png" /> Home
+			</NavLink>
+
+			<NavLink href="/add" Match="NavLinkMatch.All">
+				<img src="img/add.png" /> Add feed
+			</NavLink>
+
+			<NavLink href="/favorites" Match="NavLinkMatch.All">
+				<img src="img/favorite.png" /> My favorites
+			</NavLink>
 		</div>
 		@if (CurrentUser.SubscribedFeeds.Count > 0)
 		{
-			<div class="section">
+			<div class="section vstack gap-3">
 				<div class="title">MY FEEDS</div>
-				<ul>
-
-					@foreach (var item in UserSubscribedFeeds)
-					{
-						<li>
-							<a href="@item.TargetUri" class="@(item.IsSelected ? "selected" : "")">
-								<img src="@item.ImgUri"><span>@item.Name</span>
-							</a>
-						</li>
-					}
-				</ul>
+				@foreach (var feed in CurrentUser.SubscribedFeeds)
+				{
+					<NavLink href="@($"/feed/{feed.SubscriptionName}")" Match="NavLinkMatch.All">
+						<img src="@feed.IconUri" /> @feed.Name
+					</NavLink>
+				}
 			</div>
 		}
 	</div>
@@ -43,103 +37,9 @@
 		</ul>
 	</div>
 </div>
+
 @code
 {
-	class ActionItem
-	{
-		public string TargetUri { get; set; }
-		public string ImgUri { get; set; }
-		public string Name { get; set; }
-		public bool IsSelected { get; set; }
-	}
-
-	List<ActionItem> ActionItems { get; set; }
-
-	List<ActionItem> UserSubscribedFeeds { get; set; }
-
 	[CascadingParameter]
 	public User CurrentUser { get; set; }
-
-	protected override void OnInitialized()
-	{
-		NavigationManager.LocationChanged += OnLocationChanged;
-		OnLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, false));
-	}
-
-	protected override void OnParametersSet()
-	{
-		ActionItems = new List<ActionItem>()
-		{
-			new ActionItem()
-			{
-				TargetUri = "/",
-				ImgUri = "img/home.png",
-				Name = "Home",
-			}
-		};
-
-		if (CurrentUser.Role == UserRole.Guest)
-		{
-			ActionItems.Add(new ActionItem()
-				{
-					TargetUri = "/login",
-					ImgUri = "img/login.png",
-					Name = "Login",
-				});
-		}
-		else
-		{
-			ActionItems.Add(new ActionItem()
-				{
-					TargetUri = "/favorites",
-					ImgUri = "img/favorite.png",
-					Name = "My favorites",
-				});
-		}
-
-		UserSubscribedFeeds = new List<ActionItem>()
-		{
-			new ActionItem()
-			{
-				TargetUri = "/add",
-				ImgUri = "img/add.png",
-				Name = "Add feed",
-			}
-		};
-		UserSubscribedFeeds.AddRange(CurrentUser.SubscribedFeeds.Select(f => new ActionItem()
-		{
-			TargetUri = $"/feed/{f.SubscriptionName}",
-			ImgUri = f.IconUri,
-			Name = f.Name
-		}));
-	}
-
-	public void Dispose()
-	{
-		NavigationManager.LocationChanged -= OnLocationChanged;
-	}
-
-	void OnLocationChanged(object sender, LocationChangedEventArgs args)
-	{
-		var realPath = NavigationManager.ToBaseRelativePath(args.Location);
-		var path = new PathString($"/{realPath}");
-
-		if (ActionItems != null)
-		{
-			foreach (var item in ActionItems)
-			{
-				item.IsSelected = path.StartsWithSegments(item.TargetUri);
-			}
-		}
-
-		if (UserSubscribedFeeds != null)
-		{
-			foreach (var item in UserSubscribedFeeds)
-			{
-				item.IsSelected = path.StartsWithSegments(item.TargetUri);
-			}
-		}
-
-		StateHasChanged();
-	}
 }

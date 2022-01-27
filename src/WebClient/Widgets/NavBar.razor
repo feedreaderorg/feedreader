@@ -1,11 +1,9 @@
 @inject IJSRuntime JSRuntime
 
 <div class="navbar">
-    <div class="logo" href="/">
-        <div @onclick="ToggleLeftSideBar"><img src="img/logo.svg"/></div>
-        <a href="/">FeedReader</a>
+    <div class="logo" @onclick="ToggleLeftSideBar">
+        <img src="img/logo.svg"/> FeedReader
     </div>
-    <div class="toolbar"></div>
 </div>
 
 @code

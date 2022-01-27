@@ -1,9 +1,4 @@
-﻿.left-side-bar {
-    
-    
-}
-
-.section {
+﻿.section {
     padding: 9px 0px;
 }
 
@@ -14,40 +9,32 @@
     font-weight: 500;
 }
 
-a {
+::deep a {
     display: flex;
     align-items: center;
     color: var(--subtext-color);
-    padding: 10px 0px;
 }
 
-a:hover {
+::deep a:hover {
     color: var(--left-side-bar-selected-color);
 }
 
-img {
+::deep a.active {
+    color: var(--left-side-bar-selected-color);
+}
+
+::deep a.active {
+    font-weight: 500;
+}
+
+::deep a img {
     width: var(--left-side-button-image-size);
     height: var(--left-side-button-image-size);
     border-radius: 50%;
+    margin-right: var(--left-side-button-text-margin-left);
 }
 
-a:hover img {
+::deep a:hover img {
     border: 1px solid var(--left-side-bar-selected-color);
     padding: 2px;
-}
-
-i {
-    font-size: 26px;
-}
-
-span {
-    margin-left: var(--left-side-button-text-margin-left);
-}
-
-a.selected {
-    color: var(--left-side-bar-selected-color);
-}
-
-a.selected span {
-    font-weight: 500;
 }

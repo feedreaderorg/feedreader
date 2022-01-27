@@ -8,7 +8,6 @@ using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
-using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using static FeedReader.Share.Protocols.AuthServerApi;
 using static FeedReader.Share.Protocols.WebServerApi;
@@ -23,7 +22,6 @@ namespace FeedReader.WebClient.Models
 
     public class User
     {
-        #region Properties
         string ServerAddress { get; set; }
 
         Dictionary<string, List<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, List<FeedItem>>();
@@ -36,33 +34,43 @@ namespace FeedReader.WebClient.Models
 
         public UserRole Role { get; set; }
 
-        public string AvatarUri { get; set; }
-
         public event EventHandler OnStateChanged;
 
         public List<Feed> SubscribedFeeds { get; set; } = new List<Feed>();
 
         public WebServerApiClient WebServerApi { get; set; }
 
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
-        #endregion
-
         AuthServerApiClient AuthServerApi { get; set; }
-        
-        public User()
+
+        private IJSRuntime JS { get; set; }
+
+        public User(IJSRuntime js)
         {
+            JS = JS;
             Reset();
         }
 
-        public void SetServerAddress(string serverAddress)
+        public async Task Init(string serverAddress)
         {
             ServerAddress = serverAddress;
             var httpHandler = new HttpClientHandler();
             var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
             var grpcChannel = GrpcChannel.ForAddress(serverAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
             AuthServerApi = new AuthServerApiClient(grpcChannel);
-            RefreshWebServerApi();
+
+            // Try to load token
+            Token = await Load("feedreader-access-token");
+            if (!string.IsNullOrEmpty(Token))
+            {
+                try
+                {
+                    await LoginAsync(Token);
+                }
+                catch
+                {
+                    Reset();
+                }
+            }
         }
 
         public async Task FavoriteFeedItemAsync(FeedItem feedItem)
@@ -82,18 +90,23 @@ namespace FeedReader.WebClient.Models
                 Token = token,
             });
 
+            // Save the new token.
+            await Save("feedreader-access-token", Token);
+
             // Update user.
             Id = response.UserId;
             Token = response.Token;
             Role = UserRole.Normal;
             RefreshWebServerApi();
             OnStateChanged?.Invoke(this, null);
+            _ = RefreshUserProfile();
         }
 
         public async Task LogoutAsync()
         {
             // TODO: logout from server?
             await Task.Delay(2000);
+            await ClearStorage();
             Reset();
             await Task.CompletedTask;
         }
@@ -189,11 +202,18 @@ namespace FeedReader.WebClient.Models
             }
         }
 
+        public async Task RefreshUserProfile()
+        {
+            UpdateSelf((await WebServerApi.GetUserProfileAsync(new Share.Protocols.GetUserProfileRequest()
+            {
+                UserId = string.Empty
+            })).User);
+        }
+
         void Reset()
         {
             Token = "";
             Role = UserRole.Guest;
-            AvatarUri = "img/default-avatar.png";
             SubscribedFeeds.Clear();
             RefreshWebServerApi();
             OnStateChanged?.Invoke(this, null);
@@ -224,28 +244,7 @@ namespace FeedReader.WebClient.Models
 
         void UpdateSelf(Share.Protocols.User user)
         {
-            foreach (var feed in user.SubscribedFeeds)
-            {
-                var f = SubscribedFeeds.FirstOrDefault(f => f.Id == feed.Id);
-                if (f != null)
-                {
-                    // Update existed feed.
-                    f.UpdateFromProtoclFeedInfo(feed);
-                    f.IsSubscribed = true;
-                }
-                else
-                {
-                    // Add new feed.
-                    var tmp = feed.ToModelFeed();
-                    tmp.IsSubscribed = true;
-                    SubscribedFeeds.Add(tmp);
-                }
-            }
-
-            // Remove unexisted feed
-            SubscribedFeeds.RemoveAll(f => user.SubscribedFeeds.FirstOrDefault(x => x.Id == f.Id) == null);
-
-            // Notify user state has been changed.
+            SubscribedFeeds = user.SubscribedFeeds.Select(f => f.ToModelFeed()).ToList();
             OnStateChanged?.Invoke(this, null);
         }
 
@@ -296,6 +295,49 @@ namespace FeedReader.WebClient.Models
         {
             // TODO: log exception message.
             Reset();
+        }
+
+        private async Task<string> Load(string key)
+        {
+            try
+            {
+                // Try to get the saved access token from the local cache.
+                return await JS.InvokeAsync<string>("localStorage.getItem", "access-token");
+            }
+            catch
+            {
+                await Save("access-token", null);
+                return null;
+            }
+        }
+
+        private async Task Save(string key, string value)
+        {
+            try
+            {
+                if (value == null)
+                {
+                    await JS.InvokeVoidAsync("localStorage.removeItem", key);
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("localStorage.setItem", key, value);
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private async Task ClearStorage()
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("localStorage.clear");
+            }
+            catch
+            {
+            }
         }
 
         #region CustomizedHttpClientHandler & GrpcInterceptor

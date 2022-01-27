@@ -18,6 +18,16 @@ namespace FeedReader.ServerCore.Services
             DbFactory = dbFactory;
         }
 
+        public async Task<User> GetUserProfile(Guid userId)
+        {
+            using (var db = await DbFactory.CreateDbContextAsync())
+            {
+                return await db.Users
+                    .Include(u => u.SubscribedFeeds).ThenInclude(s => s.Feed)
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+            }
+        }
+
         public async Task<List<FeedItem>> GetFavoritesAsync(Guid userId, int page)
         {
             using (var db = DbFactory.CreateDbContext())

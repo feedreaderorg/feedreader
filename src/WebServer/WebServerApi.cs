@@ -1,12 +1,10 @@
-﻿using FeedReader.ServerCore;
-using FeedReader.ServerCore.Models;
-using FeedReader.ServerCore.Services;
+﻿using FeedReader.ServerCore.Services;
 using FeedReader.Share.Protocols;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -70,6 +68,26 @@ namespace FeedReader.WebServer
         {
             FeedService = feedService;
             UserService = userService;
+        }
+
+        public override async Task<GetUserProfileResponse> GetUserProfile(GetUserProfileRequest request, ServerCallContext context)
+        {
+            var userId = GetUserId(context);
+            if (!string.IsNullOrEmpty(request.UserId))
+            {
+                userId = Guid.Parse(request.UserId);
+            }
+
+            var user = await UserService.GetUserProfile(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            return new GetUserProfileResponse()
+            {
+                User = user.ToProtocolUser()
+            };
         }
 
         public override async Task<DiscoverFeedsResponse> DiscoverFeeds(DiscoverFeedsRequest request, ServerCallContext context)

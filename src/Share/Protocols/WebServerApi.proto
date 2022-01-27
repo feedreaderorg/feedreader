@@ -1,6 +1,5 @@
 ﻿syntax = "proto3";
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "Protocols/Types.proto";
 
@@ -8,6 +7,7 @@ option csharp_namespace = "FeedReader.Share.Protocols";
 
 service WebServerApi
 {
+    rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc FavoriteFeedItem(FavoriteFeedItemRequest) returns (FavoriteFeedItemResponse);
     rpc GetFavorites(GetFavoritesRequest) returns (GetFavoritesResponse);
@@ -15,6 +15,17 @@ service WebServerApi
     rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
     rpc UpdateFeedSubscription(UpdateFeedSubscriptionRequest) returns (UpdateFeedSubscriptionResponse);
+}
+
+message GetUserProfileRequest
+{
+    // If `UserId` is empty, will return the userself profile.
+    string UserId = 1;
+}
+
+message GetUserProfileResponse
+{
+    User User = 1;
 }
 
 message DiscoverFeedsRequest

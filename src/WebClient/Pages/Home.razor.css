@@ -1,4 +1,8 @@
-﻿.waitting {
+﻿.page-content {
+    margin-top: 0px;
+}
+
+.waitting {
     display: flex;
     justify-content: center;
 }

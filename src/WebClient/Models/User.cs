@@ -246,7 +246,12 @@ namespace FeedReader.WebClient.Models
 
         void UpdateSelf(Share.Protocols.User user)
         {
-            SubscribedFeeds = user.SubscribedFeeds.Select(f => f.ToModelFeed()).ToList();
+            SubscribedFeeds = user.SubscribedFeeds.Select(f =>
+            {
+                var r = f.ToModelFeed();
+                r.IsSubscribed = true;
+                return r;
+            }).ToList();
             OnStateChanged?.Invoke(this, null);
         }
 

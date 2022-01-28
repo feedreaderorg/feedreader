@@ -9,7 +9,14 @@
         </div>
         <div class="content">
             <div class="title">@Title</div>
-            <div class="detail">@Detail</div>
+            @if (string.IsNullOrEmpty(Detail))
+            {
+                <div class="detail">&nbsp;</div>
+            }
+            else
+            {
+                <div class="detail">@Detail</div>
+            }
             <a href="@BackUri">@BackTitle</a>
         </div>
     </div>
@@ -19,7 +26,7 @@
 {
     string Title { get; set; } = "Error";
 
-    string Detail { get; set; } = "Operation failed.";
+    string Detail { get; set; }
 
     string BackTitle { get; set; } = "Back to homepage";
 

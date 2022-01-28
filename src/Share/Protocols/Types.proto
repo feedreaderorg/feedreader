@@ -15,7 +15,7 @@ message FeedInfo
     string SiteLink = 7;
     int32 TotalPosts = 8;
     int32 TotalFavorites = 9;
-    google.protobuf.Timestamp LastReadedTime = 10;
+    optional google.protobuf.Timestamp LastReadedTime = 10;
     string RssUri = 11;
 }
 

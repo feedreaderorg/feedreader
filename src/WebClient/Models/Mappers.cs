@@ -16,7 +16,8 @@ namespace FeedReader.WebClient.Models
                 TotalFavorites = f.TotalFavorites,
                 TotalPosts = f.TotalPosts,
                 TotalSubscribers = f.TotalSubscribers,
-                SiteLink = f.SiteLink
+                SiteLink = f.SiteLink,
+                LastReadedTime = f.LastReadedTime == null ? default(DateTime) : f.LastReadedTime.ToDateTime(),
             };
         }
 

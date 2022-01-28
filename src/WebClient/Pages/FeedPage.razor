@@ -17,7 +17,7 @@
             @if (Feed.IsSubscribed)
             {
                 <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
-                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="@Feed.MarkAsReaded" />
+                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="MarkAsReaded" />
             }
             else
             {
@@ -107,5 +107,11 @@
         {
             await Feed.RefreshAsync();
         }
+    }
+
+    private async Task MarkAsReaded()
+    {
+        await Feed.MarkAsReaded();
+        StateHasChanged();
     }
 }

@@ -46,7 +46,7 @@ namespace FeedReader.WebClient.Models
 
         public User(IJSRuntime js)
         {
-            JS = JS;
+            JS = js;
             Reset();
         }
 
@@ -91,11 +91,11 @@ namespace FeedReader.WebClient.Models
             });
 
             // Save the new token.
+            Token = response.Token;
             await Save("feedreader-access-token", Token);
 
             // Update user.
             Id = response.UserId;
-            Token = response.Token;
             Role = UserRole.Normal;
             RefreshWebServerApi();
             OnStateChanged?.Invoke(this, null);
@@ -261,11 +261,11 @@ namespace FeedReader.WebClient.Models
             try
             {
                 // Try to get the saved access token from the local cache.
-                return await JS.InvokeAsync<string>("localStorage.getItem", "access-token");
+                return await JS.InvokeAsync<string>("localStorage.getItem", key);
             }
             catch
             {
-                await Save("access-token", null);
+                await Save(key, null);
                 return null;
             }
         }

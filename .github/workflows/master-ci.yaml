@@ -82,7 +82,6 @@ jobs:
           manifests: |
             kubernetes/devtest-configs/webclient.yaml
             kubernetes/devtest-configs/webserver.yaml
-            kubernetes/devtest.yaml
           images: |
             docker.xyb.name/feedreader-devtest/webclient:master-${{ github.sha }}
             docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}

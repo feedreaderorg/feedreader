@@ -24,8 +24,6 @@ namespace FeedReader.WebClient.Models
     {
         string ServerAddress { get; set; }
 
-        Dictionary<string, List<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, List<FeedItem>>();
-
         public List<FeedItem> Favorites { get; set; } = new List<FeedItem>();
 
         public string Id { get; set; }
@@ -336,12 +334,6 @@ namespace FeedReader.WebClient.Models
                 return new AsyncUnaryCall<TResponse>(ProcessResponse(call.ResponseAsync, OnUnauthenticatedException), call.ResponseHeadersAsync, call.GetStatus, call.GetTrailers, call.Dispose);
             }
 
-            public override AsyncServerStreamingCall<TResponse> AsyncServerStreamingCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncServerStreamingCallContinuation<TRequest, TResponse> continuation)
-            {
-                var call = continuation(request, context);
-                return new AsyncServerStreamingCall<TResponse>(new ResponseStream<TResponse>(call.ResponseStream, OnUnauthenticatedException), call.ResponseHeadersAsync, call.GetStatus, call.GetTrailers, call.Dispose);
-            }
-
             public static async Task<TResponse> ProcessResponse<TResponse>(Task<TResponse> task, Action<string> onUnauthenticatedException)
             {
                 try
@@ -360,25 +352,6 @@ namespace FeedReader.WebClient.Models
                         throw;
                     }
                 }
-            }
-        }
-
-        class ResponseStream<TResponse> : IAsyncStreamReader<TResponse>
-        {
-            IAsyncStreamReader<TResponse> Stream { get; set; }
-            Action<string> OnUnauthenticatedException { get; set; }
-
-            public TResponse Current => Stream.Current;
-
-            public ResponseStream(IAsyncStreamReader<TResponse> stream, Action<string> onUnauthenticatedException)
-            {
-                Stream = stream;
-                OnUnauthenticatedException = onUnauthenticatedException;
-            }
-
-            public Task<bool> MoveNext(CancellationToken cancellationToken)
-            {
-                return GrpcInterceptor.ProcessResponse(Stream.MoveNext(cancellationToken), OnUnauthenticatedException);
             }
         }
         #endregion

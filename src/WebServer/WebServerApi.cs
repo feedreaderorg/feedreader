@@ -32,20 +32,6 @@ namespace FeedReader.WebServer
             }
         }
 
-        public override async Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
-        {
-            try
-            {
-                ValidateToken(context);
-                await base.ServerStreamingServerHandler(request, responseStream, context, continuation);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                throw new RpcException(new Status(StatusCode.Unauthenticated, ex.Message));
-            }
-            
-        }
-
         void ValidateToken(ServerCallContext context)
         {
             var token = context.RequestHeaders.Get("authentication")?.Value;

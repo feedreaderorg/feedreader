@@ -26,7 +26,7 @@ namespace FeedReader.WebClient.Models
 
         Dictionary<string, List<FeedItem>> FeedItemsCategories { get; set; } = new Dictionary<string, List<FeedItem>>();
 
-        public List<FeedItem> Favorites { get; } = new List<FeedItem>();
+        public List<FeedItem> Favorites { get; set; } = new List<FeedItem>();
 
         public string Id { get; set; }
 
@@ -175,30 +175,32 @@ namespace FeedReader.WebClient.Models
             }
         }
 
-        public async Task RefreshFavoritesAsync()
+        public async Task<IEnumerable<FeedItem>> GetFavorites(int startIndex, int count)
         {
-            var res = await WebServerApi.GetFavoritesAsync(new Share.Protocols.GetFavoritesRequest()
+            while (Favorites.Count < startIndex + count)
             {
-                Page = 0
-            });
-            await UpdateListFeedItemsAsync(Favorites, res.FeedItems);
-        }
+                var response = await App.CurrentUser.WebServerApi.GetFavoritesAsync(new Share.Protocols.GetFavoritesRequest()
+                {
+                    StartIndex = startIndex,
+                    Count = 50
+                });
+                var newItems = response.FeedItems.Select(i => i.ToModelFeedItem());
+                Favorites.AddRange(newItems);
+                Favorites = Favorites.DistinctBy(f => f.Id).OrderByDescending(f => f.PublishTime).ToList();
+                if (newItems.Count() < 50)
+                {
+                    break;
+                }
+            }
 
-        public List<Models.FeedItem> GetFeedItemsByCategory(string category)
-        {
-            if (string.IsNullOrEmpty(category))
+            if (startIndex >= Favorites.Count)
             {
-                return null;
+                return new List<FeedItem>();
             }
             else
             {
-                if (!FeedItemsCategories.ContainsKey(category))
-                {
-                    FeedItemsCategories.Add(category, new List<FeedItem>());
-                }
-
-                _ = RefreshFeedItemsCategoryAsync(category);
-                return FeedItemsCategories[category];
+                count = Math.Min(Favorites.Count - startIndex, count);
+                return Favorites.GetRange(startIndex, count);
             }
         }
 
@@ -246,49 +248,6 @@ namespace FeedReader.WebClient.Models
         {
             SubscribedFeeds = user.SubscribedFeeds.Select(f => f.ToModelFeed()).ToList();
             OnStateChanged?.Invoke(this, null);
-        }
-
-        async Task RefreshFeedItemsCategoryAsync(string category)
-        {
-            var res = await WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
-            {
-                Category = category,
-                StartIndex = 0,
-                Count = 50,
-            });
-            await UpdateListFeedItemsAsync(FeedItemsCategories[category], res.FeedItems);
-        }
-
-        async Task UpdateListFeedItemsAsync(List<FeedItem> feedItemList, IEnumerable<Share.Protocols.FeedItem> protocolFeedItems)
-        {
-            var modelFeedItems = new List<FeedItem>();
-            foreach (var feedItem in protocolFeedItems)
-            {
-                var item = feedItemList.FirstOrDefault(f => f.Id == feedItem.Id);
-                if (item != null)
-                {
-                    // TODO: need update feed item.
-                    continue;
-                }
-
-                var modelFeedItem = feedItem.ToModelFeedItem();
-                var feed = SubscribedFeeds.Find(f => f.Id == feedItem.FeedId);
-                if (feed == null)
-                {
-                    modelFeedItem.Feed = new Feed() { Id = feedItem.FeedId };
-                    await modelFeedItem.Feed.RefreshInfoAsync();
-                }
-                else
-                {
-                    modelFeedItem.Feed = feed;
-                }
-                modelFeedItems.Add(modelFeedItem);
-            }
-
-            if (modelFeedItems.Count > 0)
-            {
-                feedItemList.AddRange(modelFeedItems);
-            }
         }
 
         void OnUnauthenticatedException(string message)

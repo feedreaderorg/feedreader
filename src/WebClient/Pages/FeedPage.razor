@@ -25,7 +25,7 @@
             }
         </div>
         <div class="page-content">
-            <div class="feed-items-panel d-flex flex-column pe-lg-3">
+            <div class="feed-items-panel d-flex flex-column flex-grow-1 pe-lg-3">
                 <InfiniteScrolling ItemsProvider="@((startIndex, count, _) => Feed.GetFeedItems(startIndex, count))" Context="feedItem">
                     <ItemsTemplate>
                         <FeedItem ClassName="mb-3" Item=@feedItem />

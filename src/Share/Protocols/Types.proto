@@ -29,6 +29,7 @@ message FeedItem
     string Title = 6;
     string PictureUri = 7;
     int32 TotalFavorites = 8;
+    optional FeedInfo Feed = 9;
 }
 
 message User {

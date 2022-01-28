@@ -135,7 +135,21 @@ namespace FeedReader.WebServer
 
         public override async Task<GetFavoritesResponse> GetFavorites(GetFavoritesRequest request, ServerCallContext context)
         {
-            var favorites = await UserService.GetFavoritesAsync(GetUserId(context), request.Page);
+            if (request.StartIndex < 0)
+            {
+                throw new ArgumentException("'StartIndex' can't be less than 0.");
+            }
+            if (request.Count < 1 || request.Count > 50)
+            {
+                throw new ArgumentException("'Count' must be between 1 to 50.");
+            }
+
+            var userId = GetUserId(context);
+            if (!string.IsNullOrEmpty(request.UserId))
+            {
+                userId = Guid.Parse(request.UserId);
+            }
+            var favorites = await UserService.GetFavorites(userId, request.StartIndex, request.Count);
             var response = new GetFavoritesResponse();
             response.FeedItems.AddRange(favorites.Select(f => f.ToProtocolFeedItem()));
             return response;

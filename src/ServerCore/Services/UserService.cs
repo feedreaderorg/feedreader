@@ -28,17 +28,17 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        public async Task<List<FeedItem>> GetFavoritesAsync(Guid userId, int page)
+        public async Task<List<FeedItem>> GetFavorites(Guid userId, int startIndex, int count)
         {
             using (var db = DbFactory.CreateDbContext())
             {
                 return await db.Favorites
-                    .Include(f => f.FeedItem)
+                    .Include(f => f.FeedItem).ThenInclude(f => f.Feed)
                     .Where(f => f.UserId == userId)
                     .Select(f => f.FeedItem)
                     .OrderByDescending(f => f.PublishTime)
-                    .Skip(page * PAGE_ITEMS_COUNT)
-                    .Take(PAGE_ITEMS_COUNT)
+                    .Skip(startIndex)
+                    .Take(count)
                     .ToListAsync();
             }
         }

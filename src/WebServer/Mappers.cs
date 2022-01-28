@@ -51,7 +51,8 @@ namespace FeedReader.WebServer
                 PublishTime = f.PublishTime.ToProtocolTime(),
                 Summary = f.Summary ?? string.Empty,
                 Title = f.Title ?? string.Empty,
-                TotalFavorites = f.TotalFavorites
+                TotalFavorites = f.TotalFavorites,
+                Feed = f.Feed?.ToProtocolFeedInfo(),
             };
         }
 

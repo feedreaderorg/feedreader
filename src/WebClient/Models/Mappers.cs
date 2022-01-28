@@ -30,7 +30,8 @@ namespace FeedReader.WebClient.Models
                 PublishTime = f.PublishTime.ToDateTime(),
                 Summary = f.Summary,
                 Title = f.Title,
-                TotalFavorites = f.TotalFavorites
+                TotalFavorites = f.TotalFavorites,
+                Feed = f.Feed?.ToModelFeed(),
             };
         }
     }

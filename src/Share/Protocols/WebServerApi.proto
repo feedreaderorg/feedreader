@@ -40,7 +40,10 @@ message DiscoverFeedsResponse
 
 message GetFavoritesRequest
 {
-    int32 Page = 1;
+    // If `UserId` is empty, will return the userself favorites.
+    string UserId = 1;
+    int32 StartIndex = 2;
+    int32 Count = 3;
 }
 
 message GetFavoritesResponse

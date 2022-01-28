@@ -2,19 +2,22 @@
 @inherits LoginRequiredPageBase
 @layout LeftSideBarLayout
 
-<div class="favorites-page">
+<div class="favorites-page d-flex flex-grow-1">
 	<div class="page-header">
 		<h1>My favorites</h1>
 	</div>
-	<div class="page-content">
-		<div class="feed-items-panel">
-			@if (CurrentUser.Favorites.Count > 0)
-            {
-                foreach (var feedItem in CurrentUser.Favorites)
-                {
-					<FeedItem ClassName="mb-3" Item=@feedItem/>
-                }
-            }
-		</div>
+	<div class="page-content d-flex flex-grow-1">
+		<div class="feed-items-panel d-flex flex-column flex-grow-1 pe-lg-3">
+            <InfiniteScrolling ItemsProvider="@((startIndex, count, _) => App.CurrentUser.GetFavorites(startIndex, count))" Context="feedItem">
+                <ItemsTemplate>
+                    <FeedItem ClassName="mb-3" Item=@feedItem />
+                </ItemsTemplate>
+                <LoadingTemplate>
+                    <div class="d-flex justify-content-center">
+                        <img class="my-2" src="img/loading-buffering.gif" style="width: 32px; height: 32px;" />
+                    </div>
+                </LoadingTemplate>
+            </InfiniteScrolling>
+        </div>
 	</div>
 </div>

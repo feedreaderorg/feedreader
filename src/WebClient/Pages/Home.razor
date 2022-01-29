@@ -9,17 +9,24 @@
 				<Search Placeholder="Search by link, name, description ..." InputChanged="@OnSearchRssChanged" />
 			</div>
 		</div>
-		@if (SearchingCount != 0)
+		@if (SearchingCount != 0 || RecommededFeeds == null && Feeds == null)
 		{
 			<div class="panel waitting">
 				<img src="img/loading-buffering.gif"/>
 			</div>
 		}
-		else if (Feeds != null)
+		else
 		{
+			var feeds = Feeds ?? RecommededFeeds;
 			var index = 0;
+
+			if (Feeds == null)
+			{
+				<div class="title fs-4 ms-2 mb-2">You may like ...</div>
+			}
+
 			<div class="panel feeds mb-3">
-				@foreach (var g in Feeds.GroupBy(f => index++ / 2))
+				@foreach (var g in feeds.GroupBy(f => index++ / 2))
 				{
 					<div class="row">
 					@foreach (var feed in g)
@@ -54,11 +61,19 @@
 
 @code
 {
+	List<Feed> RecommededFeeds { get; set; }
+
 	List<Feed> Feeds { get; set; }
 
 	int SearchingCount { get; set; }
 
 	CancellationTokenSource SearchRssCancellationSource { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		var response = await App.CurrentUser.WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest());
+		RecommededFeeds = response.Feeds.Select(f => f.ToModelFeed()).ToList();
+	}
 
 	async Task OnSearchRssChanged(string query)
 	{	
@@ -81,19 +96,5 @@
 		{
 		}
 		--SearchingCount;
-	}
-
-	async Task Subscribe(Feed feed)
-	{
-		await CurrentUser.SubscribeFeedAsync(feed);
-		++feed.TotalSubscribers;
-		StateHasChanged();
-	}
-
-	async Task Unsubscribe(Feed feed)
-	{
-		await CurrentUser.UnsubscribeFeedAsync(feed);
-		--feed.TotalSubscribers;
-		StateHasChanged();
 	}
 }

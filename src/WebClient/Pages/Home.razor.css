@@ -12,6 +12,11 @@
     height: 32px;
 }
 
+.title {
+    font-weight: 500;
+    font-style: italic;
+}
+
 .feeds {
     display: flex;
     flex-direction: column;

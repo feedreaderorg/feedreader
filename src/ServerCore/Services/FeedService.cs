@@ -30,8 +30,21 @@ namespace FeedReader.ServerCore.Services
             FeedProcessor = new FeedProcessor(HttpClient);
         }
 
-        public async Task<List<FeedInfo>> DiscoverFeedsAsync(string query)
+        public async Task<List<FeedInfo>> DiscoverFeedsAsync(string query, int startIndex, int count)
         {
+            if (string.IsNullOrEmpty(query))
+            {
+                using (var db = await DbFactory.CreateDbContextAsync())
+                {
+                    return await db.FeedInfos
+                        .OrderByDescending(f => f.TotalSubscribers)
+                        .OrderByDescending(f => f.LastUpdatedTime)
+                        .Skip(startIndex)
+                        .Take(count)
+                        .ToListAsync();
+                }
+            }
+
             var feeds = new List<FeedInfo>();
 
             // Normalize query string.
@@ -65,7 +78,10 @@ namespace FeedReader.ServerCore.Services
                 // Search in name and description.
                 using (var db = await DbFactory.CreateDbContextAsync())
                 {
-                    feeds = db.FeedInfos.Where(f => f.SearchVector.Matches(query)).ToList();
+                    feeds = await db.FeedInfos
+                        .Where(f => f.SearchVector.Matches(query))
+                        .Skip(startIndex)
+                        .ToListAsync();
                 }
             }
 

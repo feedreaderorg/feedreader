@@ -54,7 +54,10 @@ message GetUserFavoritesResponse
 
 message DiscoverFeedsRequest
 {
-    string Query = 1;
+    // If empty, will return recomended feeds.
+    optional string Query = 1;
+    int32 StartIndex = 2;
+    int32 Count = 3;
 }
 
 message DiscoverFeedsResponse

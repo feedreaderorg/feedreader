@@ -94,7 +94,9 @@ namespace FeedReader.WebServer
 
         public override async Task<DiscoverFeedsResponse> DiscoverFeeds(DiscoverFeedsRequest request, ServerCallContext context)
         {
-            var feeds = await FeedService.DiscoverFeedsAsync(request.Query);
+            (request.StartIndex, request.Count) = ValidateStartIndexAndCount(request.StartIndex, request.Count);
+
+            var feeds = await FeedService.DiscoverFeedsAsync(request.Query, request.StartIndex, request.Count);
             var response = new DiscoverFeedsResponse();
             response.Feeds.AddRange(feeds.Select(f => f.ToProtocolFeedInfo()).ToList());
             return response;
@@ -175,14 +177,7 @@ namespace FeedReader.WebServer
 
         public override async Task<GetFeedItemsResponse> GetFeedItems(GetFeedItemsRequest request, ServerCallContext context)
         {
-            if (request.StartIndex < 0)
-            {
-                throw new ArgumentException("'StartIndex' can't be less than 0.");
-            }
-            if (request.Count < 1 || request.Count > 50)
-            {
-                throw new ArgumentException("'Count' must be between 1 to 50.");
-            }
+            (request.StartIndex, request.Count) = ValidateStartIndexAndCount(request.StartIndex, request.Count);
 
             var feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.StartIndex, request.Count);
             var response = new GetFeedItemsResponse();
@@ -209,6 +204,28 @@ namespace FeedReader.WebServer
                 throw new FeedReaderException(HttpStatusCode.Forbidden);
             }
             return userselfId;
+        }
+
+        /// <summary>
+        /// Validate & set the default value (if necessary) for startIndex and count.
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <param name="count"></param>
+        /// <returns>Updated startIndex and count.</returns>
+        /// <exception cref="FeedReaderException"></exception>
+        private (int, int) ValidateStartIndexAndCount(int startIndex, int count)
+        {
+            if (count == 0)
+            {
+                count = 50;
+            }
+
+            if (startIndex < 0 || count < 1 || count > 50)
+            {
+                throw new FeedReaderException(HttpStatusCode.BadRequest);
+            }
+
+            return (startIndex, count);
         }
     }
 }

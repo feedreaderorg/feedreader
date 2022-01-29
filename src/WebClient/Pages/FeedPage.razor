@@ -1,6 +1,7 @@
 ﻿@page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
 @inherits LoginRequiredPageBase
+@using FeedItem = Widgets.FeedItem
 
 <div class="feed-page d-flex flex-grow-1 flex-column">
     @if (Feed == null)
@@ -14,7 +15,7 @@
         <div class="page-header">
             <h1 class="text-nowrap text-truncate">@Feed.Name</h1>
             <div class="flex-grow-1 flex-lg-grow-0" />
-            @if (Feed.IsSubscribed)
+            @if (IsSubscribed)
             {
                 <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
                 <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="MarkAsReaded" />
@@ -95,6 +96,8 @@
     public string FeedSubscriptionName { get; set; }
 
     private Feed Feed { get; set; }
+
+    private bool IsSubscribed => Feed != null && App.CurrentUser.SubscribedFeeds.Find(f => f.Id == Feed.Id) != null;
 
     protected override async Task OnParametersSetAsync()
     {

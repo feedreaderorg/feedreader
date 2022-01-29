@@ -34,5 +34,4 @@ message FeedItem
 
 message User {
     string Id = 1;
-    repeated FeedInfo SubscribedFeeds = 2;    
 }

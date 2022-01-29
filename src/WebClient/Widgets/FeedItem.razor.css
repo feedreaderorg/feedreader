@@ -65,7 +65,10 @@
     display: flex;
     margin-top: 8px;
     padding-top: 12px;
-    font-size: 12px;
+}
+
+.footer li:hover {
+    cursor: pointer;
 }
 
 .btn-border-only {

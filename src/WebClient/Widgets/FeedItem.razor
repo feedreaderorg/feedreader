@@ -18,10 +18,11 @@
         }
     </a>
     <div class="footer">
-        <div class="btn-border-only" @onclick="OnFavorite">
-            <i class="far fa-star"></i>
-            @Item.TotalFavorites
-        </div>
+        <ul>
+            <li @onclick="ToggleFavorite">
+                <i class="bi @(IsFavorited ? "bi-star-fill" : "bi-star")"></i> @TotalFavorites
+            </li>
+        </ul>
     </div>
 </div>
 
@@ -35,8 +36,30 @@
 
     private bool IsReaded => Item.Feed.LastReadedTime >= Item.PublishTime;
 
-    async Task OnFavorite()
+    private bool IsFavorited { get; set; }
+
+    private int TotalFavorites { get; set;  }
+
+    protected override void OnParametersSet()
     {
-        await App.CurrentUser.FavoriteFeedItemAsync(Item);
+        IsFavorited = App.CurrentUser.Favorites.Find(f => f.Id == Item.Id) != null;
+        TotalFavorites = Math.Max(IsFavorited ? 1 : 0, Item.TotalFavorites);
+    }
+
+    private async Task ToggleFavorite()
+    {
+        if (IsFavorited)
+        {
+            IsFavorited = false;
+            --TotalFavorites;
+        }
+        else
+        {
+            IsFavorited = true;
+            ++TotalFavorites;
+        }
+
+        await App.CurrentUser.AddOrRemoveFavorite(Item, IsFavorited);
+        StateHasChanged();
     }
 }

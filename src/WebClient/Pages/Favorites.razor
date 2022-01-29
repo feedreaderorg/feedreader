@@ -1,6 +1,7 @@
 ﻿@page "/favorites"
 @inherits LoginRequiredPageBase
 @layout LeftSideBarLayout
+@using FeedItem = Widgets.FeedItem
 
 <div class="favorites-page d-flex flex-grow-1">
 	<div class="page-header">
@@ -8,16 +9,9 @@
 	</div>
 	<div class="page-content d-flex flex-grow-1">
 		<div class="feed-items-panel d-flex flex-column flex-grow-1 pe-lg-3">
-            <InfiniteScrolling ItemsProvider="@((startIndex, count, _) => App.CurrentUser.GetFavorites(startIndex, count))" Context="feedItem">
-                <ItemsTemplate>
-                    <FeedItem ClassName="mb-3" Item=@feedItem />
-                </ItemsTemplate>
-                <LoadingTemplate>
-                    <div class="d-flex justify-content-center">
-                        <img class="my-2" src="img/loading-buffering.gif" style="width: 32px; height: 32px;" />
-                    </div>
-                </LoadingTemplate>
-            </InfiniteScrolling>
+            <Virtualize Items="@App.CurrentUser.Favorites" Context="feedItem">
+                <FeedItem ClassName="mb-3" Item=@feedItem />
+            </Virtualize>
         </div>
 	</div>
 </div>

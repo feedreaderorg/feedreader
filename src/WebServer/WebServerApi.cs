@@ -1,4 +1,5 @@
 ﻿using FeedReader.ServerCore.Services;
+using FeedReader.Share;
 using FeedReader.Share.Protocols;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FeedReader.WebServer
@@ -58,22 +60,36 @@ namespace FeedReader.WebServer
 
         public override async Task<GetUserProfileResponse> GetUserProfile(GetUserProfileRequest request, ServerCallContext context)
         {
-            var userId = GetUserId(context);
-            if (!string.IsNullOrEmpty(request.UserId))
-            {
-                userId = Guid.Parse(request.UserId);
-            }
-
+            var userId = ValidateUserSelfOnly(context, request.UserId);
             var user = await UserService.GetUserProfile(userId);
             if (user == null)
             {
-                throw new KeyNotFoundException();
+                throw new FeedReaderException(HttpStatusCode.NotFound);
             }
 
-            return new GetUserProfileResponse()
+            var response = new GetUserProfileResponse()
             {
                 User = user.ToProtocolUser()
             };
+            return response;
+        }
+
+        public override async Task<GetUserSubscriptionsResponse> GetUserSubscriptions(GetUserSubscriptionsRequest request, ServerCallContext context)
+        {
+            var userId = ValidateUserSelfOnly(context, request.UserId);
+            var subscriptions = await UserService.GetUserSubscriptions(userId);
+            var response = new GetUserSubscriptionsResponse();
+            response.Feeds.AddRange(subscriptions.Select(f => f.ToProtocolFeedInfo()));
+            return response;
+        }
+
+        public override async Task<GetUserFavoritesResponse> GetUserFavorites(GetUserFavoritesRequest request, ServerCallContext context)
+        {
+            var userId = ValidateUserSelfOnly(context, request.UserId);
+            var favorites = await UserService.GetFavorites(userId);
+            var response = new GetUserFavoritesResponse();
+            response.FeedItems.AddRange(favorites.Select(f => f.ToProtocolFeedItem()));
+            return response;
         }
 
         public override async Task<DiscoverFeedsResponse> DiscoverFeeds(DiscoverFeedsRequest request, ServerCallContext context)
@@ -117,28 +133,6 @@ namespace FeedReader.WebServer
             var lastedReadedTime = request.LastReadedTime.ToDateTime();
             await UserService.UpdateFeedSubscription(userId, feedId, lastedReadedTime);
             return new UpdateFeedSubscriptionResponse();
-        }
-
-        public override async Task<GetFavoritesResponse> GetFavorites(GetFavoritesRequest request, ServerCallContext context)
-        {
-            if (request.StartIndex < 0)
-            {
-                throw new ArgumentException("'StartIndex' can't be less than 0.");
-            }
-            if (request.Count < 1 || request.Count > 50)
-            {
-                throw new ArgumentException("'Count' must be between 1 to 50.");
-            }
-
-            var userId = GetUserId(context);
-            if (!string.IsNullOrEmpty(request.UserId))
-            {
-                userId = Guid.Parse(request.UserId);
-            }
-            var favorites = await UserService.GetFavorites(userId, request.StartIndex, request.Count);
-            var response = new GetFavoritesResponse();
-            response.FeedItems.AddRange(favorites.Select(f => f.ToProtocolFeedItem()));
-            return response;
         }
 
         public override async Task<GetFeedInfoResponse> GetFeedInfo(GetFeedInfoRequest request, ServerCallContext context)
@@ -212,6 +206,22 @@ namespace FeedReader.WebServer
         Guid GetUserId(ServerCallContext context)
         {
             return (Guid)context.UserState["userId"];
+        }
+
+        /// <summary>
+        /// Make sure the request is made by userself.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="resourceUserId"></param>
+        /// <returns>The id of userself.</returns>
+        private Guid ValidateUserSelfOnly(ServerCallContext context, string resourceUserId)
+        {
+            var userselfId = GetUserId(context);
+            if (!string.IsNullOrEmpty(resourceUserId) && Guid.Parse(resourceUserId) != userselfId)
+            {
+                throw new FeedReaderException(HttpStatusCode.Forbidden);
+            }
+            return userselfId;
         }
     }
 }

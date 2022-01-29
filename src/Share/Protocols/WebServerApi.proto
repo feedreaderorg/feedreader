@@ -8,9 +8,11 @@ option csharp_namespace = "FeedReader.Share.Protocols";
 service WebServerApi
 {
     rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
+    rpc GetUserSubscriptions(GetUserSubscriptionsRequest) returns (GetUserSubscriptionsResponse);
+    rpc GetUserFavorites(GetUserFavoritesRequest) returns (GetUserFavoritesResponse);
+
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc FavoriteFeedItem(FavoriteFeedItemRequest) returns (FavoriteFeedItemResponse);
-    rpc GetFavorites(GetFavoritesRequest) returns (GetFavoritesResponse);
     rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
     rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
@@ -20,12 +22,34 @@ service WebServerApi
 message GetUserProfileRequest
 {
     // If `UserId` is empty, will return the userself profile.
-    string UserId = 1;
+    optional string UserId = 1;
 }
 
 message GetUserProfileResponse
 {
-    User User = 1;
+    // If `UserId` is empty, will return the userself profile.
+    optional User User = 1;
+}
+
+message GetUserSubscriptionsRequest
+{
+    // If `UserId` is empty, will return the userself profile.
+    optional string UserId = 1;
+}
+
+message GetUserSubscriptionsResponse
+{
+    repeated FeedInfo Feeds = 1;
+}
+
+message GetUserFavoritesRequest
+{
+    string UserId = 1;
+}
+
+message GetUserFavoritesResponse
+{
+    repeated FeedItem FeedItems = 1;
 }
 
 message DiscoverFeedsRequest
@@ -36,19 +60,6 @@ message DiscoverFeedsRequest
 message DiscoverFeedsResponse
 {
     repeated FeedInfo Feeds = 1;
-}
-
-message GetFavoritesRequest
-{
-    // If `UserId` is empty, will return the userself favorites.
-    string UserId = 1;
-    int32 StartIndex = 2;
-    int32 Count = 3;
-}
-
-message GetFavoritesResponse
-{
-    repeated FeedItem FeedItems = 1;
 }
 
 message FavoriteFeedItemRequest

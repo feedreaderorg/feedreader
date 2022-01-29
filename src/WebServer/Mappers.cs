@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
 
 namespace FeedReader.WebServer
@@ -26,17 +25,19 @@ namespace FeedReader.WebServer
             return feedInfo;
         }
 
+        public static Share.Protocols.FeedInfo ToProtocolFeedInfo(this ServerCore.Models.FeedSubscription f)
+        {
+            var feedInfo = f.Feed.ToProtocolFeedInfo();
+            feedInfo.LastReadedTime = f.LastReadedTime.ToProtocolTime();
+            return feedInfo;
+        }
+
         public static Share.Protocols.User ToProtocolUser(this ServerCore.Models.User u)
         {
             var user = new Share.Protocols.User()
             {
                 Id = u.Id.ToString()
             };
-            user.SubscribedFeeds.AddRange(u.SubscribedFeeds.Select(f => {
-                var feed = f.Feed.ToProtocolFeedInfo();
-                feed.LastReadedTime = f.LastReadedTime.ToProtocolTime();
-                return feed;
-            }));
             return user;
         }
 

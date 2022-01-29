@@ -17,7 +17,6 @@ namespace FeedReader.WebClient.Models
         public int TotalPosts { get; set; }
         public int TotalSubscribers { get; set; }
         public string SiteLink { get; set; }
-        public bool IsSubscribed { get; set; }
         public DateTime LastReadedTime { get; set; }
         public string RssUri { get; set; }
         private List<FeedItem> FeedItems { get; set; } = new List<FeedItem>();

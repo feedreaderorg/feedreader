@@ -22,24 +22,33 @@ namespace FeedReader.ServerCore.Services
         {
             using (var db = await DbFactory.CreateDbContextAsync())
             {
-                return await db.Users
-                    .Include(u => u.SubscribedFeeds).ThenInclude(s => s.Feed)
-                    .FirstOrDefaultAsync(u => u.Id == userId);
+                return await db.Users.FirstOrDefaultAsync(u => u.Id == userId);
             }
         }
 
-        public async Task<List<FeedItem>> GetFavorites(Guid userId, int startIndex, int count)
+        public async Task<List<FeedSubscription>> GetUserSubscriptions(Guid userId)
+        {
+            using (var db = await DbFactory.CreateDbContextAsync())
+            {
+                return await db.FeedSubscriptions.Include(f => f.Feed).ToListAsync();
+            }
+        }
+
+        public async Task<List<FeedItem>> GetFavorites(Guid userId, int startIndex = 0, int count = int.MaxValue)
         {
             using (var db = DbFactory.CreateDbContext())
             {
-                return await db.Favorites
+                var query = db.Favorites
                     .Include(f => f.FeedItem).ThenInclude(f => f.Feed)
                     .Where(f => f.UserId == userId)
                     .Select(f => f.FeedItem)
                     .OrderByDescending(f => f.PublishTime)
-                    .Skip(startIndex)
-                    .Take(count)
-                    .ToListAsync();
+                    .Skip(startIndex);
+                if (count != int.MaxValue)
+                {
+                    query = query.Take(count);
+                }
+                return await query.ToListAsync();
             }
         }
 

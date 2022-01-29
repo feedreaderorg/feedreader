@@ -71,14 +71,24 @@ namespace FeedReader.WebClient.Models
             }
         }
 
-        public async Task FavoriteFeedItemAsync(FeedItem feedItem)
+        public async Task AddOrRemoveFavorite(FeedItem feedItem, bool addToFavorite)
         {
             await WebServerApi.FavoriteFeedItemAsync(new Share.Protocols.FavoriteFeedItemRequest()
             {
                 FeedItemId = feedItem.Id,
-                Favorite = true
+                Favorite = addToFavorite
             });
-            ++feedItem.TotalFavorites;
+
+            var oldItem = Favorites.Find(f => f.Id == feedItem.Id);
+            if (addToFavorite && oldItem == null)
+            {
+                Favorites.Add(feedItem);
+                Favorites = Favorites.OrderByDescending(f => f.PublishTime).ToList();
+            }
+            else if (!addToFavorite && oldItem != null)
+            {
+                Favorites.Remove(oldItem);
+            }
         }
 
         public async Task LoginAsync(string token)
@@ -91,13 +101,14 @@ namespace FeedReader.WebClient.Models
             // Save the new token.
             Token = response.Token;
             await Save("feedreader-access-token", Token);
+            RefreshWebServerApi();
 
             // Update user.
             Id = response.UserId;
             Role = UserRole.Normal;
-            RefreshWebServerApi();
+            await RefreshSubscriptions();
+            await RefreshFavorites();
             OnStateChanged?.Invoke(this, null);
-            _ = RefreshUserProfile();
         }
 
         public async Task LogoutAsync()
@@ -173,41 +184,16 @@ namespace FeedReader.WebClient.Models
             }
         }
 
-        public async Task<IEnumerable<FeedItem>> GetFavorites(int startIndex, int count)
+        private async Task RefreshSubscriptions()
         {
-            while (Favorites.Count < startIndex + count)
-            {
-                var response = await App.CurrentUser.WebServerApi.GetFavoritesAsync(new Share.Protocols.GetFavoritesRequest()
-                {
-                    StartIndex = startIndex,
-                    Count = 50
-                });
-                var newItems = response.FeedItems.Select(i => i.ToModelFeedItem());
-                Favorites.AddRange(newItems);
-                Favorites = Favorites.DistinctBy(f => f.Id).OrderByDescending(f => f.PublishTime).ToList();
-                if (newItems.Count() < 50)
-                {
-                    break;
-                }
-            }
-
-            if (startIndex >= Favorites.Count)
-            {
-                return new List<FeedItem>();
-            }
-            else
-            {
-                count = Math.Min(Favorites.Count - startIndex, count);
-                return Favorites.GetRange(startIndex, count);
-            }
+            var response = await WebServerApi.GetUserSubscriptionsAsync(new Share.Protocols.GetUserSubscriptionsRequest());
+            SubscribedFeeds = response.Feeds.Select(f => f.ToModelFeed()).ToList();
         }
 
-        public async Task RefreshUserProfile()
+        private async Task RefreshFavorites()
         {
-            UpdateSelf((await WebServerApi.GetUserProfileAsync(new Share.Protocols.GetUserProfileRequest()
-            {
-                UserId = string.Empty
-            })).User);
+            var response = await WebServerApi.GetUserFavoritesAsync(new Share.Protocols.GetUserFavoritesRequest());
+            Favorites = response.FeedItems.Select(f => f.ToModelFeedItem()).ToList();
         }
 
         void Reset()
@@ -232,25 +218,6 @@ namespace FeedReader.WebClient.Models
                 var grpcChannel = GrpcChannel.ForAddress(ServerAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
                 WebServerApi = new WebServerApiClient(grpcChannel.Intercept(new GrpcInterceptor(OnUnauthenticatedException)));
             }
-        }
-
-        void UpdateUser(Share.Protocols.User user)
-        {
-            if (user.Id == Id)
-            {
-                UpdateSelf(user);
-            }
-        }
-
-        void UpdateSelf(Share.Protocols.User user)
-        {
-            SubscribedFeeds = user.SubscribedFeeds.Select(f =>
-            {
-                var r = f.ToModelFeed();
-                r.IsSubscribed = true;
-                return r;
-            }).ToList();
-            OnStateChanged?.Invoke(this, null);
         }
 
         void OnUnauthenticatedException(string message)

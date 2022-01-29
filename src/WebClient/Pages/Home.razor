@@ -26,33 +26,22 @@
 			}
 
 			<div class="panel feeds mb-3">
-				@foreach (var g in feeds.GroupBy(f => index++ / 2))
+				@foreach (var feed in feeds)
 				{
-					<div class="row">
-					@foreach (var feed in g)
-					{
-						<div class="feed-wrapper">
-							<a class="feed" href="@($"/feed/{feed.SubscriptionName}")">
-								<img src="@feed.IconUri" />
-								<div class="content vstack gap-2">
-									<div class="name">@feed.Name</div>
-									<div class="description">@feed.Description</div>
-									<div class="toolbar">
-										<div class="statics hstack gap-3">
-											<div><i class="bi bi-people" />@feed.TotalSubscribers</div>
-											<div><i class="bi bi-newspaper" />@feed.TotalPosts</div>
-											<div><i class="bi bi-star-fill" />@feed.TotalFavorites</div>
-										</div>
-									</div>
+					<a class="feed" href="@($"/feed/{feed.SubscriptionName}")">
+						<img src="@feed.IconUri" />
+						<div class="content vstack gap-2">
+							<div class="name">@feed.Name</div>
+							<div class="description">@feed.Description</div>
+							<div class="toolbar">
+								<div class="statics hstack gap-3">
+									<div><i class="bi bi-people" />@feed.TotalSubscribers</div>
+									<div><i class="bi bi-newspaper" />@feed.TotalPosts</div>
+									<div><i class="bi bi-star-fill" />@feed.TotalFavorites</div>
 								</div>
-							</a>
+							</div>
 						</div>
-					}
-					@if (g.Count() % 2 == 1)
-					{
-						<div class="feed-wrapper"/>
-					}
-					</div>
+					</a>
 				}
 			</div>
 		}
@@ -71,7 +60,10 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var response = await App.CurrentUser.WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest());
+		var response = await App.CurrentUser.WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
+		{
+			Count = 10
+		});
 		RecommededFeeds = response.Feeds.Select(f => f.ToModelFeed()).ToList();
 	}
 

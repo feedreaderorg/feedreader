@@ -38,7 +38,7 @@ namespace FeedReader.ServerCore.Services
                 {
                     return await db.FeedInfos
                         .OrderByDescending(f => f.TotalSubscribers)
-                        .OrderByDescending(f => f.LastUpdatedTime)
+                        .ThenByDescending(f => f.LastUpdatedTime)
                         .Skip(startIndex)
                         .Take(count)
                         .ToListAsync();

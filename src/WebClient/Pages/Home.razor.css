@@ -18,8 +18,8 @@
 }
 
 .feeds {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-gap: 10px;
 }
 
 .row {
@@ -39,6 +39,7 @@
     max-width: 50%;
     flex: 1;
     padding: 8px;
+    height: 160px;
 }
 
 .feed {
@@ -47,6 +48,7 @@
     padding: 16px;
     border-radius: 4px;
     flex: 1;
+    height: 160px;
 }
 
 .feed .content {
@@ -90,4 +92,10 @@
 
 .feed:hover {
     background-color: var(--left-side-bar-bg-color);
+}
+
+@media (min-width: 992px) {
+    .feeds {
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
+    }
 }

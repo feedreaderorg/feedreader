@@ -31,18 +31,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - ConnectionStrings__DbConnectionString=Server=db;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader
-      - TextClassificationServer=http://textclassificationserver
-      - TextClassificationBatchSize=10
-
-  textclassificationserver:
-    image: feedreader-textclassificationserver
-    build:
-      context: src/TextClassificationServer
-      dockerfile: Dockerfile
-      args:
-        FROM_IMG: huggingface/transformers-pytorch-cpu
-    ports:
-      - 8090:80
 
   db:
     image: postgres:13.4

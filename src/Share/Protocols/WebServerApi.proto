@@ -87,12 +87,9 @@ message GetFeedInfoResponse
 
 message GetFeedItemsRequest
 {
-    oneof Query {
-        string FeedId = 1;
-        string Category = 3;
-	}
+    string FeedId = 1;
     int32 StartIndex = 2;
-    int32 Count = 4;
+    int32 Count = 3;
 }
 
 message GetFeedItemsResponse

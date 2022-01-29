@@ -20,9 +20,6 @@ namespace FeedReader.ServerCore.Services
         IDbContextFactory<DbContext> DbFactory { get; set; }
         HttpClient HttpClient { get; set; }
         ILogger Logger { get; set; }
-        string TextClassificationServerAddress { get; }
-        int TextClassificationBatchSize { get; }
-        string[] TextClassificationLabels { get; }
         private FeedProcessor FeedProcessor { get; }
 
         public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient, ILogger<FeedService> logger, IConfiguration configuration)
@@ -30,9 +27,6 @@ namespace FeedReader.ServerCore.Services
             DbFactory = dbFactory;
             HttpClient = httpClient;
             Logger = logger;
-            TextClassificationServerAddress = configuration["TextClassificationServer"];
-            TextClassificationBatchSize = int.Parse(configuration["TextClassificationBatchSize"] ?? "0");
-            TextClassificationLabels = Enum.GetValues(typeof(FeedItemCategories)).Cast<FeedItemCategories>().Select(e => e.ToString().ToLower()).ToArray();
             FeedProcessor = new FeedProcessor(HttpClient);
         }
 
@@ -122,80 +116,6 @@ namespace FeedReader.ServerCore.Services
                     .OrderByDescending(f => f.PublishTime)
                     .Skip(startIndex)
                     .Take(count).ToListAsync();
-            }
-        }
-
-        public async Task<List<FeedItem>> GetFeedItemsByCategoryAsync(string category, int startIndex, int count)
-        {
-            using (var db = DbFactory.CreateDbContext())
-            {
-                return await db.FeedItems
-                    .Where(f => f.Category == category)
-                    .OrderByDescending(f => f.PublishTime)
-                    .Skip(startIndex)
-                    .Take(count).ToListAsync();
-            }
-        }
-
-        public async Task ClassifyFeedItemsAsync(CancellationToken cancellationToken)
-        {
-            bool classifySuccess = true;
-
-            while (classifySuccess && !cancellationToken.IsCancellationRequested)
-            {
-                using (var db = DbFactory.CreateDbContext())
-                {
-                    classifySuccess = false;
-
-                    foreach (var feedItem in db.FeedItems.Where(f => string.IsNullOrEmpty(f.Category)).OrderByDescending(f => f.PublishTime).Take(TextClassificationBatchSize))
-                    {
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            break;
-                        }
-
-                        try
-                        {
-                            var contentForTextClassification = string.IsNullOrEmpty(feedItem.Content) ? feedItem.Summary : feedItem.Content;
-                            if (string.IsNullOrEmpty(contentForTextClassification))
-                            {
-                                // TODO: feed item has neither content nor summary. Because parser bug? Log it ...
-                                Logger.LogWarning($"Feed item {feedItem.Id} has neither content nor summary, ignore for classification.");
-                                feedItem.Category = "_NOT_AVAILABLE_";
-                            }
-                            else
-                            {
-                                var content = new StringContent(JsonConvert.SerializeObject(new
-                                {
-                                    content = contentForTextClassification,
-                                    labels = TextClassificationLabels
-                                }), UnicodeEncoding.UTF8, "application/json");
-
-                                Logger.LogInformation($"Classify for feed item {feedItem.Id}");
-                                var res = await HttpClient.PostAsync(TextClassificationServerAddress, content, cancellationToken);
-                                var result = JsonConvert.DeserializeObject<TextClassificationServerResult>(await res.Content.ReadAsStringAsync(cancellationToken));
-                                var category = result.Labels[Array.IndexOf(result.Scores, result.Scores.Max())];
-                                feedItem.Category = category;
-                            }
-
-                            classifySuccess = true;
-                        }
-                        catch (TaskCanceledException)
-                        {
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogError(ex, $"Classify for feed item {feedItem.Id} failed");
-                        }
-                    }
-
-                    if (classifySuccess && !cancellationToken.IsCancellationRequested)
-                    {
-                        Logger.LogInformation($"Classify batch finished, update database");
-                        await db.SaveChangesAsync(cancellationToken);
-                    }
-                }
             }
         }
 
@@ -363,8 +283,6 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        
-
         Task TryToDiscoverFeedsFromHtmlAsync(string content, List<FeedInfo> feeds)
         {
             return Task.CompletedTask;
@@ -437,13 +355,5 @@ namespace FeedReader.ServerCore.Services
                 Logger.LogInformation($"Refresh feed: {feed.Uri} finished at {endTime}, elasped {(endTime - starTime).TotalSeconds} seconds");
             }
         }
-
-        #region TextClassificationServerResult
-        class TextClassificationServerResult
-        {
-            public string[] Labels { get; set; }
-            public float[] Scores { get; set; }
-        }
-        #endregion
     }
 }

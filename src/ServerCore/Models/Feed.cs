@@ -5,21 +5,6 @@ using System.Collections.Generic;
 
 namespace FeedReader.ServerCore.Models
 {
-    public enum FeedItemCategories
-    {
-        Culture,
-        Economy,
-        Education,
-        Entertainment,
-        Health,
-        Other,
-        Politic,
-        Science,
-        Sociality,
-        Sport,
-        Technology
-    }
-
     [Index(nameof(IdFromUri), IsUnique = true)]
     [Index(nameof(SubscriptionName), IsUnique = true)]
     public class FeedInfo
@@ -57,7 +42,6 @@ namespace FeedReader.ServerCore.Models
         public NpgsqlTsVector SearchVector { get; set; }
     }
 
-    [Index(nameof(Category), IsUnique = false)]
     public class FeedItem
     {
         public Guid Id { get; set; }
@@ -78,7 +62,5 @@ namespace FeedReader.ServerCore.Models
         public string PictureUri { get; set; }
 
         public int TotalFavorites { get; set; }
-
-        public string Category { get; set; }
     }
 }

@@ -17,7 +17,6 @@ namespace FeedReader.TaskServer
             return Host.CreateDefaultBuilder(args).ConfigureServices((hostContext, services) =>
             {
                 services.AddFeedReaderServerCoreServices(hostContext.Configuration);
-                services.AddHostedService<FeedItemsClassificationTask>();
                 services.AddHostedService<FeedItemStatisticsRefreshingTask>();
                 services.AddHostedService<FeedRefreshingTask>();
             });

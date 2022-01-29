@@ -25,7 +25,3 @@ spec:
               secretKeyRef:
                 name: feedreader-devtest-db-secret
                 key: db-conns
-          - name: TextClassificationServer
-            value: "http://feedreader-devtest-textclassificationserver"
-          - name: TextClassificationBatchSize
-            value: "10"

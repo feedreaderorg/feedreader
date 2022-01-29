@@ -184,20 +184,7 @@ namespace FeedReader.WebServer
                 throw new ArgumentException("'Count' must be between 1 to 50.");
             }
 
-            List<ServerCore.Models.FeedItem> feedItems;
-            switch (request.QueryCase)
-            {
-                case GetFeedItemsRequest.QueryOneofCase.FeedId:
-                    feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.StartIndex, request.Count);
-                    break;
-
-                case GetFeedItemsRequest.QueryOneofCase.Category:
-                    feedItems = await FeedService.GetFeedItemsByCategoryAsync(request.Category, request.StartIndex, request.Count);
-                    break;
-
-                default:
-                    throw new ArgumentException("Unsupported query", "Query");
-            }
+            var feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.StartIndex, request.Count);
             var response = new GetFeedItemsResponse();
             response.FeedItems.AddRange(feedItems.Select(f => f.ToProtocolFeedItem()));
             return response;

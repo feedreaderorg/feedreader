@@ -38,3 +38,7 @@
     border: 1px solid var(--left-side-bar-selected-color);
     padding: 2px;
 }
+
+.bottom ul li {
+    margin-bottom: 8px;
+}

@@ -38,7 +38,7 @@ namespace FeedReader.ServerCore.Services
                 {
                     return await db.FeedInfos
                         .OrderByDescending(f => f.TotalSubscribers)
-                        .ThenByDescending(f => f.LastUpdatedTime)
+                        .ThenByDescending(f => f.LatestItemPublishTime)
                         .Skip(startIndex)
                         .Take(count)
                         .ToListAsync();
@@ -357,6 +357,11 @@ namespace FeedReader.ServerCore.Services
                     {
                         db.FeedItems.Add(parsedFeedItem);
                     }
+
+                    if (feed.LatestItemPublishTime < parsedFeedItem.PublishTime)
+					{
+                        feed.LatestItemPublishTime = parsedFeedItem.PublishTime;
+					}
                 }
 
                 // Update feed stat.

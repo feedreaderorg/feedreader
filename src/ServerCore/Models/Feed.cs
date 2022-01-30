@@ -35,7 +35,15 @@ namespace FeedReader.ServerCore.Models
 
         public int TotalFavorites { get; set; }
 
+        /// <summary>
+        /// The last fetch time.
+        /// </summary>
         public DateTime LastUpdatedTime { get; set; }
+
+        /// <summary>
+        /// The publish time for the latest item.
+        /// </summary>
+        public DateTime LatestItemPublishTime { get; set; }
 
         public List<FeedItem> FeedItems { get; set; }
 

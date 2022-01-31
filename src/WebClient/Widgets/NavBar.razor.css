@@ -9,6 +9,7 @@
     background-color: var(--btn-bg-color);
     padding: 8px var(--body-left-right-padding);
     justify-content: space-between;
+    z-index: 1;
 }
 
 .logo {

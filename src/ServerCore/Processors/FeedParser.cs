@@ -1,6 +1,7 @@
 ﻿using FeedReader.ServerCore.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -39,6 +40,25 @@ namespace FeedReader.ServerCore.Processors
             try
             {
                 return new JsonFeedParser(content);
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                // remove invalid character and try again.
+                content = new string(content.Select(c => XmlConvert.IsXmlChar(c) ? c : '.').ToArray());
+                var xml = new XmlDocument();
+                xml.LoadXml(content);
+                if (xml.DocumentElement?.Name == "feed")
+                {
+                    return new AtomFeedParser(xml);
+                }
+                else
+                {
+                    return new RssFeedParser(xml);
+                }
             }
             catch
             {

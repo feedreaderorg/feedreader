@@ -1,4 +1,5 @@
 ﻿using FeedReader.ServerCore.Processors;
+using System.Linq;
 using Xunit;
 
 namespace FeedReader.ServerCoreTest
@@ -15,5 +16,17 @@ namespace FeedReader.ServerCoreTest
             // Test all html tags are removed and html enitities are decoded.
             Assert.Equal("More convenience. C++20 Concurrency — Part 2: jthreads by Gajendra Gulgulia From the article: In this part of the issue, I’ll discuss about the new std::jthread that helps us avoid the boilerplate code for joining the conventional std::thread in the first section. In the end, I’ll also mention about the std::swap algorithm’s specialization introduced in C++20 to swap the underlying thread handles associated with std::jthread ...", feed.FeedItems[0].Summary);
         }
+
+        [Fact]
+        public void InvalidXmlCharacterCanBeIgnored()
+		{
+            var feedParser = FeedParser.TryCreateFeedParser(TestUtils.LoadTestData("coolshell.cn.2022.01.31.xml"));
+            var feed = feedParser.TryParseFeed(parseItems: true);
+            Assert.NotNull(feed);
+            Assert.Equal("享受编程和技术所带来的快乐 - Coding Your Ambition", feed.Description);
+            Assert.Equal(15, feed.FeedItems.Count);
+            Assert.Equal("网络数字身份认证术", feed.FeedItems.First().Title);
+            Assert.Equal("程序员如何把控自己的职业", feed.FeedItems.Last().Title);
+		}
     }
 }

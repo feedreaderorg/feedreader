@@ -1,4 +1,6 @@
-﻿<div class="left-side-bar d-flex flex-column flex-grow-1">
+﻿@implements IDisposable
+
+<div class="left-side-bar d-flex flex-column flex-grow-1">
 	<div class="flex-grow-1">
 		<div class="section vstack gap-3">
 			<NavLink href="/" Match="NavLinkMatch.All">
@@ -9,13 +11,13 @@
 				<img src="img/favorite.png" /> My favorites
 			</NavLink>
 		</div>
-		@if (CurrentUser.SubscribedFeeds.Count > 0)
+		@if (SubscribedFeeds != null)
 		{
 			<div class="section vstack gap-3">
 				<div class="title">MY FEEDS</div>
-				@foreach (var feed in CurrentUser.SubscribedFeeds)
+				@foreach (var feed in SubscribedFeeds)
 				{
-					<NavLink href="@($"/feed/{feed.SubscriptionName}")" Match="NavLinkMatch.All">
+					<NavLink class="@(feed.HasNewItems ? "has-new-items" : "")" href="@($"/feed/{feed.SubscriptionName}")" Match="NavLinkMatch.All">
 						<img src="@feed.IconUri" /> @feed.Name
 					</NavLink>
 				}
@@ -38,4 +40,33 @@
 {
 	[CascadingParameter]
 	public User CurrentUser { get; set; }
+
+	private Feed[] SubscribedFeeds { get; set; }
+
+	protected override void OnParametersSet()
+	{
+		if (SubscribedFeeds != null)
+		{
+			foreach (var feed in SubscribedFeeds)
+			{
+				feed.OnStateChanged -= (s, e) => StateHasChanged();
+			}
+		}
+		SubscribedFeeds = CurrentUser.SubscribedFeeds.ToArray();
+		foreach (var feed in SubscribedFeeds)
+		{
+			feed.OnStateChanged += (s, e) => StateHasChanged();
+		}
+	}
+
+	public void Dispose()
+	{
+		if (SubscribedFeeds != null)
+		{
+			foreach (var feed in SubscribedFeeds)
+			{
+				feed.OnStateChanged -= (s, e) => StateHasChanged();
+			}
+		}
+	}
 }

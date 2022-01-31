@@ -19,6 +19,14 @@ namespace FeedReader.WebClient.Models
         public string SiteLink { get; set; }
         public DateTime LastReadedTime { get; set; }
         public string RssUri { get; set; }
+        public bool HasNewItems
+		{
+            get
+			{
+                return FeedItems.Count > 0 && FeedItems.First().PublishTime > LastReadedTime;
+			}
+		}
+
         private List<FeedItem> FeedItems { get; set; } = new List<FeedItem>();
         public event EventHandler OnStateChanged;
 
@@ -118,6 +126,7 @@ namespace FeedReader.WebClient.Models
                 FeedId = Id.ToString(),
                 LastReadedTime = LastReadedTime.ToTimestamp(),
             });
+            OnStateChanged?.Invoke(this, null);
         }
     }
 

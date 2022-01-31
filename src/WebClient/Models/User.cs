@@ -14,7 +14,7 @@ using static FeedReader.Share.Protocols.WebServerApi;
 
 namespace FeedReader.WebClient.Models
 {
-    public enum UserRole
+	public enum UserRole
     {
         Guest,
         Normal
@@ -108,6 +108,7 @@ namespace FeedReader.WebClient.Models
             Role = UserRole.Normal;
             await RefreshSubscriptions();
             await RefreshFavorites();
+            RefreshInBackground();
             OnStateChanged?.Invoke(this, null);
         }
 
@@ -272,6 +273,29 @@ namespace FeedReader.WebClient.Models
             {
             }
         }
+
+        private async void RefreshInBackground()
+		{
+            while (true)
+			{
+                if (SubscribedFeeds != null)
+                {
+                    try
+                    {
+                        foreach (var feed in SubscribedFeeds)
+                        {
+                            _ = feed.RefreshAsync();
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                // Wait for 10 mins to refresh.
+                await Task.Delay(600 * 1000);
+			}
+		}
 
         #region CustomizedHttpClientHandler & GrpcInterceptor
         class CustomizedHttpClientHandler : HttpClientHandler

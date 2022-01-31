@@ -1,5 +1,6 @@
 ﻿@page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
+@implements IDisposable
 @inherits LoginRequiredPageBase
 @using FeedItem = Widgets.FeedItem
 
@@ -18,7 +19,7 @@
             @if (IsSubscribed)
             {
                 <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
-                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="MarkAsReaded" />
+                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="@Feed.MarkAsReaded" />
             }
             else
             {
@@ -101,6 +102,11 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        if (Feed != null)
+        {
+            Feed.OnStateChanged -= (s, e) => StateHasChanged();
+        }
+
         Feed = await App.CurrentUser.GetFeed(FeedSubscriptionName);
         if (Feed == null)
         {
@@ -108,13 +114,15 @@
         }
         else
         {
-            await Feed.RefreshAsync();
+            Feed.OnStateChanged += (s, e) => StateHasChanged();
         }
     }
 
-    private async Task MarkAsReaded()
+    public void Dispose()
     {
-        await Feed.MarkAsReaded();
-        StateHasChanged();
+        if (Feed != null)
+        {
+            Feed.OnStateChanged -= (s, e) => StateHasChanged();
+        }
     }
 }

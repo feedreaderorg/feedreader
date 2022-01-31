@@ -39,6 +39,10 @@
     padding: 2px;
 }
 
+::deep a.has-new-items {
+    font-weight: bold;
+}
+
 .bottom ul li {
     margin-bottom: 8px;
 }

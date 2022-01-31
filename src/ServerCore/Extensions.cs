@@ -171,5 +171,11 @@ namespace FeedReader.ServerCore
                 return uri;
             }
         }
+
+        public static T TryGetValue<T>(this IDictionary<string, T> dict, string key) where T : class
+        {
+            T value;
+            return (dict != null && key != null && dict.TryGetValue(key, out value)) ? value : null;
+        }
     }
 }

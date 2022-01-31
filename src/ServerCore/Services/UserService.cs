@@ -30,7 +30,10 @@ namespace FeedReader.ServerCore.Services
         {
             using (var db = await DbFactory.CreateDbContextAsync())
             {
-                return await db.FeedSubscriptions.Include(f => f.Feed).ToListAsync();
+                return await db.FeedSubscriptions
+                    .Include(f => f.Feed)
+                    .Where(u => u.UserId == userId)
+                    .ToListAsync();
             }
         }
 

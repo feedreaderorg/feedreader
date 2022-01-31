@@ -10,6 +10,7 @@ namespace FeedReader.ServerCore.Models
     {
         public const string FeedReader = "feedreader";
         public const string Microsoft = "microsoft";
+        public const string Google = "google";
     }
 
     public class User

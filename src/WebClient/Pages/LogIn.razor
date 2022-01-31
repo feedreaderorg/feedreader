@@ -11,6 +11,9 @@ else if (string.IsNullOrEmpty(OAuthProvider))
     var callbackUri = NavigationManager.ToAbsoluteUri("/login/microsoft");
     var microsoftLoginUri = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=dcaaa2ba-a614-4b8c-b78e-1fb39cb8899a&redirect_uri={callbackUri}&response_type=id_token&scope=openid+profile&nonce=feedreader";
 
+    callbackUri = NavigationManager.ToAbsoluteUri("/login/google");
+    var googleLoginUri = $"https://accounts.google.com/o/oauth2/v2/auth?client_id=830207024957-oh9b7oth864jtkb32glia884o0neq1vl.apps.googleusercontent.com&redirect_uri={callbackUri}&response_type=id_token&scope=openid&nonce=feedreader";
+    
     <div class="login">
         <div class="wrapper">
             <div class="title">Welcome back</div>
@@ -18,11 +21,10 @@ else if (string.IsNullOrEmpty(OAuthProvider))
                 <a class="btn btn-primary" href="@microsoftLoginUri">
                     <i class="bi bi-microsoft" /> Continue with Microsoft
                 </a>
-                <a class="btn btn-primary">
+                <a class="btn btn-primary" href="@googleLoginUri">
                     <i class="bi bi-google" /> Continue with Google
                 </a>
             </div>
-            <div class="term text-muted mt-3">By continuing, you agree to FeedReader &nbsp;<br /><a href="/terms">Terms of Service</a>,&nbsp;<a href="/privacy">Privacy Policy</a></div>
         </div>
     </div>
 }

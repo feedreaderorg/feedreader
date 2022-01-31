@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 using FeedReader.ServerCore.Models;
+using FeedReader.Share;
 using JWT;
 using JWT.Algorithms;
 using JWT.Builder;
@@ -21,15 +24,26 @@ namespace FeedReader.ServerCore.Services
         string FeedReaderJwtSecret { get; set; }
         MicrosoftKeys MicrosoftKeyss { get; set; }
 
+        private Dictionary<string, X509Certificate2> GoogleCerts { get; set; }
+
         public AuthService(IDbContextFactory<DbContext> dbFactory, IConfiguration configuration)
         {
             DbFactory = dbFactory;
             FeedReaderJwtSecret = configuration["FeedReaderJwtSecret"];
 
-            // Get Microsoft Keys
+            // Get Microsoft & google Keys
             using (var http = new HttpClient())
             {
                 MicrosoftKeyss = JsonConvert.DeserializeObject<MicrosoftKeys>(http.GetStringAsync(MICROSOFT_PUBLIC_KEYS_URL).Result);
+
+                var content = http.GetStringAsync(GOOGLE_PUBLIC_KEYS_URL).Result;
+                var keys = JsonConvert.DeserializeObject<IDictionary<string, string>>(content);
+                var certs = new Dictionary<string, X509Certificate2>();
+                foreach (var key in keys)
+				{
+                    certs[key.Key] = new X509Certificate2(Encoding.UTF8.GetBytes(key.Value));
+				}
+                GoogleCerts = certs;
             }
         }
 
@@ -127,6 +141,9 @@ namespace FeedReader.ServerCore.Services
 
                     case MICROSOFT_ISS:
                         return ParseMicrosoftToken(jwtToken);
+
+                    case GOOGLE_ISS:
+                        return ParseGoogleToken(jwtToken);
 
                     default:
                         throw new UnauthorizedAccessException("Not supported token issuer");
@@ -227,6 +244,50 @@ namespace FeedReader.ServerCore.Services
             };
         }
 
+        Token ParseGoogleToken(string token)
+		{
+            // Decode kid
+            var header = new JwtBuilder().DecodeHeader<IDictionary<string, string>>(token);
+            var kid = GetValue(header, "kid");
+            var cert = GoogleCerts.TryGetValue(kid);
+            if (cert == null)
+			{
+                throw new FeedReaderException(HttpStatusCode.Unauthorized);
+			}
+
+            // Validate algorithm type.
+            var alg = header.TryGetValue("alg");
+            if (alg != "RS256")
+            {
+                throw new FeedReaderException(HttpStatusCode.Unauthorized);
+            }
+
+            // Validate the signature.
+            var claims = new JwtBuilder().WithAlgorithm(new RS256Algorithm(cert)).MustVerifySignature().Decode<IDictionary<string, string>>(token);
+
+            // Validate the audience.
+            var aud = claims.TryGetValue("aud");
+            if (aud != GOOGLE_AUD)
+            {
+                throw new FeedReaderException(HttpStatusCode.Unauthorized);
+            }
+
+            // Validate the sub which is the user identity id in Google account system.
+            var sub = GetValue(claims, "sub");
+            if (string.IsNullOrEmpty(sub))
+            {
+                throw new FeedReaderException(HttpStatusCode.Unauthorized);
+            }
+
+            // All validations pass
+            return new Token
+            {
+                OriginalToken = token,
+                OAuthId = sub,
+                OAuthIssuer = OAuthIssuers.Google
+            };
+        }
+
         string GetValue(IDictionary<string, string> dict, string key)
         {
             string value;
@@ -239,6 +300,10 @@ namespace FeedReader.ServerCore.Services
         const string MICROSOFT_PUBLIC_KEYS_URL = "https://login.microsoftonline.com/common/discovery/v2.0/keys";
         const string MICROSOFT_ISS = "https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0";
         const string MICROSOFT_AUD = "dcaaa2ba-a614-4b8c-b78e-1fb39cb8899a";
+
+        const string GOOGLE_PUBLIC_KEYS_URL = "https://www.googleapis.com/oauth2/v1/certs";
+        const string GOOGLE_ISS = "https://accounts.google.com";
+        const string GOOGLE_AUD = "830207024957-oh9b7oth864jtkb32glia884o0neq1vl.apps.googleusercontent.com";
 
         class MicrosoftKey
         {

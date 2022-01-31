@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskserver
+  namespace: feedreader-release-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskserver
+  template:
+    metadata:
+      labels:
+        app: taskserver
+    spec:
+      imagePullSecrets:
+      - name: xyb-private-docker-registry
+      containers:
+      - name: taskserver
+        image: docker.xyb.name/feedreader-release-a/taskserver:latest
+        imagePullPolicy: Always
+        env:
+          - name: ConnectionStrings__DbConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: feedreader-release-db-secret
+                key: db-conns

@@ -141,6 +141,8 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = true,
             });
+            SubscribedFeeds.Add(feed);
+            OnStateChanged?.Invoke(this, null);
         }
 
         public async Task UnsubscribeFeedAsync(Feed feed)
@@ -156,6 +158,8 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = false,
             });
+            SubscribedFeeds.Remove(feed);
+            OnStateChanged?.Invoke(this, null);
         }
 
         public async Task<Feed> GetFeed(string feedSubscriptionName)

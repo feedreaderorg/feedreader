@@ -48,7 +48,7 @@ namespace FeedReader.WebClient.Models
             OnStateChanged?.Invoke(this, null);
         }
 
-        public async Task RefreshInfoAsync()
+        private async Task RefreshInfoAsync()
         {
             var response = await App.CurrentUser.WebServerApi.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
             {
@@ -57,11 +57,11 @@ namespace FeedReader.WebClient.Models
 
             if (!string.IsNullOrEmpty(response.Feed.Id))
             {
-                UpdateFromProtoclFeedInfo(response.Feed);
+                UpdateFromProtcolFeedInfo(response.Feed.ToModelFeed());
             }
         }
 
-        public void UpdateFromProtoclFeedInfo(Share.Protocols.FeedInfo feed)
+        public void UpdateFromProtcolFeedInfo(Feed feed)
         {
             Description = feed.Description;
             IconUri = feed.IconUri;
@@ -72,9 +72,9 @@ namespace FeedReader.WebClient.Models
             TotalSubscribers = feed.TotalSubscribers;
             SiteLink = feed.SiteLink;
             RssUri = feed.RssUri;
-            if (feed.LastReadedTime != null)
+            if (feed.LastReadedTime != default(DateTime))
             {
-                LastReadedTime = feed.LastReadedTime.ToDateTime();
+                LastReadedTime = feed.LastReadedTime;
             }
         }
 

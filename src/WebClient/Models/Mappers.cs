@@ -2,11 +2,11 @@
 
 namespace FeedReader.WebClient.Models
 {
-    static class Mappers
+	static class Mappers
     {
         public static Feed ToModelFeed(this Share.Protocols.FeedInfo f)
         {
-            return new Feed()
+            var feed = new Feed()
             {
                 Id = f.Id,
                 SubscriptionName = f.SubscriptionName,
@@ -19,6 +19,11 @@ namespace FeedReader.WebClient.Models
                 SiteLink = f.SiteLink,
                 LastReadedTime = f.LastReadedTime == null ? default(DateTime) : f.LastReadedTime.ToDateTime(),
             };
+            if (string.IsNullOrEmpty(feed.IconUri))
+			{
+                feed.IconUri = App.DefaultSiteIcon;
+			}
+            return feed;
         }
 
         public static FeedItem ToModelFeedItem(this Share.Protocols.FeedItem f)

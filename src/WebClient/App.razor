@@ -14,7 +14,7 @@
 @code
 {
     public static User CurrentUser { get; set; }
-
+    public static string DefaultSiteIcon { get; set; }
     protected override void OnInitialized()
     {
         CurrentUser.OnStateChanged += (s, e) => StateHasChanged();

@@ -17,6 +17,7 @@ namespace FeedReader.WebClient.Models
                 TotalPosts = f.TotalPosts,
                 TotalSubscribers = f.TotalSubscribers,
                 SiteLink = f.SiteLink,
+                RssUri = f.RssUri,
                 LastReadedTime = f.LastReadedTime == null ? default(DateTime) : f.LastReadedTime.ToDateTime(),
             };
             if (string.IsNullOrEmpty(feed.IconUri))

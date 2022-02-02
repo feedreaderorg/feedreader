@@ -1,4 +1,5 @@
 ﻿using FeedReader.ServerCore.Processors;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -28,5 +29,19 @@ namespace FeedReader.ServerCoreTest
             Assert.Equal("网络数字身份认证术", feed.FeedItems.First().Title);
             Assert.Equal("程序员如何把控自己的职业", feed.FeedItems.Last().Title);
 		}
+
+        [Fact]
+        public void ParseItemWithoutPubDate()
+        {
+            var feedParser = FeedParser.TryCreateFeedParser(TestUtils.LoadTestData("ffmpeg.com.2022.02.03.xml"));
+            var feed = feedParser.TryParseFeed(parseItems: true);
+            Assert.NotNull(feed);
+            Assert.Equal(default(DateTime), feed.LatestItemPublishTime);
+            Assert.Equal(47, feed.FeedItems.Count);
+            foreach (var item in feed.FeedItems)
+            {
+                Assert.Equal(default(DateTime), item.PublishTime);
+            }
+        }
     }
 }

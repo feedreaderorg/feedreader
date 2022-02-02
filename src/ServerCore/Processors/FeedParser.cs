@@ -258,7 +258,7 @@ namespace FeedReader.ServerCore.Processors
             {
                 Title = xml["title"]?.InnerText?.Trim(),
                 Link = xml["link"]?.InnerText?.Trim(),
-                PublishTime = xml["pubDate"]?.InnerText?.ToUtcDateTime() ?? DateTime.UtcNow,
+                PublishTime = xml["pubDate"]?.InnerText?.ToUtcDateTime() ?? default(DateTime),
             };
 
             // Get feed id.

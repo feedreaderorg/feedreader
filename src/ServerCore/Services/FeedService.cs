@@ -349,12 +349,25 @@ namespace FeedReader.ServerCore.Services
                         feedItem.Content = parsedFeedItem.Content;
                         feedItem.Link = parsedFeedItem.Link;
                         feedItem.PictureUri = parsedFeedItem.PictureUri;
-                        feedItem.PublishTime = parsedFeedItem.PublishTime;
                         feedItem.Summary = parsedFeedItem.Summary;
                         feedItem.Title = parsedFeedItem.Title;
+
+                        if (parsedFeedItem.PublishTime == default(DateTime))
+                        {
+                            parsedFeedItem.PublishTime = feedItem.PublishTime;
+                        }
+                        else
+                        {
+                            feedItem.PublishTime = parsedFeedItem.PublishTime;
+                        }
                     }
                     else
                     {
+                        if (parsedFeedItem.PublishTime == default(DateTime))
+                        {
+                            parsedFeedItem.PublishTime = DateTime.UtcNow;
+                        }
+
                         db.FeedItems.Add(parsedFeedItem);
                     }
 

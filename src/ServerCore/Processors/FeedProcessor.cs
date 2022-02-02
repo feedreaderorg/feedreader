@@ -61,6 +61,24 @@ namespace FeedReader.ServerCore.Processors
                         return uriBuilder.ToString();
                     }
                 }
+                else
+                {
+                    // Try to get icon from /favicon.ico
+                    var ub = new UriBuilder(uri);
+                    ub.Path = "/favicon.ico";
+                    try
+                    {
+                        var path = ub.ToString();
+                        var message = await HttpClient.GetAsync(path);
+                        if (message.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            return path;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
             }
             catch
             {

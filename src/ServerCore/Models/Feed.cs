@@ -2,6 +2,7 @@
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FeedReader.ServerCore.Models
 {
@@ -9,6 +10,9 @@ namespace FeedReader.ServerCore.Models
     [Index(nameof(SubscriptionName), IsUnique = true)]
     public class FeedInfo
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DbId { get; set; }
+
         public Guid Id { get; set; }
 
         public Guid IdFromUri { get; set; }
@@ -52,6 +56,9 @@ namespace FeedReader.ServerCore.Models
 
     public class FeedItem
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DbId { get; set; }
+
         public Guid Id { get; set; }
 
         public Guid FeedId { get; set; }

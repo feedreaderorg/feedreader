@@ -90,20 +90,10 @@ namespace FeedReader.ServerCore.Services
 
         public async Task RefreshFeedsAsync(CancellationToken cancellationToken)
         {
-            Guid[] feedIds;
             using (var db = DbFactory.CreateDbContext())
             {
-                feedIds = await db.FeedInfos.Select(f => f.Id).ToArrayAsync(cancellationToken);
-            }
-
-            foreach (var feedId in feedIds)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException();
-                }
-
-                await RefreshFeedsAsync(feedId, cancellationToken);
+                await BatchOperation(db.FeedInfos.OrderBy(f => f.DbId).Select(f => f.Id), batchSize: 50, cancellationToken,
+                    perItemOp: (feedId) => RefreshFeedsAsync(feedId, cancellationToken));
             }
         }
 
@@ -137,47 +127,19 @@ namespace FeedReader.ServerCore.Services
 
         public async Task RefreshFeedItemStatisticsAsync(CancellationToken cancellationToken)
         {
-            try
+            using (var db = DbFactory.CreateDbContext())
             {
-                const int PAGE_COUNT = 100;
-                int page = 0;
-
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    using (var db = DbFactory.CreateDbContext())
+                await BatchOperation(db.FeedItems.OrderBy(f => f.DbId).Select(f => f.Id), batchSize: 50, cancellationToken, 
+                    perItemOp: async (feedItemId) =>
                     {
-                        int actualCount = 0;
-
-                        foreach (var feedItemId in db.FeedItems.Select(f => f.Id).Skip(page * PAGE_COUNT).Take(PAGE_COUNT).ToArray())
+                        var totalFavorites = await db.Favorites.CountAsync(f => f.FeedItemId == feedItemId);
+                        db.UpdateEntity(() => new FeedItem()
                         {
-                            ++actualCount;
-
-                            var totalFavorites = await db.Favorites.CountAsync(f => f.FeedItemId == feedItemId);
-                            db.UpdateEntity(() => new FeedItem()
-                            {
-                                Id = feedItemId,
-                                TotalFavorites = totalFavorites
-                            });
-                        }
-
-                        await db.SaveChangesAsync(cancellationToken);
-                        Logger.LogInformation($"RefreshFeedItemStatisticsAsync page: {page}, actualCount: {actualCount}.");
-
-                        if (actualCount < PAGE_COUNT)
-                        {
-                            break;
-                        }
-
-                        ++page;
-                    }
-                }
-            }
-            catch (TaskCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, $"RefreshFeedItemStatisticsAsync failed.");
+                            Id = feedItemId,
+                            TotalFavorites = totalFavorites
+                        });
+                    },
+                    perBatchOp: () => db.SaveChangesAsync());
             }
         }
 
@@ -387,6 +349,42 @@ namespace FeedReader.ServerCore.Services
                                 
                 DateTime endTime = DateTime.Now;
                 Logger.LogInformation($"Refresh feed: {feed.Uri} finished at {endTime}, elasped {(endTime - starTime).TotalSeconds} seconds");
+            }
+        }
+
+        private async Task BatchOperation<T>(IQueryable<T> query, int batchSize, CancellationToken cancellationToken, Func<T, Task> perItemOp, Func<Task> perBatchOp = null)
+        {
+            try
+            {
+                int skip = 0;
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var items = await query.Skip(skip).Take(batchSize).ToArrayAsync(cancellationToken);
+                    foreach (var item in items)
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        await perItemOp(item);
+                    }
+
+                    if (perBatchOp != null && !cancellationToken.IsCancellationRequested)
+                    {
+                        await perBatchOp();
+                    }
+
+                    if (items.Length < batchSize)
+                    {
+                        break;
+                    }
+
+                    skip += batchSize;
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
     }

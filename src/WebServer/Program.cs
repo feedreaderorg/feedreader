@@ -95,7 +95,7 @@ namespace FeedReader.WebServer
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<AuthServerApi>().EnableGrpcWeb().RequireCors("AllowAll");
+                endpoints.MapGrpcService<AnonymousService>().EnableGrpcWeb().RequireCors("AllowAll");
                 endpoints.MapGrpcService<WebServerApi>().EnableGrpcWeb().RequireCors("AllowAll");
                 endpoints.MapFallbackToFile("/index.html");
             });

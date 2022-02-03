@@ -8,6 +8,8 @@ namespace FeedReader.WebClient.Models
 {
     public class Feed
     {
+        private static List<FeedItem> RecomendedFeedItems { get; set; } = new List<FeedItem>();
+
         public string Id { get; set; }
         public string SubscriptionName { get; set; }
         public string IconUri { get; set; }
@@ -34,14 +36,6 @@ namespace FeedReader.WebClient.Models
         {
             // Todo: refresh feed info.
             await RefreshInfoAsync();
-
-            // Refresh feed items.
-            var response = await App.CurrentUser.WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
-            {
-                FeedId = Id,
-                StartIndex = 0,
-                Count = 50,
-            });
 
             // Update local cache.
             await GetFeedItems(startIndex: 0, count: 50);
@@ -80,37 +74,16 @@ namespace FeedReader.WebClient.Models
 
         public async Task<IEnumerable<FeedItem>> GetFeedItems(int startIndex, int count)
         {
-            while (FeedItems.Count < startIndex + count)
+            return await GetFeedItems(FeedItems, startIndex, count, async (s, c) =>
             {
-                var response = await App.CurrentUser.WebServerApi.GetFeedItemsAsync(new Share.Protocols.GetFeedItemsRequest()
+                var request = new Share.Protocols.GetFeedItemsRequest()
                 {
                     FeedId = Id,
-                    StartIndex = startIndex,
-                    Count = 50,
-                });
-                var newItems = response.FeedItems.Select(i =>
-                {
-                    var f = i.ToModelFeedItem();
-                    f.Feed = this;
-                    return f;
-                });
-                FeedItems.AddRange(newItems);
-                FeedItems = FeedItems.DistinctBy(f => f.Id).OrderByDescending(f => f.PublishTime).ToList();
-                if (newItems.Count() < 50)
-                {
-                    break;
-                }
-            }
-
-            if (startIndex >= FeedItems.Count)
-            {
-                return new List<FeedItem>();
-            }
-            else
-            {
-                count = Math.Min(FeedItems.Count - startIndex, count);
-                return FeedItems.GetRange(startIndex, count);
-            }
+                    StartIndex = s,
+                    Count = c,
+                };
+                return (await App.CurrentUser.WebServerApi.GetFeedItemsAsync(request)).FeedItems;
+            }, perItemOp: item => item.Feed = this);
         }
 
         public async Task MarkAsReaded()
@@ -127,6 +100,42 @@ namespace FeedReader.WebClient.Models
                 LastReadedTime = LastReadedTime.ToTimestamp(),
             });
             OnStateChanged?.Invoke(this, null);
+        }
+
+        public static async Task<IEnumerable<FeedItem>> GetRecomendedFeedItems(int startIndex, int count)
+        {
+            return await GetFeedItems(RecomendedFeedItems, startIndex, count, async (s, c) =>
+            {
+                var request = new Share.Protocols.GetRecommedFeedItemsRequest()
+                {
+                    StartIndex = s,
+                    Count = c,
+                };
+                return (await App.CurrentUser.AnonymousService.GetRecommedFeedItemsAsync(request)).FeedItems;
+            });
+        }
+
+        private static async Task<IEnumerable<FeedItem>> GetFeedItems(List<FeedItem> cacheList, int startIndex, int count, Func<int, int, Task<IEnumerable<Share.Protocols.FeedItem>>> op, Action<FeedItem> perItemOp = null)
+        {
+            while (cacheList.Count < startIndex + count)
+            {
+                var response = await op(cacheList.Count, 50);
+                var newItems = response.Select(i => i.ToModelFeedItem()).ToArray();
+                if (perItemOp != null)
+                {
+                    foreach (var item in newItems)
+                    {
+                        perItemOp(item);
+                    }
+                }
+                cacheList.AddRange(newItems);
+                cacheList.Sort((x, y) => x.PublishTime.DescCompareTo(y.PublishTime));
+                if (newItems.Count() < 50)
+                {
+                    break;
+                }
+            }
+            return cacheList.Skip(startIndex).Take(count);
         }
     }
 

@@ -113,12 +113,20 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        public async Task<List<FeedItem>> GetFeedItemsByIdAsync(Guid feedId, int startIndex, int count)
+        public async Task<List<FeedItem>> GetFeedItemsByIdAsync(Guid? feedId, int startIndex, int count)
         {
             using (var db = DbFactory.CreateDbContext())
             {
-                return await db.FeedItems
-                    .Where(f => f.FeedId == feedId)
+                IQueryable<FeedItem> query = db.FeedItems;
+                if (feedId != null)
+                {
+                    query = query.Where(f => f.FeedId == feedId);
+                }
+                else
+                {
+                    query = query.Include(f => f.Feed);
+                }
+                return await query
                     .OrderByDescending(f => f.PublishTime)
                     .Skip(startIndex)
                     .Take(count).ToListAsync();

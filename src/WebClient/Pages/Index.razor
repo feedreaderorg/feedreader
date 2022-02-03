@@ -1,0 +1,72 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@layout MainLayout
+
+@if (App.CurrentUser.Role != UserRole.Guest)
+{
+    NavigationManager.NavigateTo("/home");
+}
+else
+{
+    <div class="login-panel">
+        <div class="wrapper">
+            <div class="form">
+                <div class="title">The Web Feed Online Reader</div>
+                <div class="buttons">
+                    <a class="btn btn-primary" href="@MicrosoftLoginUri">
+                        <i class="bi bi-microsoft me-1" /> Continue with Microsoft
+                    </a>
+                    <a class="btn btn-primary" href="@GoogleLoginUri">
+                        <i class="bi bi-google me-1" /> Continue with Google
+                    </a>
+                </div>
+            </div>
+
+            <div class="ad d-flex">
+                <img src="img/reading.png" />
+            </div>
+        </div>
+    </div>
+
+    <div class="content-panel">
+        <div class="wrapper">
+            <div class="feed-items-panel">
+                <InfiniteScrolling ItemsProvider="@((startIndex, count, _) => GetRecomendedFeedItems(startIndex, count))" Context="feedItem">
+                    <ItemsTemplate>
+                        <FeedItem ClassName="mb-3" Item=@feedItem />
+                    </ItemsTemplate>
+                    <LoadingTemplate>
+                        <div class="d-flex justify-content-center">
+                            <img class="my-2" src="img/loading-buffering.gif" style="width: 32px; height: 32px;" />
+                        </div>
+                    </LoadingTemplate>
+                </InfiniteScrolling>
+            </div>
+        </div>
+    </div>
+}
+
+@code
+{
+    private string MicrosoftLoginUri { get; set; }
+    private string GoogleLoginUri { get; set; }
+    private IEnumerable<Models.FeedItem> RecomendedFeedItems { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var callbackUri = NavigationManager.ToAbsoluteUri("/login/microsoft");
+        MicrosoftLoginUri = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=dcaaa2ba-a614-4b8c-b78e-1fb39cb8899a&redirect_uri={callbackUri}&response_type=id_token&scope=openid+profile&nonce=feedreader";
+
+        callbackUri = NavigationManager.ToAbsoluteUri("/login/google");
+        GoogleLoginUri = $"https://accounts.google.com/o/oauth2/v2/auth?client_id=830207024957-oh9b7oth864jtkb32glia884o0neq1vl.apps.googleusercontent.com&redirect_uri={callbackUri}&response_type=id_token&scope=openid&nonce=feedreader";
+    }
+
+    private async Task<IEnumerable<Models.FeedItem>> GetRecomendedFeedItems(int startIndex, int count)
+    {
+        if (RecomendedFeedItems == null)
+        {
+            RecomendedFeedItems = await Feed.GetRecomendedFeedItems(0, 30);
+        }
+        return RecomendedFeedItems.Skip(startIndex).Take(count);
+    }
+}

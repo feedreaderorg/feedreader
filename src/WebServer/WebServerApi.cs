@@ -4,7 +4,6 @@ using FeedReader.Share.Protocols;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -49,8 +48,9 @@ namespace FeedReader.WebServer
 
     public class WebServerApi : Share.Protocols.WebServerApi.WebServerApiBase
     {
-        FeedService FeedService { get; set; }
-        UserService UserService { get; set; }
+        private Validator Validator { get; } = new Validator();
+        private FeedService FeedService { get; set; }
+        private UserService UserService { get; set; }
 
         public WebServerApi(FeedService feedService, UserService userService)
         {
@@ -94,7 +94,7 @@ namespace FeedReader.WebServer
 
         public override async Task<DiscoverFeedsResponse> DiscoverFeeds(DiscoverFeedsRequest request, ServerCallContext context)
         {
-            (request.StartIndex, request.Count) = ValidateStartIndexAndCount(request.StartIndex, request.Count);
+            (request.StartIndex, request.Count) = Validator.ValidateStartIndexAndCount(request.StartIndex, request.Count);
 
             var feeds = await FeedService.DiscoverFeedsAsync(request.Query, request.StartIndex, request.Count);
             var response = new DiscoverFeedsResponse();
@@ -177,7 +177,7 @@ namespace FeedReader.WebServer
 
         public override async Task<GetFeedItemsResponse> GetFeedItems(GetFeedItemsRequest request, ServerCallContext context)
         {
-            (request.StartIndex, request.Count) = ValidateStartIndexAndCount(request.StartIndex, request.Count);
+            (request.StartIndex, request.Count) = Validator.ValidateStartIndexAndCount(request.StartIndex, request.Count);
 
             var feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.StartIndex, request.Count);
             var response = new GetFeedItemsResponse();
@@ -204,28 +204,6 @@ namespace FeedReader.WebServer
                 throw new FeedReaderException(HttpStatusCode.Forbidden);
             }
             return userselfId;
-        }
-
-        /// <summary>
-        /// Validate & set the default value (if necessary) for startIndex and count.
-        /// </summary>
-        /// <param name="startIndex"></param>
-        /// <param name="count"></param>
-        /// <returns>Updated startIndex and count.</returns>
-        /// <exception cref="FeedReaderException"></exception>
-        private (int, int) ValidateStartIndexAndCount(int startIndex, int count)
-        {
-            if (count == 0)
-            {
-                count = 50;
-            }
-
-            if (startIndex < 0 || count < 1 || count > 50)
-            {
-                throw new FeedReaderException(HttpStatusCode.BadRequest);
-            }
-
-            return (startIndex, count);
         }
     }
 }

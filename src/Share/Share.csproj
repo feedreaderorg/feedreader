@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Protobuf Include="Protocols\AuthServerApi.proto" GrpcServices="Both" />
+    <Protobuf Include="Protocols\AnonymousService.proto" GrpcServices="Both" />
     <Protobuf Include="Protocols\Types.proto" GrpcServices="Both" />
     <Protobuf Include="Protocols\WebServerApi.proto" GrpcServices="Both" />
   </ItemGroup>

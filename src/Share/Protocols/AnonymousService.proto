@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "Protocols/Types.proto";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+service AnonymousService
+{
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc GetRecommedFeedItems(GetRecommedFeedItemsRequest) returns (GetRecommedFeedItemsResponse);
+}
+
+message LoginRequest
+{
+    string Token = 1;
+}
+
+message LoginResponse
+{
+    string Token = 1;
+    string UserId = 2;
+}
+
+message GetRecommedFeedItemsRequest
+{
+    int32 StartIndex = 1;
+    int32 Count = 2;
+}
+
+message GetRecommedFeedItemsResponse
+{
+    repeated FeedItem FeedItems = 1; 
+}

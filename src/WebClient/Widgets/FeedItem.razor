@@ -17,13 +17,16 @@
             </div>
         }
     </a>
-    <div class="footer">
-        <ul>
-            <li @onclick="ToggleFavorite">
-                <i class="bi @(IsFavorited ? "bi-star-fill" : "bi-star")"></i> @TotalFavorites
-            </li>
-        </ul>
-    </div>
+    @if (App.CurrentUser.Role != UserRole.Guest)
+    {
+        <div class="footer">
+            <ul>
+                <li @onclick="ToggleFavorite">
+                    <i class="bi @(IsFavorited ? "bi-star-fill" : "bi-star")"></i> @TotalFavorites
+                </li>
+            </ul>
+        </div>
+    }
 </div>
 
 @code
@@ -33,7 +36,7 @@
 
     [Parameter]
     public Models.FeedItem Item { get; set; }
-
+ 
     private bool IsReaded => Item.Feed.LastReadedTime >= Item.PublishTime;
 
     private bool IsFavorited { get; set; }

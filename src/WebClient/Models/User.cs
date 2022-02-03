@@ -9,7 +9,7 @@ using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using Microsoft.JSInterop;
-using static FeedReader.Share.Protocols.AuthServerApi;
+using static FeedReader.Share.Protocols.AnonymousService;
 using static FeedReader.Share.Protocols.WebServerApi;
 
 namespace FeedReader.WebClient.Models
@@ -38,7 +38,7 @@ namespace FeedReader.WebClient.Models
 
         public WebServerApiClient WebServerApi { get; set; }
 
-        AuthServerApiClient AuthServerApi { get; set; }
+        public AnonymousServiceClient AnonymousService { get; set; }
 
         private IJSRuntime JS { get; set; }
 
@@ -54,7 +54,7 @@ namespace FeedReader.WebClient.Models
             var httpHandler = new HttpClientHandler();
             var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
             var grpcChannel = GrpcChannel.ForAddress(serverAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
-            AuthServerApi = new AuthServerApiClient(grpcChannel);
+            AnonymousService = new AnonymousServiceClient(grpcChannel);
 
             // Try to load token
             Token = await Load("feedreader-access-token");
@@ -93,7 +93,7 @@ namespace FeedReader.WebClient.Models
 
         public async Task LoginAsync(string token)
         {
-            var response = await AuthServerApi.LoginAsync(new Share.Protocols.LoginRequest()
+            var response = await AnonymousService.LoginAsync(new Share.Protocols.LoginRequest()
             {
                 Token = token,
             });

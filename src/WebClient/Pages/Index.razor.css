@@ -1,0 +1,104 @@
+﻿.login-panel, .content-panel {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.login-panel {
+    background-color: rgb(245, 245, 242);
+}
+
+.ad, .feeds {
+    display: flex;
+    width: 320px;
+}
+
+.ad {
+    justify-content: center;
+    align-content: center;
+}
+
+.ad img {
+    width: 280px;
+    height: 280px;
+}
+
+.form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.form .title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 2.25rem;
+    color: rgb(0, 50, 100);
+}
+
+.wrapper {
+    display: flex;
+    flex: 1;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    max-width: 1000px;
+}
+
+.content-panel .wrapper {
+    padding-top: 30px;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+    justify-content: center;
+}
+
+.buttons .btn {
+    width: 280px;
+    padding: 16px;
+}
+
+.feed-items-panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+    .ad {
+        display: none !important;
+    }
+
+    .form {
+        align-items: center !important;
+    }
+
+    .form .title {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 280px) {
+    .form .title {
+        font-size: 1rem !important;
+    }
+
+    .buttons .btn {
+        width: 240px !important;
+        padding: 8px !important;
+    }
+
+    .wrapper {
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+    }
+
+    .content-panel .wrapper {
+        padding-top: 0px !important;
+    }
+}

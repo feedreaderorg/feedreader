@@ -93,7 +93,18 @@ namespace FeedReader.ServerCore.Services
             using (var db = DbFactory.CreateDbContext())
             {
                 await BatchOperation(db.FeedInfos.OrderBy(f => f.DbId).Select(f => f.Id), batchSize: 50, cancellationToken,
-                    perItemOp: (feedId) => RefreshFeedsAsync(feedId, cancellationToken));
+                    perItemOp: async (feedId) =>
+                    {
+                        try
+                        {
+                            await RefreshFeedsAsync(feedId, cancellationToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            // TODO: save error in db?
+                            Logger.LogError(ex, "Refresh feedId: {0} failed.", feedId);
+                        }
+                    });
             }
         }
 

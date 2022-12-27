@@ -5,9 +5,13 @@ on:
     branches:
       - master
 
+env:
+  DOTNET_VERSION: '7.0'
+  TARGET_BRANCH: 'master'
+
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -15,7 +19,7 @@ jobs:
       - name: Setup DotNet Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
         run: dotnet restore
@@ -27,15 +31,13 @@ jobs:
         run: dotnet test -c Release --no-build
 
       - name: Publish
-        run: dotnet publish -c Release --no-build
-
-      - name: Setup Docker Build
-        uses: docker/setup-buildx-action@v1
+        run: |
+          dotnet publish -c Release --no-build
+          mv src/WebClient/bin/Release/net${{ env.DOTNET_VERSION }}/publish/wwwroot/staticwebapp.${{ env.TARGET_BRANCH }}.config.json src/WebClient/bin/Release/net${{ env.DOTNET_VERSION }}/publish/wwwroot/staticwebapp.config.json
 
       - name: Login Container Repository
         uses: docker/login-action@v1
         with:
-          registry: docker.xyb.name
           username: ${{ secrets.DOCKER_REPOSITORY_USERNAME }}
           password: ${{ secrets.DOCKER_REPOSITORY_PASSWORD }}
 
@@ -44,7 +46,7 @@ jobs:
         with:
           context: src/WebClient/
           file: src/WebClient/Dockerfile
-          tags: docker.xyb.name/feedreader-devtest/webclient:latest,docker.xyb.name/feedreader-devtest/webclient:master-${{ github.sha }}
+          tags: xieyubo/private:f-webclient-${{ github.sha }}
           push: true
 
       - name: Build And Push Docker Image for webserver
@@ -52,28 +54,36 @@ jobs:
         with:
           context: src/WebServer/
           file: src/WebServer/Dockerfile
-          tags: docker.xyb.name/feedreader-devtest/webserver:latest,docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
+          tags: xieyubo/private:f-webserver-${{ github.sha }}
           push: true
 
-      - name: Build And Push Docker Image for taskserver
-        uses: docker/build-push-action@v2
-        with:
-          context: src/TaskServer/
-          file: src/TaskServer/Dockerfile
-          tags: docker.xyb.name/feedreader-devtest/taskserver:latest,docker.xyb.name/feedreader-devtest/taskserver:master-${{ github.sha }}
-          push: true
+      # - name: Build And Push Docker Image for taskserver
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: src/TaskServer/
+      #     file: src/TaskServer/Dockerfile
+      #     tags: xieyubo/private:f-taskserver-${{ github.sha }}
+      #     push: true
 
       - uses: azure/k8s-set-context@v1
         with:
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
-      - name: Deploy To Azure Kubernetes
+      - name: Deploy WebServer
         uses: azure/k8s-deploy@v1
         with:
-          namespace: feedreader-devtest
+          namespace: yuboxie
           manifests: |
-            kubernetes/devtest-configs/webclient.yaml
-            kubernetes/devtest-configs/webserver.yaml
+            kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
           images: |
-            docker.xyb.name/feedreader-devtest/webclient:master-${{ github.sha }}
-            docker.xyb.name/feedreader-devtest/webserver:master-${{ github.sha }}
+            xieyubo/private:f-webserver-${{ github.sha }}
+
+      - name: Deploy WebClient
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.WEBCLIENT_MASTER_DEPLOY_TOKEN }}
+          action: "upload"
+          skip_app_build: true
+          skip_api_build: true
+          app_location: "src/WebClient/bin/Release/net${{ env.DOTNET_VERSION }}/publish/wwwroot"
+          api_location: ""

@@ -50,6 +50,31 @@ namespace FeedReader.ServerCoreTest
             Assert.NotNull(feed);
             Assert.Equal("https://coolshell.cn:443/favicon.ico", feed.IconUri);
         }
+
+        [Fact]
+        public void GetIconUriWithRelativePathAndQueryParameterFromWebSite()
+        {
+            // For issue: https://github.com/xieyubo/FeedReader/issues/16
+            var httpClient = MockHttpClientFactory.CreateMockHttpClient(r =>
+            {
+                var path = r.RequestUri.ToString();
+                if (path == "https://www.insider.com/")
+                {
+                    return TestUtils.LoadTestData("www.insider.com.2022.12.27.html");
+                }
+                else
+                {
+                    Assert.True(false);
+                    return "";
+                }
+            });
+
+            var feedProcessor = new FeedProcessor(httpClient);
+            var data = TestUtils.LoadTestData("www.insider.com.2022.12.27.xml");
+            var feed = feedProcessor.TryToParseFeedFromContent(data, parseItems: false).Result;
+            Assert.NotNull(feed);
+            Assert.Equal("https://www.insider.com/public/assets/INSIDER/US/favicons/apple-touch-icon.png?v=2021-08", feed.IconUri);
+        }
     }
 
     

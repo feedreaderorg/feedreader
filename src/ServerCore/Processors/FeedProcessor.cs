@@ -56,9 +56,7 @@ namespace FeedReader.ServerCore.Processors
                     }
                     else if (Uri.IsWellFormedUriString(iconPath, UriKind.Relative))
                     {
-                        var uriBuilder = new UriBuilder(uri.ToString());
-                        uriBuilder.Path = iconPath;
-                        return uriBuilder.ToString();
+                        return new Uri(uri, iconPath).ToString();
                     }
                 }
                 else

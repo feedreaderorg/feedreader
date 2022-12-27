@@ -1,73 +1,69 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webserver
-  namespace: feedreader-release-a
+  name: f-webserver-release-a
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: webserver
+      app: f-webserver-release-a
   template:
     metadata:
       labels:
-        app: webserver
+        app: f-webserver-release-a
     spec:
       imagePullSecrets:
-      - name: xyb-private-docker-registry
+      - name: f-docker-secret
       containers:
-      - name: webserver
-        image: docker.xyb.name/feedreader-release-a/webserver:latest
-        imagePullPolicy: Always
+      - name: f-webserver-release-a
+        image: xieyubo/private:f-webserver-release-a
         ports:
         - containerPort: 80
         env:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:
               secretKeyRef:
-                name: feedreader-release-db-secret
+                name: f-release-db-secret
                 key: db-conns
           - name: FeedReaderJwtSecret
             valueFrom:
               secretKeyRef:
-                name: feedreader-release-jwt-secret
+                name: f-release-jwt-secret
                 key: key
           - name: StaticServer
-            value: https://cdn.release-a.feedreader.org
+            value: https://cdn.freleasea.xyb.name
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: webserver
-  namespace: feedreader-release-a
+  name: f-webserver-release-a
 spec:
   type: ClusterIP
   ports:
   - port: 80
   selector:
-    app: webserver
+    app: f-webserver-release-a
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webserver
-  namespace: feedreader-release-a
+  name: f-webserver-release-a
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt
 spec:
   tls:
   - hosts:
-    - api.release-a.feedreader.org
-    secretName: webserver-https-secret
+    - api.freleasea.xyb.name
+    secretName: f-webserver-release-a-tls
   rules:
-  - host: api.release-a.feedreader.org
+  - host: api.freleasea.xyb.name
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: webserver
+            name: f-webserver-release-a
             port:
               number: 80

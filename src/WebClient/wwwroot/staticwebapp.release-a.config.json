@@ -1,0 +1,8 @@
+{
+    "globalHeaders": {
+        "Blazor-Environment": "release-a"
+    },
+    "navigationFallback": {
+        "rewrite": "/index.html"
+    }
+}

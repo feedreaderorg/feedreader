@@ -2,15 +2,15 @@
     <PropertyGroup>
         <AssemblyName>FeedReader.WebClient</AssemblyName>
         <RootNamespace>FeedReader.WebClient</RootNamespace>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Grpc.Net.Client" Version="2.42.0" />
-      <PackageReference Include="Grpc.Net.Client.Web" Version="2.42.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
+      <PackageReference Include="Grpc.Net.Client.Web" Version="2.50.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Share\Share.csproj" />

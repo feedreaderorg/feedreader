@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>FeedReader.Share</AssemblyName>
     <RootNamespace>FeedReader.Share</RootNamespace>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Protobuf Include="Protocols\AnonymousService.proto" GrpcServices="Both" />
@@ -10,9 +10,9 @@
     <Protobuf Include="Protocols\WebServerApi.proto" GrpcServices="Both" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.19.4" />
-    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.42.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.43.0">
+    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.50.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.51.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

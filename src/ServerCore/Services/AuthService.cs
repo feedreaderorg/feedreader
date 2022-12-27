@@ -228,18 +228,18 @@ namespace FeedReader.ServerCore.Services
                 throw new UnauthorizedAccessException("Invalid aud claim in token");
             }
 
-            // Validate the oid which is the user identity id in Microsoft account system.
-            var oid = GetValue(claims, "oid");
-            if (string.IsNullOrEmpty(oid))
+            // Validate the sub which is the user identity id in Microsoft account system for this application.
+            var sub = GetValue(claims, "sub");
+            if (string.IsNullOrEmpty(sub))
             {
-                throw new UnauthorizedAccessException("No oid claim in token");
+                throw new UnauthorizedAccessException("No sub claim in token");
             }
 
             // All validations pass
             return new Token
             {
                 OriginalToken = token,
-                OAuthId = oid,
+                OAuthId = sub,
                 OAuthIssuer = OAuthIssuers.Microsoft
             };
         }
@@ -299,7 +299,7 @@ namespace FeedReader.ServerCore.Services
 
         const string MICROSOFT_PUBLIC_KEYS_URL = "https://login.microsoftonline.com/common/discovery/v2.0/keys";
         const string MICROSOFT_ISS = "https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0";
-        const string MICROSOFT_AUD = "dcaaa2ba-a614-4b8c-b78e-1fb39cb8899a";
+        const string MICROSOFT_AUD = "ecdce664-80f7-4d97-a047-ae75035b957c";
 
         const string GOOGLE_PUBLIC_KEYS_URL = "https://www.googleapis.com/oauth2/v1/certs";
         const string GOOGLE_ISS = "https://accounts.google.com";

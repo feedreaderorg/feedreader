@@ -16,9 +16,11 @@ else
                     <a class="btn btn-primary" href="@MicrosoftLoginUri">
                         <i class="bi bi-microsoft me-1" /> Continue with Microsoft
                     </a>
+                    <!--
                     <a class="btn btn-primary" href="@GoogleLoginUri">
                         <i class="bi bi-google me-1" /> Continue with Google
                     </a>
+                    -->
                 </div>
             </div>
 
@@ -55,7 +57,7 @@ else
     protected override void OnInitialized()
     {
         var callbackUri = NavigationManager.ToAbsoluteUri("/login/microsoft");
-        MicrosoftLoginUri = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=dcaaa2ba-a614-4b8c-b78e-1fb39cb8899a&redirect_uri={callbackUri}&response_type=id_token&scope=openid+profile&nonce=feedreader";
+        MicrosoftLoginUri = $"https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=ecdce664-80f7-4d97-a047-ae75035b957c&redirect_uri={callbackUri}&response_type=id_token&scope=openid&nonce=feedreader";
 
         callbackUri = NavigationManager.ToAbsoluteUri("/login/google");
         GoogleLoginUri = $"https://accounts.google.com/o/oauth2/v2/auth?client_id=830207024957-oh9b7oth864jtkb32glia884o0neq1vl.apps.googleusercontent.com&redirect_uri={callbackUri}&response_type=id_token&scope=openid&nonce=feedreader";

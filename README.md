@@ -1,1 +1,2 @@
 [![Master CI](https://github.com/xieyubo/feedreader/actions/workflows/master-ci.yaml/badge.svg)](https://github.com/xieyubo/feedreader/actions/workflows/master-ci.yaml)
+[![Release-A CI](https://github.com/xieyubo/FeedReader/actions/workflows/release-a-ci.yaml/badge.svg)](https://github.com/xieyubo/FeedReader/actions/workflows/release-a-ci.yaml)

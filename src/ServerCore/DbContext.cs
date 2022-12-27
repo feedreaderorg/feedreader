@@ -40,8 +40,20 @@ namespace FeedReader.ServerCore
     {
         public DbContext CreateDbContext(string[] args)
         {
+            string connectionString = "Server=localhost;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader";
+            if (args != null)
+            {
+                for (int i = 0; i < args.Length; ++i)
+                {
+                    if (args[i] == "--conns")
+                    {
+                        connectionString = args[++i];
+                    }
+                }
+            }
+
             var optsBuilder = new DbContextOptionsBuilder<DbContext>();
-            optsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=feedreader;User Id=feedreader;Password=feedreader");
+            optsBuilder.UseNpgsql(connectionString);
             return new DbContext(optsBuilder.Options);
         }
     }

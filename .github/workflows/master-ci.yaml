@@ -57,13 +57,13 @@ jobs:
           tags: xieyubo/private:f-webserver-${{ github.sha }}
           push: true
 
-      # - name: Build And Push Docker Image for taskserver
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: src/TaskServer/
-      #     file: src/TaskServer/Dockerfile
-      #     tags: xieyubo/private:f-taskserver-${{ github.sha }}
-      #     push: true
+      - name: Build And Push Docker Image for taskserver
+        uses: docker/build-push-action@v2
+        with:
+          context: src/TaskServer/
+          file: src/TaskServer/Dockerfile
+          tags: xieyubo/private:f-taskserver-${{ github.sha }}
+          push: true
 
       - uses: azure/k8s-set-context@v1
         with:
@@ -77,6 +77,15 @@ jobs:
             kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
           images: |
             xieyubo/private:f-webserver-${{ github.sha }}
+
+      - name: Deploy TaskServer
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: yuboxie
+          manifests: |
+            kubernetes/${{ env.TARGET_BRANCH }}-configs/taskserver.yaml
+          images: |
+            xieyubo/private:f-taskserver-${{ github.sha }}
 
       - name: Deploy WebClient
         uses: Azure/static-web-apps-deploy@v1

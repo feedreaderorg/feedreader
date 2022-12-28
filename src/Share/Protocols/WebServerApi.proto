@@ -13,8 +13,6 @@ service WebServerApi
 
     rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc FavoriteFeedItem(FavoriteFeedItemRequest) returns (FavoriteFeedItemResponse);
-    rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
-    rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
     rpc UpdateFeedSubscription(UpdateFeedSubscriptionRequest) returns (UpdateFeedSubscriptionResponse);
 }
@@ -73,31 +71,6 @@ message FavoriteFeedItemRequest
 
 message FavoriteFeedItemResponse
 {
-}
-
-message GetFeedInfoRequest
-{
-    oneof Key {
-        string FeedId = 1;
-        string SubscriptionName = 2;
-    }
-}
-
-message GetFeedInfoResponse
-{
-    FeedInfo Feed = 1;
-}
-
-message GetFeedItemsRequest
-{
-    string FeedId = 1;
-    int32 StartIndex = 2;
-    int32 Count = 3;
-}
-
-message GetFeedItemsResponse
-{
-    repeated FeedItem FeedItems = 1;
 }
 
 message SubscribeFeedRequest

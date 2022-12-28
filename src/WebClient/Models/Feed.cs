@@ -44,7 +44,7 @@ namespace FeedReader.WebClient.Models
 
         private async Task RefreshInfoAsync()
         {
-            var response = await App.CurrentUser.WebServerApi.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
+            var response = await App.CurrentUser.AnonymousService.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
             {
                 FeedId = Id
             });
@@ -82,7 +82,7 @@ namespace FeedReader.WebClient.Models
                     StartIndex = s,
                     Count = c,
                 };
-                return (await App.CurrentUser.WebServerApi.GetFeedItemsAsync(request)).FeedItems;
+                return (await App.CurrentUser.AnonymousService.GetFeedItemsAsync(request)).FeedItems;
             }, perItemOp: item => item.Feed = this);
         }
 

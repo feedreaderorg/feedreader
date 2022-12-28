@@ -7,13 +7,16 @@
 				<img src="img/home.png" /> Home
 			</NavLink>
 
-			<NavLink href="/favorites" Match="NavLinkMatch.All">
-				<img src="img/favorite.png" /> My favorites
-			</NavLink>
+			@if (CurrentUser.Role != UserRole.Guest)
+			{
+				<NavLink href="/favorites" Match="NavLinkMatch.All">
+					<img src="img/favorite.png" /> My favorites
+				</NavLink>
+			}
 		</div>
-		@if (SubscribedFeeds != null)
-		{
-			<div class="section vstack gap-3">
+		<div class="section vstack gap-3">
+			@if (CurrentUser.Role != UserRole.Guest && SubscribedFeeds != null)
+			{
 				<div class="title">MY FEEDS</div>
 				@foreach (var feed in SubscribedFeeds)
 				{
@@ -21,19 +24,27 @@
 						<img src="@feed.IconUri" /> @feed.Name
 					</NavLink>
 				}
-			</div>
-		}
+			}
+			else
+			{
+				<div class="title">YOU MAY LIKE</div>
+				<div><i>TODO</i></div>
+			}
+		</div>
 	</div>
-	<hr/>
-	<div class="bottom">
-		<ul>
-			<li>
-				<a href="/logout">
-					<img src="/img/logout.png"><span>Log out</span>
-				</a>
-			</li>
-		</ul>
-	</div>
+	@if (CurrentUser.Role != UserRole.Guest)
+	{
+		<hr/>
+		<div class="bottom">
+			<ul>
+				<li>
+					<a href="/logout">
+						<img src="/img/logout.png"><span>Log out</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	}
 </div>
 
 @code

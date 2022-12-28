@@ -176,7 +176,7 @@ namespace FeedReader.WebClient.Models
                 {
                     try
                     {
-                        feed = (await WebServerApi.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
+                        feed = (await AnonymousService.GetFeedInfoAsync(new Share.Protocols.GetFeedInfoRequest()
                         {
                             SubscriptionName = feedSubscriptionName
                         })).Feed.ToModelFeed();

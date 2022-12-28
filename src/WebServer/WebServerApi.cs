@@ -137,54 +137,6 @@ namespace FeedReader.WebServer
             return new UpdateFeedSubscriptionResponse();
         }
 
-        public override async Task<GetFeedInfoResponse> GetFeedInfo(GetFeedInfoRequest request, ServerCallContext context)
-        {
-            ServerCore.Models.FeedInfo feedInfo = null;
-            switch (request.KeyCase)
-            {
-                case GetFeedInfoRequest.KeyOneofCase.FeedId:
-                    if (string.IsNullOrEmpty(request.FeedId))
-                    {
-                        throw new ArgumentException("FeedId can't be empty", "FeedId");
-                    }
-                    feedInfo = await FeedService.GetFeedInfoById(Guid.Parse(request.FeedId));
-                    break;
-
-                case GetFeedInfoRequest.KeyOneofCase.SubscriptionName:
-                    if (string.IsNullOrEmpty(request.SubscriptionName))
-                    {
-                        throw new ArgumentException("SubscriptionName can't be empty", "FeedId");
-                    }
-                    feedInfo = await FeedService.GetFeedInfoBySubscriptionName(request.SubscriptionName);
-                    break;
-
-                default:
-                    throw new ArgumentException();
-            }
-
-            if (feedInfo == null)
-            {
-                return new GetFeedInfoResponse();
-            }
-            else
-            {
-                return new GetFeedInfoResponse()
-                {
-                    Feed = feedInfo.ToProtocolFeedInfo()
-                };
-            }
-        }
-
-        public override async Task<GetFeedItemsResponse> GetFeedItems(GetFeedItemsRequest request, ServerCallContext context)
-        {
-            (request.StartIndex, request.Count) = Validator.ValidateStartIndexAndCount(request.StartIndex, request.Count);
-
-            var feedItems = await FeedService.GetFeedItemsByIdAsync(Guid.Parse(request.FeedId), request.StartIndex, request.Count);
-            var response = new GetFeedItemsResponse();
-            response.FeedItems.AddRange(feedItems.Select(f => f.ToProtocolFeedItem()));
-            return response;
-        }
-
         Guid GetUserId(ServerCallContext context)
         {
             return (Guid)context.UserState["userId"];

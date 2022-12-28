@@ -1,7 +1,7 @@
 ﻿@page "/feed/{FeedSubscriptionName}"
 @layout LeftSideBarLayout
 @implements IDisposable
-@inherits LoginRequiredPageBase
+@inject NavigationManager NavigationManager
 @using FeedItem = Widgets.FeedItem
 
 <div class="feed-page d-flex flex-grow-1 flex-column">
@@ -15,15 +15,18 @@
     {
         <div class="page-header">
             <h1 class="text-nowrap text-truncate">@Feed.Name</h1>
-            <div class="flex-grow-1 flex-lg-grow-0" />
-            @if (IsSubscribed)
+            @if (CurrentUser.Role != UserRole.Guest)
             {
-                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
-                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="@Feed.MarkAsReaded" />
-            }
-            else
-            {
-                <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Follow" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))"/>
+                <div class="flex-grow-1 flex-lg-grow-0" />
+                @if (IsSubscribed)
+                {
+                    <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))"/>
+                    <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Readed" OnClick="@Feed.MarkAsReaded" />
+                }
+                else
+                {
+                    <ActionButton ClassName="btn-primary ms-3 btn-sm" Text="Follow" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))"/>
+                }
             }
         </div>
         <div class="page-content">
@@ -63,18 +66,21 @@
                         <div class="label">ABOUT</div>
                         <div class="about">@Feed.Description</div>
                         <div class="actions container">
-                            @if (IsSubscribed)
+                            @if (CurrentUser.Role != UserRole.Guest)
                             {
-                                <div class="row gap-2 mb-2">
-                                    <ActionButton ClassName="btn-primary btn-sm col" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))" />
-                                    <ActionButton ClassName="btn-primary btn-sm col" Text="Readed" OnClick="@Feed.MarkAsReaded" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="row gap-2 mb-2">
-                                    <ActionButton ClassName="btn-primary btn-sm" Text="Follow" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))" />
-                                </div>
+                                if (IsSubscribed)
+                                {
+                                    <div class="row gap-2 mb-2">
+                                        <ActionButton ClassName="btn-primary btn-sm col" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))" />
+                                        <ActionButton ClassName="btn-primary btn-sm col" Text="Readed" OnClick="@Feed.MarkAsReaded" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row gap-2 mb-2">
+                                        <ActionButton ClassName="btn-primary btn-sm" Text="Follow" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))" />
+                                    </div>
+                                }
                             }
                             <div class="row gap-2">
                                 @if (!string.IsNullOrEmpty(Feed.RssUri))
@@ -105,6 +111,9 @@
 {
     [Parameter]
     public string FeedSubscriptionName { get; set; }
+
+    [CascadingParameter]
+    public User CurrentUser { get; set; }
 
     private Feed Feed { get; set; }
 

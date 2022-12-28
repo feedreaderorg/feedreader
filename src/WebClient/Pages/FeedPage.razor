@@ -63,6 +63,19 @@
                         <div class="label">ABOUT</div>
                         <div class="about">@Feed.Description</div>
                         <div class="actions container">
+                            @if (IsSubscribed)
+                            {
+                                <div class="row gap-2 mb-2">
+                                    <ActionButton ClassName="btn-primary btn-sm col" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))" />
+                                    <ActionButton ClassName="btn-primary btn-sm col" Text="Readed" OnClick="@Feed.MarkAsReaded" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row gap-2 mb-2">
+                                    <ActionButton ClassName="btn-primary btn-sm" Text="Follow" OnClick="@(() => CurrentUser.SubscribeFeedAsync(Feed))" />
+                                </div>
+                            }
                             <div class="row gap-2">
                                 @if (!string.IsNullOrEmpty(Feed.RssUri))
                                 {

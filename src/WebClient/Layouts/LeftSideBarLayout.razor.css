@@ -46,8 +46,8 @@
 
 ::deep .page-content {
     display: flex;
-    margin-top: 58px;
-    padding: 1rem;
+    margin-top: var(--page-content-margin-top);
+    padding: var(--page-content-padding);
 }
 
 @media (max-width: 1200px) {
@@ -67,6 +67,6 @@
     }
 
     ::deep .page-content {
-        padding: 1rem 0;
+        padding: var(--page-content-padding) 0;
     }
 }

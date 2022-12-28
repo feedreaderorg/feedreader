@@ -131,7 +131,7 @@ namespace FeedReader.ServerCore.Processors
         {
             // Find media content, standard: media rss, https://www.rssboard.org/media-rss
             string imgUrl = null;
-            var mediaContents = xml.SelectNodes("media:group/media:content", FeedXmlNS);
+            var mediaContents = xml.SelectNodes("media:content", FeedXmlNS) ?? xml.SelectNodes("media:group/media:content", FeedXmlNS);
             if (mediaContents != null)
             {
                 foreach (XmlNode mediaContent in mediaContents)
@@ -147,6 +147,14 @@ namespace FeedReader.ServerCore.Processors
                             break;
                         }
                         else if (string.IsNullOrWhiteSpace(imgUrl))
+                        {
+                            imgUrl = attributes["url"].InnerText;
+                        }
+                    }
+                    else
+                    {
+                        var type = attributes["type"]?.InnerText;
+                        if (type?.StartsWith("image/") == true)
                         {
                             imgUrl = attributes["url"].InnerText;
                         }

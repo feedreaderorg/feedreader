@@ -43,5 +43,15 @@ namespace FeedReader.ServerCoreTest
                 Assert.Equal(default(DateTime), item.PublishTime);
             }
         }
+
+        [Fact]
+        public void ExtractTopicImageFromMediaContentTag()
+        {
+            var feedParser = FeedParser.TryCreateFeedParser(TestUtils.LoadTestData("moxie.foxnews.com.2022.12.28.xml"));
+            var feed = feedParser.TryParseFeed(parseItems: true);
+            Assert.NotNull(feed);
+            Assert.Equal("https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2022/12/931/523/Whale.jpg?ve=1&tl=1", feed.FeedItems[0].PictureUri);
+
+        }
     }
 }

@@ -3,11 +3,9 @@ using FeedReader.ServerCore.Processors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -18,16 +16,16 @@ namespace FeedReader.ServerCore.Services
     public class FeedService
     {
         IDbContextFactory<DbContext> DbFactory { get; set; }
-        HttpClient HttpClient { get; set; }
         ILogger Logger { get; set; }
         private FeedProcessor FeedProcessor { get; }
+        private readonly IWebContentProvider _webContentProvider;
 
-        public FeedService(IDbContextFactory<DbContext> dbFactory, HttpClient httpClient, ILogger<FeedService> logger, IConfiguration configuration)
+        public FeedService(IDbContextFactory<DbContext> dbFactory, IWebContentProvider webContentProvider, ILogger<FeedService> logger, IConfiguration configuration)
         {
             DbFactory = dbFactory;
-            HttpClient = httpClient;
+            _webContentProvider = webContentProvider;
             Logger = logger;
-            FeedProcessor = new FeedProcessor(HttpClient);
+            FeedProcessor = new FeedProcessor(webContentProvider);
         }
 
         public async Task<List<FeedInfo>> DiscoverFeedsAsync(string query, int startIndex, int count)
@@ -181,7 +179,7 @@ namespace FeedReader.ServerCore.Services
             string content = null;
             try
             {
-                content = await HttpClient.GetStringAsync(uri);
+                content = await _webContentProvider.GetAsync(uri.ToString());
             }
             catch
             {
@@ -298,7 +296,7 @@ namespace FeedReader.ServerCore.Services
                 DateTime starTime = DateTime.Now;
                 Logger.LogInformation($"Refresh feed: {feed.Uri} at {starTime}");
 
-                var content = await HttpClient.GetStringAsync(feed.Uri, cancellationToken);
+                var content = await _webContentProvider.GetAsync(feed.Uri);
                 if (string.IsNullOrEmpty(content))
                 {
                     feed.LastParseError = "Fetch content failed.";

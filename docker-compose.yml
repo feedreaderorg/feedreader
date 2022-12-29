@@ -14,8 +14,8 @@ services:
   webserver:
     image: feedreader-webserver
     build:
-      context: src/WebServer
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/WebServer/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80

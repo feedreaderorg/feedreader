@@ -104,6 +104,7 @@ namespace FeedReader.ServerCore
         {
             services.AddLogging();
             services.AddTransient<HttpClient>();
+            services.AddSingleton<IWebContentProvider, CurlWebContentProvider>();
             services.AddDbContextFactory<DbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DbConnectionString")));
             services.AddSingleton<AuthService>();
             services.AddSingleton<FeedService>();

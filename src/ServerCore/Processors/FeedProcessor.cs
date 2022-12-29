@@ -1,7 +1,7 @@
 ﻿using FeedReader.ServerCore.Models;
+using FeedReader.ServerCore.Services;
 using HtmlAgilityPack;
 using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,11 +9,11 @@ namespace FeedReader.ServerCore.Processors
 {
     public class FeedProcessor
     {
-        private HttpClient HttpClient { get; set; }
+        private readonly IWebContentProvider _webContentProvider;
 
-        public FeedProcessor(HttpClient httpClient)
+        public FeedProcessor(IWebContentProvider webContentProvider)
         {
-            HttpClient = httpClient;
+			_webContentProvider = webContentProvider;
         }
 
         public async Task<FeedInfo> TryToParseFeedFromContent(string content, bool parseItems, CancellationToken cancellationToken = default(CancellationToken))
@@ -43,7 +43,7 @@ namespace FeedReader.ServerCore.Processors
             try
             {
                 var html = new HtmlDocument();
-                html.LoadHtml(await HttpClient.GetStringAsync(uri));
+                html.LoadHtml(await _webContentProvider.GetAsync(uri.ToString()));
                 var el = html.DocumentNode.SelectSingleNode("/html/head/link[@rel='apple-touch-icon' and @href]") ??
                          html.DocumentNode.SelectSingleNode("/html/head/link[@rel='shortcut icon' and @href]") ??
                          html.DocumentNode.SelectSingleNode("/html/head/link[@rel='icon' and @href]");
@@ -66,9 +66,9 @@ namespace FeedReader.ServerCore.Processors
                     ub.Path = "/favicon.ico";
                     try
                     {
-                        var path = ub.ToString();
-                        var message = await HttpClient.GetAsync(path);
-                        if (message.StatusCode == System.Net.HttpStatusCode.OK)
+                        var path = ub.Uri.ToString();
+                        var headers = await _webContentProvider.GetHeaderAsync(path);
+                        if (!string.IsNullOrEmpty(headers))
                         {
                             return path;
                         }

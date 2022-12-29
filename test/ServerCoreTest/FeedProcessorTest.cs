@@ -1,7 +1,6 @@
 ﻿using FeedReader.ServerCore.Processors;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
+using FeedReader.ServerCore.Services;
+using Moq;
 using Xunit;
 
 namespace FeedReader.ServerCoreTest
@@ -11,12 +10,10 @@ namespace FeedReader.ServerCoreTest
         [Fact]
         public void GetIconFromWebSiteHtmlShortcutTag()
         {
-            var httpClient = MockHttpClientFactory.CreateMockHttpClient(r =>
-            {
-                Assert.Equal("https://blog.eltrovemo.com/", r.RequestUri.ToString());
-                return TestUtils.LoadTestData("blog.eltrovemo.com.2022.01.23.html");
-            });
-            var feedProcessor = new FeedProcessor(httpClient);
+            var mockWebContentClient = new Mock<IWebContentProvider>();
+            mockWebContentClient.Setup(c => c.GetAsync("https://blog.eltrovemo.com/")).ReturnsAsync(TestUtils.LoadTestData("blog.eltrovemo.com.2022.01.23.html"));
+
+            var feedProcessor = new FeedProcessor(mockWebContentClient.Object);
             var data = TestUtils.LoadTestData("blog.eltrovemo.com.2022.01.23.xml");
             var feed = feedProcessor.TryToParseFeedFromContent(data, parseItems: false).Result;
             Assert.NotNull(feed);
@@ -26,50 +23,25 @@ namespace FeedReader.ServerCoreTest
         [Fact]
         public void GetIconFromWebSitePredefinedPath()
         {
-            var httpClient = MockHttpClientFactory.CreateMockHttpClient(r =>
-            {
-                var path = r.RequestUri.ToString();
-                if (path == "https://coolshell.cn/")
-                {
-                    return TestUtils.LoadTestData("coolshell.cn.2022.02.02.html");
-                }
-                else if (path == "https://coolshell.cn/favicon.ico")
-                {
-                    return "";
-                }
-                else
-                {
-                    Assert.True(false);
-                    return "";
-                }
-            });
-
-            var feedProcessor = new FeedProcessor(httpClient);
+			var mockWebContentClient = new Mock<IWebContentProvider>();
+            mockWebContentClient.Setup(c => c.GetAsync("https://coolshell.cn/")).ReturnsAsync(TestUtils.LoadTestData("coolshell.cn.2022.02.02.html"));
+            mockWebContentClient.Setup(c => c.GetHeaderAsync("https://coolshell.cn/favicon.ico")).ReturnsAsync("HTTP/1.1 200 OK");
+			
+            var feedProcessor = new FeedProcessor(mockWebContentClient.Object);
             var data = TestUtils.LoadTestData("coolshell.cn.2022.01.31.xml");
             var feed = feedProcessor.TryToParseFeedFromContent(data, parseItems: false).Result;
             Assert.NotNull(feed);
-            Assert.Equal("https://coolshell.cn:443/favicon.ico", feed.IconUri);
+            Assert.Equal("https://coolshell.cn/favicon.ico", feed.IconUri);
         }
 
         [Fact]
         public void GetIconUriWithRelativePathAndQueryParameterFromWebSite()
         {
-            // For issue: https://github.com/xieyubo/FeedReader/issues/16
-            var httpClient = MockHttpClientFactory.CreateMockHttpClient(r =>
-            {
-                var path = r.RequestUri.ToString();
-                if (path == "https://www.insider.com/")
-                {
-                    return TestUtils.LoadTestData("www.insider.com.2022.12.27.html");
-                }
-                else
-                {
-                    Assert.True(false);
-                    return "";
-                }
-            });
+			// For issue: https://github.com/xieyubo/FeedReader/issues/16
+			var mockWebContentClient = new Mock<IWebContentProvider>();
+			mockWebContentClient.Setup(c => c.GetAsync("https://www.insider.com/")).ReturnsAsync(TestUtils.LoadTestData("www.insider.com.2022.12.27.html"));
 
-            var feedProcessor = new FeedProcessor(httpClient);
+            var feedProcessor = new FeedProcessor(mockWebContentClient.Object);
             var data = TestUtils.LoadTestData("www.insider.com.2022.12.27.xml");
             var feed = feedProcessor.TryToParseFeedFromContent(data, parseItems: false).Result;
             Assert.NotNull(feed);

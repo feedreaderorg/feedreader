@@ -1,11 +1,9 @@
 {
-    "profiles": {
-        "WebServer": {
-            "commandName": "Project",
-            "applicationUrl": "http://localhost:5001",
-            "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
-        }
+  "profiles": {
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 5001
     }
+  }
 }

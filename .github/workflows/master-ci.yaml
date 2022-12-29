@@ -52,7 +52,7 @@ jobs:
       - name: Build And Push Docker Image for webserver
         uses: docker/build-push-action@v2
         with:
-          context: src/WebServer/
+          context: .
           file: src/WebServer/Dockerfile
           tags: xieyubo/private:f-webserver-${{ github.sha }}
           push: true

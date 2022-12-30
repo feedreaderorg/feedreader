@@ -112,9 +112,13 @@ namespace FeedReader.ServerCore.Services
         {
             using (var db = DbFactory.CreateDbContext())
             {
-                var item = await db.FeedSubscriptions.FindAsync(userId, feedId);
+                var item = await db.FeedSubscriptions.Include(f => f.Feed).Where(f => f.UserId == userId && f.FeedId == feedId).FirstOrDefaultAsync();
                 if (item != null)
                 {
+                    if (item.Feed.ForceSubscribed)
+                    {
+                        throw new Exception($"This feed {item.Feed.Uri} can't be unsubscribed.");
+                    }
                     db.FeedSubscriptions.Remove(item);
                     await db.SaveChangesAsync();
                 }

@@ -21,6 +21,7 @@ namespace FeedReader.WebServer
                 TotalSubscribers = f.TotalSubscribers,
                 SiteLink = f.WebsiteLink ?? string.Empty,
                 RssUri = f.Uri ?? string.Empty,
+                ForceSubscribed = f.ForceSubscribed,
             };
             return feedInfo;
         }

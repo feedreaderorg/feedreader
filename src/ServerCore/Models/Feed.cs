@@ -52,6 +52,8 @@ namespace FeedReader.ServerCore.Models
         public List<FeedItem> FeedItems { get; set; }
 
         public NpgsqlTsVector SearchVector { get; set; }
+
+        public bool ForceSubscribed { get; set; }
     }
 
     public class FeedItem
@@ -64,7 +66,7 @@ namespace FeedReader.ServerCore.Models
         public Guid FeedId { get; set; }
         public FeedInfo Feed { get; set; }
 
-        public string Link { get; set;}
+        public string Link { get; set; }
 
         public DateTime PublishTime { get; set; }
 

@@ -19,6 +19,7 @@ namespace FeedReader.WebClient.Models
                 SiteLink = f.SiteLink,
                 RssUri = f.RssUri,
                 LastReadedTime = f.LastReadedTime == null ? default(DateTime) : f.LastReadedTime.ToDateTime(),
+                ForceSubscribed = f.ForceSubscribed,
             };
             if (string.IsNullOrEmpty(feed.IconUri))
 			{

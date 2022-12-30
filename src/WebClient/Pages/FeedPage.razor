@@ -71,7 +71,10 @@
                                 if (IsSubscribed)
                                 {
                                     <div class="row gap-2 mb-2">
-                                        <ActionButton ClassName="btn-primary btn-sm col" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))" />
+                                        @if (!Feed.ForceSubscribed)
+                                        {
+                                            <ActionButton ClassName="btn-primary btn-sm col" Text="Unfollow" OnClick="@(() => CurrentUser.UnsubscribeFeedAsync(Feed))" />
+                                        }
                                         <ActionButton ClassName="btn-primary btn-sm col" Text="Readed" OnClick="@Feed.MarkAsReaded" />
                                     </div>
                                 }

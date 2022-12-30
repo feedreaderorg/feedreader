@@ -17,6 +17,7 @@ message FeedInfo
     int32 TotalFavorites = 9;
     optional google.protobuf.Timestamp LastReadedTime = 10;
     string RssUri = 11;
+    bool ForceSubscribed = 12;
 }
 
 message FeedItem

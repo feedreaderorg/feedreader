@@ -21,6 +21,7 @@ namespace FeedReader.WebClient.Models
         public string SiteLink { get; set; }
         public DateTime LastReadedTime { get; set; }
         public string RssUri { get; set; }
+        public bool ForceSubscribed { get; set; }
         public bool HasNewItems
 		{
             get
@@ -66,6 +67,7 @@ namespace FeedReader.WebClient.Models
             TotalSubscribers = feed.TotalSubscribers;
             SiteLink = feed.SiteLink;
             RssUri = feed.RssUri;
+            ForceSubscribed = feed.ForceSubscribed;
             if (feed.LastReadedTime != default(DateTime))
             {
                 LastReadedTime = feed.LastReadedTime;

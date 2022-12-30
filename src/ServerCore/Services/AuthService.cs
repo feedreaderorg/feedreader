@@ -82,6 +82,15 @@ namespace FeedReader.ServerCore.Services
                             OAuthId = token.OAuthId,
                             UserId = uid
                         });
+                        var forceSubscribedFeeds = await db.FeedInfos.Where(f => f.ForceSubscribed).Select(f => f.Id).ToArrayAsync();
+                        foreach (var feedId in forceSubscribedFeeds)
+                        {
+                            db.FeedSubscriptions.Add(new FeedSubscription()
+                            {
+                                UserId = uid,
+                                FeedId = feedId,
+                            });
+                        }
                         await db.SaveChangesAsync();
                     }
                 }

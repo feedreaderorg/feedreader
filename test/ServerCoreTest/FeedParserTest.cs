@@ -51,7 +51,7 @@ namespace FeedReader.ServerCoreTest
             var feed = feedParser.TryParseFeed(parseItems: true);
             Assert.NotNull(feed);
             Assert.Equal("https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2022/12/931/523/Whale.jpg?ve=1&tl=1", feed.FeedItems[0].PictureUri);
-
+            Assert.Equal("https://www.foxnews.com/us/vanishing-north-atlantic-right-whale-remain-protected-endangered-species-act", feed.FeedItems[0].Link);
         }
     }
 }

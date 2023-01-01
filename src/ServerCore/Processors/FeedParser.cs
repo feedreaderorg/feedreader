@@ -269,12 +269,23 @@ namespace FeedReader.ServerCore.Processors
             };
 
             // Get feed id.
-            string id = xml["guid"]?.InnerText?.Trim();
+            var guidNode = xml["guid"];
+            string id = guidNode?.InnerText?.Trim();
             if (string.IsNullOrEmpty(id))
             {
                 id = feedItem.Link;
             }
             feedItem.Id = id?.Md5HashToGuid() ?? Guid.Empty;
+
+            // If Link is empty, but guid has isPermaLink property, use this guid as the link.
+            if (string.IsNullOrEmpty(feedItem.Link))
+            {
+                var isPermaLink = guidNode?.Attributes?["isPermaLink"];
+                if (isPermaLink != null && (string.IsNullOrEmpty(isPermaLink.InnerText) || (bool.TryParse(isPermaLink.InnerText, out var value) && value)))
+                {
+                    feedItem.Link = id;
+                }
+            }
 
             // Get content
             feedItem.Content = xml["description"]?.InnerText?.Trim();

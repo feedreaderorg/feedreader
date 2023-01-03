@@ -123,14 +123,14 @@ namespace FeedReader.WebClient.Models
             {
                 var response = await op(cacheList.Count, 50);
                 var newItems = response.Select(i => i.ToModelFeedItem()).ToArray();
-                if (perItemOp != null)
+                foreach (var item in newItems)
                 {
-                    foreach (var item in newItems)
+                    if (cacheList.FirstOrDefault(f => f.Id == item.Id) == null)
                     {
-                        perItemOp(item);
+                        perItemOp?.Invoke(item);
+                        cacheList.Add(item);
                     }
                 }
-                cacheList.AddRange(newItems);
                 cacheList.Sort((x, y) => x.PublishTime.DescCompareTo(y.PublishTime));
                 if (newItems.Count() < 50)
                 {

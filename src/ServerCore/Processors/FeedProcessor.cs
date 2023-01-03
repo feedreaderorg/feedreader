@@ -1,4 +1,5 @@
-﻿using FeedReader.ServerCore.Models;
+﻿using FeedReader.ServerCore.FeedParsers;
+using FeedReader.ServerCore.Models;
 using FeedReader.ServerCore.Services;
 using HtmlAgilityPack;
 using System;

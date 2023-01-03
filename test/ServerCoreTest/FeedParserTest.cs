@@ -1,4 +1,4 @@
-﻿using FeedReader.ServerCore.Processors;
+﻿using FeedReader.ServerCore.FeedParsers;
 using System;
 using System.Linq;
 using Xunit;

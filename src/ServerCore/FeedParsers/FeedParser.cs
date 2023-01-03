@@ -7,7 +7,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace FeedReader.ServerCore.Processors
+namespace FeedReader.ServerCore.FeedParsers
 {
     public abstract class FeedParser
     {
@@ -99,19 +99,22 @@ namespace FeedReader.ServerCore.Processors
 
         protected string GetSummary(string content)
         {
-            if (content != null)
+            if (string.IsNullOrEmpty(content))
             {
+                return string.Empty;
+            }
+            else
+            { 
                 content = HtmlTagRegex.Replace(content, string.Empty);
                 content = WhiteSpaceRegex.Replace(content, " ").Trim();
                 content = WebUtility.HtmlDecode(content);
-                var str = new StringInfo(content);
-                content = str.SubstringByTextElements(0, Math.Min(str.LengthInTextElements,  500));
+                if (!string.IsNullOrEmpty(content))
+                {
+                    var str = new StringInfo(content);
+                    content = str.SubstringByTextElements(0, Math.Min(str.LengthInTextElements, 500));
+                }
+                return content;
             }
-            else
-            {
-                content = string.Empty;
-            }
-            return content;
         }
     }
 
@@ -206,20 +209,6 @@ namespace FeedReader.ServerCore.Processors
         }
     }
 
-    public class AtomFeedParser : XmlFeedParser
-    {
-        public AtomFeedParser(XmlDocument xml)
-            : base(xml)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override FeedInfo TryParseFeed(bool parseItems)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class RssFeedParser : XmlFeedParser
     {
         public RssFeedParser(XmlDocument xml)
@@ -265,7 +254,7 @@ namespace FeedReader.ServerCore.Processors
             {
                 Title = xml["title"]?.InnerText?.Trim(),
                 Link = xml["link"]?.InnerText?.Trim(),
-                PublishTime = xml["pubDate"]?.InnerText?.ToUtcDateTime() ?? default(DateTime),
+                PublishTime = xml["pubDate"]?.InnerText?.ToUtcDateTime() ?? default,
             };
 
             // Get feed id.
@@ -281,7 +270,7 @@ namespace FeedReader.ServerCore.Processors
             if (string.IsNullOrEmpty(feedItem.Link))
             {
                 var isPermaLink = guidNode?.Attributes?["isPermaLink"];
-                if (isPermaLink != null && (string.IsNullOrEmpty(isPermaLink.InnerText) || (bool.TryParse(isPermaLink.InnerText, out var value) && value)))
+                if (isPermaLink != null && (string.IsNullOrEmpty(isPermaLink.InnerText) || bool.TryParse(isPermaLink.InnerText, out var value) && value))
                 {
                     feedItem.Link = id;
                 }

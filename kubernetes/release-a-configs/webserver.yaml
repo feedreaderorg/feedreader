@@ -31,7 +31,7 @@ spec:
                 name: f-release-jwt-secret
                 key: key
           - name: StaticServer
-            value: https://cdn.freleasea.xyb.name
+            value: https://feedreader-release-a.azureedge.net
 ---
 apiVersion: v1
 kind: Service

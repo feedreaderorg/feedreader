@@ -21,11 +21,12 @@ namespace FeedReader.WebServer
 
         public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
         {
-            var user = await AuthService.LoginAsync(request.Token);
+            var (user, nonce) = await AuthService.LoginAsync(request.Token);
             return new LoginResponse()
             {
                 Token = user.Token,
                 UserId = user.Id.ToString(),
+                Nonce = nonce,
             };
         }
 

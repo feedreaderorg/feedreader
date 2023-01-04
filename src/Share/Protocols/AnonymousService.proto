@@ -21,6 +21,7 @@ message LoginResponse
 {
     string Token = 1;
     string UserId = 2;
+    string Nonce = 3;
 }
 
 message GetRecommedFeedItemsRequest

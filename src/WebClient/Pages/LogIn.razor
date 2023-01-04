@@ -22,8 +22,15 @@ else
         {
             try
             {
-                await App.CurrentUser.LoginAsync(ExtractJwtTokenFromCallbackUri(NavigationManager.Uri));
-                NavigationManager.NavigateTo("/");
+                var redirectUri = await App.CurrentUser.LoginAsync(ExtractJwtTokenFromCallbackUri(NavigationManager.Uri));
+                if (!string.IsNullOrEmpty(redirectUri) && Uri.IsWellFormedUriString(redirectUri, UriKind.Absolute))
+                {
+                    NavigationManager.NavigateTo(redirectUri);
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/");
+                }
             }
             catch (Exception ex)
             {

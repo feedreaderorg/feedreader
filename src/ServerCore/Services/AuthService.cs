@@ -47,7 +47,7 @@ namespace FeedReader.ServerCore.Services
             }
         }
 
-        public async Task<User> LoginAsync(string jwtToken)
+        public async Task<(User, string)> LoginAsync(string jwtToken)
         {
             // Parse token.
             var token = ParseToken(jwtToken);
@@ -119,7 +119,7 @@ namespace FeedReader.ServerCore.Services
                 .AddClaim("iat", now.ToUnixTimeSeconds())
                 .AddClaim("exp", now.AddDays(7).ToUnixTimeSeconds())
                 .Encode();
-            return user;
+            return (user, token.Nonce);
         }
 
         public Guid ValidateFeedReaderUserToken(string feedReaderToken)
@@ -203,7 +203,8 @@ namespace FeedReader.ServerCore.Services
             {
                 OriginalToken = token,
                 OAuthId = uid,
-                OAuthIssuer = OAuthIssuers.FeedReader
+                OAuthIssuer = OAuthIssuers.FeedReader,
+                Nonce = string.Empty,
             };
         }
 
@@ -249,7 +250,8 @@ namespace FeedReader.ServerCore.Services
             {
                 OriginalToken = token,
                 OAuthId = sub,
-                OAuthIssuer = OAuthIssuers.Microsoft
+                OAuthIssuer = OAuthIssuers.Microsoft,
+                Nonce = GetValue(claims, "nonce") ?? string.Empty,
             };
         }
 
@@ -293,7 +295,8 @@ namespace FeedReader.ServerCore.Services
             {
                 OriginalToken = token,
                 OAuthId = sub,
-                OAuthIssuer = OAuthIssuers.Google
+                OAuthIssuer = OAuthIssuers.Google,
+                Nonce = GetValue(claims, "nonce") ?? string.Empty,
             };
         }
 
@@ -339,6 +342,8 @@ namespace FeedReader.ServerCore.Services
             /// Session id. Only available for feedreader token.
             /// </summary>
             public string SessionId { get; set; }
+
+            public string Nonce { get; set; }
         }
     }
 }

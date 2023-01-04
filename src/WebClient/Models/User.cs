@@ -91,7 +91,8 @@ namespace FeedReader.WebClient.Models
             }
         }
 
-        public async Task LoginAsync(string token)
+        // Return Nonce in the token.
+        public async Task<string> LoginAsync(string token)
         {
             var response = await AnonymousService.LoginAsync(new Share.Protocols.LoginRequest()
             {
@@ -110,6 +111,8 @@ namespace FeedReader.WebClient.Models
             await RefreshFavorites();
             RefreshInBackground();
             OnStateChanged?.Invoke(this, null);
+
+            return response.Nonce;
         }
 
         public async Task LogoutAsync()

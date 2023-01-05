@@ -1,0 +1,10 @@
+﻿<div class="dialog">
+    <div class="dialog-title">Welcome back</div>
+    <SignInPanel RedirectUri="@RedirectUri" />
+</div>
+
+@code
+{
+    [Parameter]
+    public string? RedirectUri { get; set; }
+}

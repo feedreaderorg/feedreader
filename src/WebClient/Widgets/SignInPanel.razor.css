@@ -1,0 +1,11 @@
+﻿.signin-panel {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.btn {
+    padding: 16px;
+}

@@ -48,13 +48,11 @@
     padding-top: 30px;
 }
 
-.buttons {
+.signin-panel {
     margin-top: 20px;
+    width: 280px;
     display: flex;
-    flex-direction: column;
     flex: 1;
-    gap: 16px;
-    justify-content: center;
 }
 
 .buttons .btn {

@@ -1,0 +1,50 @@
+﻿@if (_popups.Count() > 0)
+{
+    <div class="popup-manager">
+        <div class="cover" @onclick=OnCoverClick/>
+        <div class="body" @onclick:stopPropagation>
+            @foreach (var item in _popups)
+            {
+                @item.Popup
+            }
+        </div>
+    </div>
+}
+
+@code
+{
+    public static PopupManager Instance = null!;
+
+    private List<PopupContext> _popups = new List<PopupContext>();
+
+    protected override void OnInitialized()
+    {
+        Instance = this;
+    }
+
+    public Task OpenPopup(RenderFragment popup)
+    {
+        _popups.Add(new PopupContext(popup, new TaskCompletionSource()));
+        StateHasChanged();
+        return _popups.Last().TaskCompletionSource.Task;
+    }
+
+    public void ClosePopup()
+    {
+        if (_popups.Count() == 0)
+        {
+            return;
+        }
+
+        _popups.Last().TaskCompletionSource.SetCanceled();
+        _popups.RemoveAt(_popups.Count() - 1);
+        StateHasChanged();
+    }
+
+    private void OnCoverClick()
+    {
+        ClosePopup();
+    }
+
+    private record PopupContext(RenderFragment Popup, TaskCompletionSource TaskCompletionSource);
+}

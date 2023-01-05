@@ -1,0 +1,19 @@
+﻿.dialog {
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 8px;
+    padding: 30px 20px;
+    width: 500px;
+}
+
+.dialog .dialog-title {
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 34px;
+    margin-bottom: 30px;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}

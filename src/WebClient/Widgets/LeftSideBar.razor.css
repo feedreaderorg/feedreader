@@ -1,4 +1,8 @@
-﻿.section {
+﻿.left-side-bar {
+    width: 100%;
+}
+
+.section {
     padding: 9px 0px;
 }
 

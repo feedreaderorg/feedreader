@@ -20,7 +20,7 @@
 				<div class="title">MY FEEDS</div>
 				@foreach (var feed in SubscribedFeeds)
 				{
-					<NavLink class="@(feed.HasNewItems ? "has-new-items" : "")" href="@($"/feed/{feed.SubscriptionName}")" Match="NavLinkMatch.All">
+					<NavLink class="@(feed.HasNewItems ? "has-new-items d-inline-block text-truncate" : "text-truncate")" href="@($"/feed/{feed.SubscriptionName}")" Match="NavLinkMatch.All" title="@feed.Name">
 						<img src="@feed.IconUri" /> @feed.Name
 					</NavLink>
 				}

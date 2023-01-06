@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
@@ -34,13 +35,14 @@ namespace FeedReader.WebClient.Models
 
         public event EventHandler OnStateChanged;
 
-        public List<Feed> SubscribedFeeds { get; set; } = new List<Feed>();
+        public IEnumerable<Feed> SubscribedFeeds => _allFeeds.Where(f => f.Subscribed == true).ToArray();
 
         public WebServerApiClient WebServerApi { get; set; }
 
         public AnonymousServiceClient AnonymousService { get; set; }
 
         private IJSRuntime JS { get; set; }
+        private List<Feed> _allFeeds = new List<Feed>();
 
         public User(IJSRuntime js)
         {
@@ -135,7 +137,8 @@ namespace FeedReader.WebClient.Models
 
         public async Task SubscribeFeedAsync(Feed feed)
         {
-            if (SubscribedFeeds.Find(f => f.Id == feed.Id) != null)
+            var item = _allFeeds.Find(f => f.Id == feed.Id);
+            if (item?.Subscribed == true)
             {
                 return;
             }
@@ -145,14 +148,19 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = true,
             });
-            SubscribedFeeds.Add(feed);
-            OnStateChanged?.Invoke(this, null);
+
+			if (item == null)
+			{
+				_allFeeds.Add(item = feed);
+			}
+			item.Subscribed = true;
+			OnStateChanged?.Invoke(this, null);
         }
 
         public async Task UnsubscribeFeedAsync(Feed feed)
         {
-            feed = SubscribedFeeds.Find(f => f.Id == feed.Id);
-            if (feed == null)
+            feed = _allFeeds.Find(f => f.Id == feed.Id);
+            if (feed == null || feed.Subscribed == false)
             {
                 return;
             }
@@ -162,7 +170,14 @@ namespace FeedReader.WebClient.Models
                 FeedId = feed.Id.ToString(),
                 Subscribe = false,
             });
-            SubscribedFeeds.Remove(feed);
+            if (feed.LastReadedTime == DateTime.MinValue)
+            {
+                _allFeeds.Remove(feed);
+            }
+            else
+            {
+                feed.Subscribed = false;
+            }
             OnStateChanged?.Invoke(this, null);
         }
 
@@ -174,7 +189,7 @@ namespace FeedReader.WebClient.Models
             }
             else
             {
-                var feed = SubscribedFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
+                var feed = _allFeeds.FirstOrDefault(f => f.SubscriptionName == feedSubscriptionName);
                 if (feed == null)
                 {
                     try
@@ -192,10 +207,30 @@ namespace FeedReader.WebClient.Models
             }
         }
 
+        public async Task MarkAsReaded(Feed feed)
+        {
+            await WebServerApi.UpdateFeedSubscriptionAsync(new Share.Protocols.UpdateFeedSubscriptionRequest()
+            {
+                FeedId = feed.Id.ToString(),
+                LastReadedTime  = feed.LastReadedTime.ToTimestamp(),
+            });
+
+            var item = _allFeeds.FirstOrDefault(f => f.Id == feed.Id);
+            if (item == null)
+            {
+                _allFeeds.Add(feed);
+            }
+            else if (item != feed)
+            {
+                item.LastReadedTime = feed.LastReadedTime;
+            }
+            OnStateChanged?.Invoke(this, null);
+        }
+
         private async Task RefreshSubscriptions()
         {
             var response = await WebServerApi.GetUserSubscriptionsAsync(new Share.Protocols.GetUserSubscriptionsRequest());
-            SubscribedFeeds = response.Feeds.Select(f => f.ToModelFeed()).ToList();
+            _allFeeds = response.Feeds.Select(f => f.ToModelFeed()).ToList();
         }
 
         private async Task RefreshFavorites()
@@ -208,7 +243,7 @@ namespace FeedReader.WebClient.Models
         {
             Token = "";
             Role = UserRole.Guest;
-            SubscribedFeeds.Clear();
+            _allFeeds.Clear();
             RefreshWebServerApi();
             OnStateChanged?.Invoke(this, null);
         }

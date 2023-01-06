@@ -18,6 +18,7 @@ message FeedInfo
     optional google.protobuf.Timestamp LastReadedTime = 10;
     string RssUri = 11;
     bool ForceSubscribed = 12;
+    optional bool Subscribed = 13;
 }
 
 message FeedItem

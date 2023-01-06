@@ -43,6 +43,8 @@ namespace FeedReader.ServerCore.Models
         public FeedInfo Feed { get; set; }
 
         public DateTime LastReadedTime { get; set; }
+
+        public bool Subscribed { get; set; }
     }
 
     [Index(nameof(UserId), IsUnique = false)]

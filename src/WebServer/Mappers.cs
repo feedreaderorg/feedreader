@@ -30,6 +30,7 @@ namespace FeedReader.WebServer
         {
             var feedInfo = f.Feed.ToProtocolFeedInfo();
             feedInfo.LastReadedTime = f.LastReadedTime.ToProtocolTime();
+            feedInfo.Subscribed = f.Subscribed;
             return feedInfo;
         }
 

@@ -81,7 +81,8 @@
                                 else
                                 {
                                     <div class="row gap-2 mb-2">
-                                        <ActionButton ClassName="btn-primary btn-sm" Text="Follow" OnClick="@(() => SubscribeAsync(Feed))" />
+                                        <ActionButton ClassName="btn-primary btn-sm col" Text="Follow" OnClick="@(() => SubscribeAsync(Feed))" />
+                                        <ActionButton ClassName="btn-primary btn-sm col" Text="Readed" OnClick="@Feed.MarkAsReaded" />
                                     </div>
                                 }
                             }
@@ -130,7 +131,7 @@
 
     private Feed Feed { get; set; }
 
-    private bool IsSubscribed => Feed != null && App.CurrentUser.SubscribedFeeds.Find(f => f.Id == Feed.Id) != null;
+    private bool IsSubscribed => Feed.Subscribed == null ? CurrentUser.SubscribedFeeds.FirstOrDefault(f => f.Id == Feed.Id)?.Subscribed == true : Feed.Subscribed == true;
 
     protected override async Task OnParametersSetAsync()
     {

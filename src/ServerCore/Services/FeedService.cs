@@ -358,7 +358,7 @@ namespace FeedReader.ServerCore.Services
 
                 // Update feed stat.
                 feed.TotalFavorites = await db.Favorites.CountAsync(f => f.FeedInfoId == feed.Id);
-                feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id).CountAsync(cancellationToken);
+                feed.TotalSubscribers = await db.FeedSubscriptions.Where(f => f.FeedId == feed.Id && f.Subscribed).CountAsync(cancellationToken);
                 feed.TotalPosts = await db.FeedItems.Where(f => f.FeedId == feed.Id).CountAsync();
 
                 // Save to db.

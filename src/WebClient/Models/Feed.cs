@@ -22,14 +22,15 @@ namespace FeedReader.WebClient.Models
         public DateTime LastReadedTime { get; set; }
         public string RssUri { get; set; }
         public bool ForceSubscribed { get; set; }
-        public bool HasNewItems
+		public bool? Subscribed { get; set; }
+		public bool HasNewItems
 		{
             get
 			{
                 return FeedItems.Count > 0 && FeedItems.First().PublishTime > LastReadedTime;
 			}
 		}
-
+        
         private List<FeedItem> FeedItems { get; set; } = new List<FeedItem>();
         public event EventHandler OnStateChanged;
 
@@ -68,6 +69,10 @@ namespace FeedReader.WebClient.Models
             SiteLink = feed.SiteLink;
             RssUri = feed.RssUri;
             ForceSubscribed = feed.ForceSubscribed;
+            if (feed.Subscribed != null)
+            {
+                Subscribed = feed.Subscribed;
+            }
             if (feed.LastReadedTime != default(DateTime))
             {
                 LastReadedTime = feed.LastReadedTime;
@@ -96,11 +101,7 @@ namespace FeedReader.WebClient.Models
             }
 
             LastReadedTime = FeedItems.First().PublishTime;
-            await App.CurrentUser.WebServerApi.UpdateFeedSubscriptionAsync(new Share.Protocols.UpdateFeedSubscriptionRequest()
-            {
-                FeedId = Id.ToString(),
-                LastReadedTime = LastReadedTime.ToTimestamp(),
-            });
+            await App.CurrentUser.MarkAsReaded(this);
             OnStateChanged?.Invoke(this, null);
         }
 

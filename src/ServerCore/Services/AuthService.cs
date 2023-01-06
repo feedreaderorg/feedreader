@@ -89,6 +89,7 @@ namespace FeedReader.ServerCore.Services
                             {
                                 UserId = uid,
                                 FeedId = feedId,
+                                Subscribed = true,
                             });
                         }
                         await db.SaveChangesAsync();

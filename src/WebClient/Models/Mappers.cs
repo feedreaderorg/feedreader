@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FeedReader.WebClient.Models
 {
@@ -20,6 +22,7 @@ namespace FeedReader.WebClient.Models
                 RssUri = f.RssUri,
                 LastReadedTime = f.LastReadedTime == null ? default(DateTime) : f.LastReadedTime.ToDateTime(),
                 ForceSubscribed = f.ForceSubscribed,
+                Subscribed = f.HasSubscribed ? f.Subscribed : null,
             };
             if (string.IsNullOrEmpty(feed.IconUri))
 			{

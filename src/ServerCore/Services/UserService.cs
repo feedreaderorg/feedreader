@@ -96,15 +96,22 @@ namespace FeedReader.ServerCore.Services
         {
             using (var db = DbFactory.CreateDbContext())
             {
-                if (await db.FeedSubscriptions.FindAsync(userId, feedId) == null)
+                var item = await db.FeedSubscriptions.FindAsync(userId, feedId);
+                if (item == null)
                 {
-                    db.FeedSubscriptions.Add(new FeedSubscription()
+                    item = new FeedSubscription()
                     {
                         UserId = userId,
                         FeedId = feedId,
-                    });
-                    await db.SaveChangesAsync();
+                        Subscribed = true,
+                    };
+                    db.FeedSubscriptions.Add(item);
                 }
+                else
+                {
+                    item.Subscribed = true;
+                }
+                await db.SaveChangesAsync();
             }
         }
 
@@ -119,27 +126,39 @@ namespace FeedReader.ServerCore.Services
                     {
                         throw new Exception($"This feed {item.Feed.Uri} can't be unsubscribed.");
                     }
-                    db.FeedSubscriptions.Remove(item);
+
+                    if (item.LastReadedTime == DateTime.MinValue)
+                    {
+                        db.FeedSubscriptions.Remove(item);
+                    }
+                    else
+                    {
+                        item.Subscribed = false;
+                    }
                     await db.SaveChangesAsync();
                 }
             }
         }
 
-        public async Task UpdateFeedSubscription(Guid userId, Guid feedId, DateTime? lastReadedTime)
+        public async Task UpdateFeedSubscription(Guid userId, Guid feedId, DateTime lastReadedTime)
         {
             using (var db = await DbFactory.CreateDbContextAsync())
             {
                 var subscription = await db.FeedSubscriptions.Include(f => f.Feed).FirstOrDefaultAsync(s => s.UserId == userId && s.FeedId == feedId);
                 if (subscription == null)
                 {
-                    throw new KeyNotFoundException();
+                    db.FeedSubscriptions.Add(new FeedSubscription()
+                    {
+                        FeedId = feedId,
+                        UserId = userId,
+                        LastReadedTime = lastReadedTime,
+                        Subscribed = false,
+                    });
                 }
-
-                if (lastReadedTime != null)
+                else
                 {
-                    subscription.LastReadedTime = lastReadedTime.Value;
+                    subscription.LastReadedTime = lastReadedTime;
                 }
-
                 await db.SaveChangesAsync();
             }
         }

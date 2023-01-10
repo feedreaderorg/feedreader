@@ -10,8 +10,6 @@ service WebServerApi
     rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
     rpc GetUserSubscriptions(GetUserSubscriptionsRequest) returns (GetUserSubscriptionsResponse);
     rpc GetUserFavorites(GetUserFavoritesRequest) returns (GetUserFavoritesResponse);
-
-    rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc FavoriteFeedItem(FavoriteFeedItemRequest) returns (FavoriteFeedItemResponse);
     rpc SubscribeFeed(SubscribeFeedRequest) returns (SubscribeFeedResponse);
     rpc UpdateFeedSubscription(UpdateFeedSubscriptionRequest) returns (UpdateFeedSubscriptionResponse);
@@ -48,19 +46,6 @@ message GetUserFavoritesRequest
 message GetUserFavoritesResponse
 {
     repeated FeedItem FeedItems = 1;
-}
-
-message DiscoverFeedsRequest
-{
-    // If empty, will return recomended feeds.
-    optional string Query = 1;
-    int32 StartIndex = 2;
-    int32 Count = 3;
-}
-
-message DiscoverFeedsResponse
-{
-    repeated FeedInfo Feeds = 1;
 }
 
 message FavoriteFeedItemRequest

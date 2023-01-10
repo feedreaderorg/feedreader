@@ -25,10 +25,15 @@
 					</NavLink>
 				}
 			}
-			else
+			else if (_recommendedFeeds?.Count() > 0)
 			{
-				<div class="title">YOU MAY LIKE</div>
-				<div><i>TODO</i></div>
+				<div class="title">YOU MAY ALSO LIKE</div>
+				@foreach (var feed in _recommendedFeeds)
+				{
+					<NavLink class="@(feed.HasNewItems ? "has-new-items d-inline-block text-truncate" : "text-truncate")" href="@($"/feed/{feed.SubscriptionName}")" Match="NavLinkMatch.All" title="@feed.Name">
+						<img src="@feed.IconUri" /> @feed.Name
+					</NavLink>
+				}
 			}
 		</div>
 	</div>
@@ -53,8 +58,9 @@
 	public User CurrentUser { get; set; }
 
 	private Feed[] SubscribedFeeds { get; set; }
+	private IEnumerable<Feed> _recommendedFeeds { get; set; }
 
-	protected override void OnParametersSet()
+	protected override async Task OnParametersSetAsync()
 	{
 		if (SubscribedFeeds != null)
 		{
@@ -63,10 +69,30 @@
 				feed.OnStateChanged -= (s, e) => StateHasChanged();
 			}
 		}
-		SubscribedFeeds = CurrentUser.SubscribedFeeds.ToArray();
-		foreach (var feed in SubscribedFeeds)
+
+		if (_recommendedFeeds != null)
 		{
-			feed.OnStateChanged += (s, e) => StateHasChanged();
+			foreach (var feed in _recommendedFeeds)
+			{
+				feed.OnStateChanged -= (s, e) => StateHasChanged();
+			}
+		}
+
+		if (CurrentUser.Role == UserRole.Guest)
+		{
+			var response = await CurrentUser.AnonymousService.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
+			{
+				Count = 10
+			});
+			_recommendedFeeds = response.Feeds.Select(f => f.ToModelFeed());
+		}
+		else
+		{
+			SubscribedFeeds = CurrentUser.SubscribedFeeds.ToArray();
+			foreach (var feed in SubscribedFeeds)
+			{
+				feed.OnStateChanged += (s, e) => StateHasChanged();
+			}
 		}
 	}
 

@@ -6,10 +6,24 @@ option csharp_namespace = "FeedReader.Share.Protocols";
 
 service AnonymousService
 {
+    rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
     rpc Login(LoginRequest) returns (LoginResponse);
     rpc GetRecommedFeedItems(GetRecommedFeedItemsRequest) returns (GetRecommedFeedItemsResponse);
     rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
     rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
+}
+
+message DiscoverFeedsRequest
+{
+    // If empty, will return recomended feeds.
+    optional string Query = 1;
+    int32 StartIndex = 2;
+    int32 Count = 3;
+}
+
+message DiscoverFeedsResponse
+{
+    repeated FeedInfo Feeds = 1;
 }
 
 message LoginRequest

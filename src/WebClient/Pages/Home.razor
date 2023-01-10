@@ -58,7 +58,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var response = await App.CurrentUser.WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
+		var response = await App.CurrentUser.AnonymousService.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
 		{
 			Count = 10
 		});

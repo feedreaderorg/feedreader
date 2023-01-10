@@ -19,6 +19,16 @@ namespace FeedReader.WebServer
             FeedService = feedService;
         }
 
+        public override async Task<DiscoverFeedsResponse> DiscoverFeeds(DiscoverFeedsRequest request, ServerCallContext context)
+        {
+            (request.StartIndex, request.Count) = Validator.ValidateStartIndexAndCount(request.StartIndex, request.Count);
+
+            var feeds = await FeedService.DiscoverFeedsAsync(request.Query, request.StartIndex, request.Count);
+            var response = new DiscoverFeedsResponse();
+            response.Feeds.AddRange(feeds.Select(f => f.ToProtocolFeedInfo()).ToList());
+            return response;
+        }
+
         public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
         {
             var (user, nonce) = await AuthService.LoginAsync(request.Token);

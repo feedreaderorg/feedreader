@@ -128,7 +128,7 @@ namespace FeedReader.WebClient.Models
 
         public async Task<List<Feed>> SearchFeedAsync(string query, CancellationToken cancelToken)
         {
-            var response = await WebServerApi.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
+            var response = await AnonymousService.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
             {
                 Query = query ?? string.Empty
             }, headers: null, deadline: null, cancelToken);

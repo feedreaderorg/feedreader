@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f-taskserver-release-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f-taskserver-release-b
+  template:
+    metadata:
+      labels:
+        app: f-taskserver-release-b
+    spec:
+      imagePullSecrets:
+      - name: f-docker-secret
+      containers:
+      - name: f-taskserver-release-b
+        image:  xieyubo/private:f-taskserver-release-b
+        env:
+          - name: ConnectionStrings__DbConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: f-release-db-secret
+                key: db-conns

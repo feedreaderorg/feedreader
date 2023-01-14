@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f-webserver-release-b
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: f-webserver-release-b
+  template:
+    metadata:
+      labels:
+        app: f-webserver-release-b
+    spec:
+      imagePullSecrets:
+      - name: f-docker-secret
+      containers:
+      - name: f-webserver-release-b
+        image: xieyubo/private:f-webserver-release-b
+        ports:
+        - containerPort: 80
+        env:
+          - name: ConnectionStrings__DbConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: f-release-db-secret
+                key: db-conns
+          - name: FeedReaderJwtSecret
+            valueFrom:
+              secretKeyRef:
+                name: f-release-jwt-secret
+                key: key
+          - name: StaticServer
+            value: https://feedreader-release-b.azureedge.net
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: f-webserver-release-b
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: f-webserver-release-b
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: f-webserver-release-b
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+  - hosts:
+    - api.freleaseb.xyb.name
+    secretName: f-webserver-release-b-tls
+  rules:
+  - host: api.freleaseb.xyb.name
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: f-webserver-release-b
+            port:
+              number: 80

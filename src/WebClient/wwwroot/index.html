@@ -29,12 +29,21 @@
     <script>
         function toggleLeftSideBar() {
             var dom = document.getElementById("left-side-bar");
+            var contentDom = document.getElementById("left-side-bar-layout-content");
+
             var classList = dom.classList;
-            classList.contains("show") ? classList.remove("show") : classList.add("show");
+            if (classList.contains("show")) {
+                classList.remove("show");
+                contentDom.classList.add("show");
+            } else {
+                classList.add("show");
+                contentDom.classList.remove("show");
+            }
         }
 
         function hideLeftSideBar() {
             document.getElementById("left-side-bar").classList.remove("show");
+            document.getElementById("left-side-bar-layout-content").classList.add("show");
         }
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->

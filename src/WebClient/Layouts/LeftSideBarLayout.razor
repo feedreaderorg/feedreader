@@ -6,7 +6,7 @@
 	<div id="left-side-bar" class="left d-flex" @onclick="@(() => JSRuntime.InvokeVoidAsync("hideLeftSideBar"))">
 		<LeftSideBar/>
 	</div>
-	<div class="right d-flex flex-grow-1">
+	<div id="left-side-bar-layout-content" class="right show d-flex flex-grow-1">
 		@Body
 	</div>
 </div>

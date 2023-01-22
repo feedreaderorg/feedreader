@@ -59,7 +59,11 @@
         display: flex !important;
     }
     .right {
+        display: none !important;
         margin-left: 0 !important;
+    }
+    .right.show {
+        display: flex !important;
     }
 
     ::deep .page-header {

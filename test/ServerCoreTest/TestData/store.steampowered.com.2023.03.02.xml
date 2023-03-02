@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:cc="http://web.resource.org/cc/" xmlns:steam="http://www.steampowered.com" xmlns="http://purl.org/rss/1.0/">
+	<channel rdf:about="http://www.steampowered.com">
+		<title>Steam RSS News Feed</title>
+		<link>http://www.steampowered.com/</link>
+		<description>All Steam news, all the time!</description>
+		<language>en</language>
+		<pubDate>Wed, 01 Mar 2023 16:34:00 -0800</pubDate>
+		<generator>http://www.steampowered.com/</generator>
+		<items>
+			<rdf:Seq>
+				<rdf:li rdf:resource="https://store.steampowered.com/news/190467/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/190461/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/189567/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/189167/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/178064/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/177620/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/188923/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/167251/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166973/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166923/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166893/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166625/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166706/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166703/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/166019/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/155500/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/154751/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/154639/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/154638/" />
+				<rdf:li rdf:resource="https://store.steampowered.com/news/144409/" />
+			</rdf:Seq>
+		</items>
+	</channel>
+	<item rdf:about="https://store.steampowered.com/news/190467/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/190467/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/190467/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 01 Mar 2023 16:34:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2023-03-01T16:34:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added missing Summer tag for Workshop maps<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/190461/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/190461/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/190461/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 01 Mar 2023 13:09:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2023-03-01T13:09:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added check to URLLabel to prevent invalid URLs<br><li>Added new Workshop tags for Summer, Player Destruction, and Community Fix<br><li>Added check to ensure bullet effects are not duplicated (community fix from mastercoms)<br><li>Deleted some unused Steam API queries to improve client perf (community fix from mastercoms)<br><li>Fixed exploit related to using the td_buyback command during Mann vs. Machine matches<br><li>Fixed Stat Clock cancelling out ÜberCharge and self-illuminating materials on weapons using War Paints (community fix from makaroffilya)<br><li>Fixed not seeing the correct inspect image for the Red Rock Roscoe after previewing another paintkit item<br><li>Fixed missing/incorrect style strings for a few items<br><li>Reverted the previous change to the equip_region for the Cranial Cowl<br><li>Updated cp_gravelpit_snowy to adjust clipping throughout the map<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/189567/">
+		<title><![CDATA[Steam Client Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/189567/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/189567/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Fri, 10 Feb 2023 11:00:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2023-02-10T11:00:00-0800</dc:date>
+		<content:encoded><![CDATA[A new Steam client has been released and will be automatically downloaded.<br><br><strong>General</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Reverted back to old Game Info dialog that is accessible from the Friends List<br><li> Reduced startup time for users with tens of thousands of games in their library<br><li> Fixed a cause of Steam library, chat and Big Picture Mode browser windows showing all black or not rendering.<br><li> Fixed crash when opening Steam store<br><li> Fixed crash on startup when an internal Steam browser window fails creation<br><li> Fixed Steam library becoming unusable after applying a controller configuration<br></ul><br><strong>Big Picture Mode</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> The Virtual Keyboard in the Overlay now remembers its last position<br><li> Added F11 as a hotkey to toggle between windowed and fullscreen<br><li> Added alt-enter as a hotkey to exit Big Picture Mode<br><li> Added fast jump by letter to BPM library<br><li> Added settings for initial location to show keyboard on desktop and in Steam overlay<br><li> Added settings option to enable/disable UI sounds<br><li> Removed UI that prompted users if they wanted to participate in the Steam Deck Verified program when in normal BPM<br><li> Report a Bug in the Quick Access menu now links to the Big Picture discussions instead of the Steam Deck discussions<br><li> Fixed Chord Hint Screen remaining shown after holding the guide button to turn off a controller in some scenarios<br><li> Fixed Big Picture Mode window not re-opening from double-clicking or selecting system tray menu options<br><li> Fixed Big Picture Mode window not displaying properly due to web GPU acceleration being disabled<br><li> Fixed issue where exiting Big Picture Mode would log out of Steam Chat<br><li> Fixed small movement of Virtual Keyboard when pressing shift in some themes<br><li> Fixed Control-1/Control-2 hotkeys not working on Linux<br></ul><br><strong>Steam Input</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed some inputs not showing up for the Steam Link App Touchscreen controller<br><li> Fixed several instances of Left Bumper/Trigger glyphs having the wrong background image<br><li> Fixed issue where a Team Fortress 2 Steam Controller startup sound was missing<br><li> Fixed some issues with Nintendo switch gyro drift calibration<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/189167/">
+		<title><![CDATA[Steam Client Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/189167/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/189167/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 01 Feb 2023 10:00:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2023-02-01T10:00:00-0800</dc:date>
+		<content:encoded><![CDATA[A new Steam client has been released and will be automatically downloaded.<br><br><strong>General</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Replaced launch option dialog with new UI that includes a checkbox to remember the user's selection - this selection can be changed in game properties<br><li> Changing download regions no longer requires restarting the Steam client<br><li> Further optimizations to load times for users with large game libraries<br><li> Fixed intermittent browser crash when closing Update news dialog<br><li> Fixed the controller settings tab not showing up in the game properties menu<br><li> Fixed DLC hover on game details page being cropped<br><li> Fixed several issues related to popup dialogs being sized incorrectly<br><li> Fixed issue with duplicate streaming dialogs appearing on Mac & Linux<br><li> Fixed background images on a collection on the app details page not being clipped correctly<br></ul><br><strong>Big Picture Mode</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> New Big Picture Mode has been made the default experience.  For compatibility purposes, old Big Picture can be accessed by using the command-line option "-oldbigpicture". Note that this functionality will be removed in a future update.<br><li> Added support for switching the primary monitor on Windows in Settings -> Display -> Preferred Display<br><li> Added an option to start in windowed mode under Settings => Display => Big Picture Mode => Windowed<br><li> Added pinned notifications for new inventory items, trade offers, async game turns, moderator messages, offline chat messages, and help request replies in Quick Access > Notifications<br><li> Added up/down cursor keys to onscreen keyboard, press shift then left/right cursor to use<br><li> Added ability to move the standalone & overlay keyboard<br><li> Added option to turn off controllers when exiting BPM<br><li> Added setting for controller idle > turn off timeout<br><li> Added a quick guided tour for new Big Picture<br><li> Added notification when a Xbox controller is plugged in, but the Guide button is disabled (which prevents bringing up the Steam main menu and other functionality like chords)<br><li> Allow onscreen keyboard to be activated while in New Big Picture Mode and Steam window is not focused<br><li> Implemented Steam Controller dongle pairing<br><li> UI Digital Navigation Key Repeats are faster<br><li> Show icons for partial/full controller support, VR Support, or Mouse & KB only support in Library when a game portrait is focused or hovered<br><li> Center the navigation column in the Overlay vertically to match the rest of the main menu<br><li> Detect focus shifting away from the BPM window faster and reduce instances of navigation going to BPM after starting a game<br><li> Cursor is now hidden when in gamepad-navigation mode in Big Picture<br><li> Various fixes to make the UI scale better in higher resolutions<br><li> Fixed some issues completing purchases through some payment providers<br><li> Fixed a rare crash exiting BPM<br><li> Fixed a case where disconnecting a controller while navigating would not cancel repeating movements<br><li> Fixed the new Big Picture Mode overlay being incorrectly sized when the monitor is set to display scaling other than 100%<br><li> Fixed overlay scaling when resizing game window<br><li> Fixed issue where a browser opened by a game was sticking around after closing the overlay<br><li> Fixed launch options dialog not closing when cancelling game launch<br><li> Fixed issues w/ digital navigation getting stuck on text boxes when using a physical keyboard<br><li> Fixed some issues using the virtual keyboard Paste button outside of a web context<br><li> Fixed issue where the virtual keyboard would continuously be made visible after exiting a game<br><li> Fixed issue viewing the hardware survey web page after submitting results<br><li> Fixed the "Start in Big Picture Mode" setting not updating<br><li> Fixed issue opting in to some game beta branches<br><li> Fixed Big Picture window being incorrect size when moving it to a different display with win+shift+arrow key<br><li> Fixed problem where setting certain library filters in Big Picture Mode could cause those games to become hidden when switching back to desktop<br><li> Fixed an issue with detecting game windows on Linux<br><li> Fixed "a" and "c" keystrokes on the app details page triggering an animation<br></ul><br><strong>Steam Input</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Controller configuration browsing screen can now preview configurations and the selection processes now previews then applies instead of directly selecting the configuration<br><li> Added a search tab to the controller layout browser screen<br><li> Added direct navigation to controller inputs and modes from the preview screen<br><li> Added upper grips as an option for mode shifts<br><li> Added support for the Armor-X Pro gamepad in PS4 mode<br><li> Added a specific XBox Elite layout preview page<br><li> Added a specific Switch Pro layout preview page<br><li> Added support for the ThrustMaster eSwap PRO Controller Xbox<br><li> Show controller settings in app properties game for non-Steam games<br><li> Gyro Calibration Rework: Calibration Calculates an anti-drift value as normal, but also records Gyro and Accelerometer noise while stationary, so that Always-On Auto Calibration (toggle to enable) is more discerning, and should only recalculate anti-drift when on a stable surface<br><li> Controller configurator now groups commands if they are attached to the same input<br><li> Changed controller mode sliders to default to larger step sizes that match the old BPM interface and added footer button to switch to "fine adjustment" mode with smaller step sizes<br><li> Reworked the layout of the mode settings page to show more content<br><li> Generate Steam Input API origins for some virtual menu modes that were missing them<br><li> Handle errors better and fix some cases where configs would no longer load<br><li> On larger screens combine the keyboard and numpad tabs of the choose binding screen<br><li> Remember the last active tab in the choose binding screen and open to that instead always using the tab w/ the current binding value<br><li> Improved Layout Preview for Nintendo Switch Joycon Left/Right/Pair<br><li> Filtered Mode Shift button options to only show available buttons based on the controller type<br><li> Nintendo Switch SL/SR buttons now show up as Bumpers for single Joycons or Grip buttons for a JoyCon Pair<br><li> Joycon individual/pair Gyro now displays and functions properly<br><li> Fixed an issue with the Joystick Deadzone sliders having delayed input<br><li> Fixed an issue w/ enabling Gyro for Switch controllers<br><li> Fixed long delay at startup when the Razer Huntsman Elite keyboard is plugged in<br><li> Fixed the Logitech G29 controller showing up as a gamepad instead of a wheel<br><li> Fixed the XBox layout preview page layout having some incorrect items and missing others<br><li> Fixed issue where Steam Controller joysticks would have unintended input during Steam Button chords<br><li> Fixed long delay at startup when Razer keyboards are connected<br><li> Fixed crash with games that use "Windows Gaming Input"<br><li> Fixed issue w/ Joystick Deadzone visualization not updating<br><li> Fixed some cases where some languages could have text overflow in choose binding screen<br><li> Fixed chord activator options for XBox and XBox Elite controller types<br><li> Fixed Capture button icon not being displayed for Joycon Pair<br><li> Fixed the Switch Pro Layout Preview not showing the gyro<br></ul><br><strong>Remote Play</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed audio crackling and loss when streaming from Linux<br></ul><br><strong>Linux</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed a crash on Linux in libaudio<br><li> Fixed crash when taking screenshots through the overlay<br><li> Fixed closing non-Steam shortcuts via the overlay when two or more are running<br><li> Fixed some errors causing the Library not to render properly<br></ul><br><strong>Mac</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed close button on macOS Steam login window<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/178064/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/178064/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/178064/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Thu, 05 Jan 2023 15:34:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2023-01-05T15:34:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed a memory leak when firing syringes as Medic<br><li>Fixed some instances of syringes being invisible around corners and in transitions between water and air (both directions)<br><li>Fixed syringes triggering false hits on the client when minimal view models are enabled or a custom view model FOV is set<br><li>Fixed The Original using the default reload sound instead of the intended sound<br><li>Fixed entities being considered static props after long server times<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed Mann vs. Machine bots failing to spawn<br><li>Fixed rockets occasionally being solid</ul><li>Updated the equip_region settings for The Onimann and the Cranial Cowl<br><li>Updated cp_frostwatch<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed being able to stand in the cliff wall near control point 2 in stage 1</ul><li>Expanded VScript support<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed .nut files being valid files for download/upload<br><li>Fixed clients being able to run certain script_* debug commands on the server<br><li>Added EmitSoundEx<br><li>Fixed crashes related to null strings being passed to functions<br><li>Exposed a MaxClients function to get the current value of maxplayers<br><li>Fixed clearing script hooks on level transition</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/177620/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/177620/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/177620/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 21 Dec 2022 13:05:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-21T13:05:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Updated the Taunt: The Boiling Point and Taunt: The Table Tantrum items to add missing voice lines when flipping the table<br><li>Updated the Taunt: Roasty Toasty to add missing marshmallow ignite sound<br><li>Updated pl_rumford_event<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Adjusted occluders<br><li>Added some hints<br><li>Reduced unneeded props<br><li>Adjusted area portals<br><li>Minor deforestation</ul><li>Updated cp_frostwatch<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Stage 2<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added spawn camp prevention/covers (both A and B paths)<br><li>Added another Snowmann<br><li>Removed mine carts in A flank<br><li>Reduced length of metal gate in the middle court<br><li>Increased cap time from 16 to 20</ul><li>Stage 3<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added spawn camp prevention/covers<br><li>Added another Snowmann<br><li>Enhanced the snow pile in the water trench<br><li>Added another way to get out of the trench<br><li>Increased Point 1 doorway length<br><li>Removed a sightline with RED spawn</ul></ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/188923/">
+		<title><![CDATA[Steam Client Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/188923/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/188923/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Fri, 16 Dec 2022 16:00:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-16T16:00:00-0800</dc:date>
+		<content:encoded><![CDATA[<strong>Note:</strong> This update was re-released Jan 26 to fix redeeming purchased game content.<br><br>A new Steam client has been released and will be automatically downloaded.<br><br><strong>New Big Picture Mode</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed gamepad focus issues in Steam store<br><li> Fixed footer buttons sometimes not appearing in Steam store<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/167251/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/167251/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/167251/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 14 Dec 2022 17:15:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-14T17:15:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed Particulate Protector not using the BLU team skin<br><li>Fixed Huntsman registering headshots when arrows go through other entities<br><li>Fixed Oktoberfester's third style using the smoke effect<br><li>Fixed missing smoke effect for The Salty Dog's second style<br><li>Updated Tainted Frost unusual effect to fix a problem with the material<br><li>Updated Colonel Kringle to fix some clipping and alignment issues<br><li>Updated Taunt: Tailored Terminal to fix a problem with the briefcase materials<br><li>Updated Taunt: Russian Rubdown to fix some sounds being clipped<br><li>Updated Taunt: Roasty Toasty<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed some sounds clipping the Pyro's lines<br><li>Fixed some missing particles<br><li>Fixed a stutter in the animation loop</ul><li>Updated pl_rumford_event<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed missing materials/models<br><li>Fixed duplicate lights on the rope entities</ul><li>Updated cp_gravelpit_snowy<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed a client crash caused by failing to decode MP3 files<br><li>Fixed snow displacements poking through the roof<br><li>Fixed bullet holes poking through soft snow<br><li>Fixed snowman bombs not respawning properly<br><li>Minor clipping improvements<br><li>Removed the Observer</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166973/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166973/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166973/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 07 Dec 2022 18:40:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-07T18:40:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed a server crash related to the Spy sapping buildings<br><li>Fixed the Battle Bear not using the correct skin for team BLU<br><li>Fixed a materials problem with the Taunt: Tailored Terminal<br><li>Fixed missing sounds and smoothed the loop point for the Taunt: Roasty Toasty<br><li>Updated ctf_frosty to fix various exploits<br><li>Updated pl_rumford_event to fix missing models/materials<br><li>Updated pl_frostcliff<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed sticky bombs from getting attached to the front of the payload cart<br><li>Fixed some window props from hovering<br><li>Fixed displacement crack in uphill near A<br><li>Fixed few misaligned textures<br><li>Fixed players from staying stuck few seconds in old respawn after spawns change<br><li>Fixed players from getting stuck between cart and geometry near last pit<br><li>Increased RED team spawn time slightly after BLU captures 2nd point<br><li>Decreased doorway size near BLU 2nd spawn area<br><li>Improved lighting in doorway near capture point D<br><li>Improved clipping within map</ul><li>Updated cp_gravelpit_snowy<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Improved clipping<br><li>Added missing color correction data<br><li>Adjusted BLU spawn to light better and tweak some clipping<br><li>Adjusted intensity and hue of lighting in various places for better readability<br><li>Fixed soundscape transition bugs<br><li>Reduced temperature by 3 degrees</ul><li>Updated VScript<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Updated HLTV placeholder player to not be a valid script entity. This fixes some scripts failing on dedicated servers because the HLTV placeholder player isn't accounted for.</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166923/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166923/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166923/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Tue, 06 Dec 2022 17:16:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-06T17:16:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Updated the Festive Rack to fix missing paintable attribute<br><li>Updated Musical Maelstrom, Verdant Virtuoso, and Silver Serenade effects to fix max particle count<br><li>Updated pl_rumford_event to fix missing materials/models<br><li>Updated cp_frostwatch<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed being able to build on one of the roofs in stage 2<br><li>Fixed a door going through the floor in stage 3</ul><li>Updated cp_gravelpit_snowy<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Improved clipping<br><li>Fixed various perch spots<br><li>Decreased fog intensity<br><li>Removed unused particle system entities<br><li>Fixed a few floating trees<br><li>Adjusted vertical positions of snowman bombs<br><li>Adjusted lighting on metal sheets in blue spawn<br><li>Fireplaces will now light arrows<br><li>Added more func_dustmotes<br><li>Fixed some visible z-fighting<br><li>Minor detailing additions and adjustments</ul><li>VScript support changes<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed lag compensation when friendly fire is enabled<br><li>Added better support for meshing player upgrades<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added GrantOrRemoveAllUpgrades method<br><li>Exposed currency UI when upgrades are enabled<br><li>Exposed upgrade history on the player when playing without a population manager</ul></ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166893/">
+		<title><![CDATA[Now Available on Steam - Kynseed, 10% off!]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166893/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166893/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Tue, 06 Dec 2022 07:00:37 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-06T07:00:37-0800</dc:date>
+		<content:encoded><![CDATA[<a href='http://store.steampowered.com/app/758870/'>Kynseed</a> is Now Available on Steam and is 10% off!*<br><br>A beautiful Life Sim Sandbox RPG. Raise a family, farm the land, run a business, cook, craft and build an everlasting legacy in a vast world filled with adventure, creativity and meaningful choices.<br><br>*Offer ends December 13 at 10AM Pacific Time<br><a href="http://store.steampowered.com/app/758870/"><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/758870/header.jpg" style=" float: left; margin-right: 12px; height: 181px; width: 467px;"></a>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166625/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166625/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166625/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Mon, 05 Dec 2022 16:12:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-05T16:12:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><br><br><b>Happy Smissmas 2022!</b><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>All players who play TF2 during the event will receive a Stuffed Stocking as a gift! Stockings contain goodies for good little Mercenaries.<br><li>Featuring 5 new community maps: Frostwatch, Frostcliff, Rumford, Frosty, and Coal Pit<br><li>Added the Winter 2022 Cosmetic Case<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Contains 23 new community-contributed items<br><li>The Festivizer can be found as a bonus drop when opening the case</ul><li>Added 3 new community-contributed taunts to the Mann Co. Store<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Taunt: Russian Rubdown<br><li>Taunt: Tailored Terminal<br><li>Taunt: Roasty Toasty</ul><li>Added 17 new community-created Unusual effects<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>8 new effects for Unusual hats<br><li>9 new effects for Unusual taunts</ul><li>All cosmetic and taunt cases will grant Smissmas 2022 Unusual effects instead of their normal Unusual effects during the event. This does not include crates.<br><li>Mann Co. Store winter sale!<br><li>Smissmas runs through January 7th, 2023<br></ul><b>General</b><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed some point_camera visibility issues<br><li>Fixed some UGC medals using the wrong skin for team RED<br><li>Updated backpack images for some older cosmetic cases<br><li>Updated winter cosmetic cases to use a winterized sound when opening<br><li>Updated several maps to fix localization issues<br><li>Updated cp_snakewater_final1<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed missing cubemaps<br><li>Improved blockbullets<br><li>Visual fixes</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166706/">
+		<title><![CDATA[Steam Client Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166706/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166706/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Thu, 01 Dec 2022 16:00:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-01T16:00:00-0800</dc:date>
+		<content:encoded><![CDATA[A new Steam client has been released and will be automatically downloaded.<br><br><strong>General</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed display of the Update News and other popup dialogs w/ GPU accelerated rendering disabled<br><li> Fixed size of content in Update news dialog when running with Windows text scaling >100%<br></ul><br><strong>Steam Input</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Change the "add command" and "add subcommand" options to take you directly to the binding screen<br><li> Fixed an issue introduced in a recent update to the old Big Picture configurator causing the names of new virtual menu bindings to be displayed incorrectly<br><li> Fixed controllers being treated as Xbox One controllers by default when defining their layout<br><li> Fixed the L3/R3 buttons not being detected for some third party PS3 controllers<br><li> Added Left and Right Stick Deflection as an option for Gyro Activation Buttons. Stick deflection is no longer considered a part of "Touch" (Cap Sense) on SteamDeck.<br><li> Fixed rumble for Switch Pro Controllers attached over USB<br></ul><br><strong>New Big Picture Mode</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed display of the new Big Picture Mode window with w/ GPU accelerated rendering disabled<br><li> Added confirmation dialogs for the power menu options to restart and shutdown your PC<br><li> Fixed a case where switching Virtual Menus w/ an action set, layer, or modeshift could cause them to stop working in the new Big Picture Mode overlay<br><li> Fixed crash when touching gift or new inventory item notification<br><li> Fixed "show password" toggle to show/hide the password<br><li> Fixed On Screen Keyboard no longer showing when requested by the game or Proton<br><li> Fixed an issue where context menus would not properly highlight focused items<br><li> Fixed crash when exiting a 1-on-1 voice chat<br><li> Fixed an issue where notification toasts would fail to appear <br></ul><br><strong>Remote Play</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed getting the wrong personalization (colors, etc.) for streaming PS4 controllers<br><li> Fixed streaming Bluetooth controllers not turning off<br></ul><br><strong>Linux</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed overlay causing crashes on some native games (Borderlands 2)<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166703/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166703/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166703/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Thu, 01 Dec 2022 15:55:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-12-01T15:55:00-0800</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Implemented VScript<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>VScript allows mappers to embed script code (Squirrel3) into maps. This system is already being used for L4D2 and CS:GO maps.<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Interface with entities and the world like regular Hammer logic<br><li>Simplify things that were previously incredibly complicated/tedious in Hammer logic<br><li>Interact with and control bots, bosses, player attributes, entities, and game state closely, allowing for enhanced, modified or entirely custom game modes<br><li>React to game events and change the outcome of certain things, such as damage calculations</ul><li>More technical info about VScript for Team Fortress 2 is available on the Valve Developer Community<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>https://developer.valvesoftware.com/wiki/VScript<br><li>https://developer.valvesoftware.com/wiki/List_of_TF2_Script_Functions</ul></ul><li>Added the ability to change the skybox dynamically using the skybox_swapper entity or SetSkyboxTexture<br><li>Added support for custom MvM upgrade files packed into the map<br><li>Added point_worldtext, an entity that can show text dynamically, with support for multiple SDF (signed distance field) fonts, multiple colors and a rainbow mode<br><li>Exposed several movement related ConVars<br><li>Implemented support for func_monitor and cameras<br><li>Implemented logic_eventlistener for listening to game events from Hammer logic<br><li>Added the ability to pass parameters and delay to MvM populator actions<br><li>Improved compile time with VRAD<br><li>Special thanks to Jakub and everyone on the GitHub VScript Mega Issue for testing, providing feedback, and submitting requests<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/166019/">
+		<title><![CDATA[Steam Client Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/166019/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/166019/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Wed, 16 Nov 2022 16:53:00 -0800</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-11-16T16:53:00-0800</dc:date>
+		<content:encoded><![CDATA[<strong>Note:</strong> This update was re-released to fix a browser crash on Linux.<br><br>A new Steam client has been released and will be automatically downloaded.<br><br><strong>New Big Picture Mode</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Updated Big Picture is now available for testing. You can read more about it in this <a href="https://store.steampowered.com/news/app/593110/view/3394051164709183116">blog post</a>.  Modify your Steam client shortcut and add -gamepadui on the command-line to automatically start Steam in the new Big Picture Mode.  Alternatively, pass -newbigpicture to start in Desktop mode and have access to the new Big Picture Mode at any time.<br></ul><br><strong>General</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Reduced client startup times for users with large game libraries<br><li> Fixed issue where launching a game would take longer to start if there was no network connection<br><li> Fixed VR flags not showing up in app details for some games<br><li> Center the popup controller configurator window when viewing controller layout<br><li> Fixed circular download progress indicator being broken in game entry list<br><li> Fixed downloads page crashing when starting in offline mode<br><li> Downloads page now properly responds to online/offline status<br><li> Updated &ldquo;Steam News&rdquo; popup dialog (again)<br></ul><br><strong>Sign In</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fix a case where if the sign-in UI had cached credentials which had become invalid, it could get stuck and not accept valid credentials thereafter<br><li> Fixed an input focus bug requiring an initial click on the sign in UI before you could type your username or password<br><li> Fixed issues with dragging or closing the sign in window, and related display scaling issues, on computers with nonstandard desktop scaling<br><li> Fixed an edge case in handling of invalid cached credentials affecting reauthentication<br><li> Fixed issue with sign in refresh UI when the user had already signed in once during the current session.<br></ul><br><strong>Steam Input</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Gyro Enabling: The "Touch" option is now available to controllers which do not have capacitive touch sensors - Moving joysticks out of their deadzone now counts as a "Touch".<br><li> All controller types can each now optionally choose to use a Nintendo-style layout. This flips the A and B button and X and Y button universally in Steam and in games.<br><li> The Xbox extended features driver has been updated for Windows 11<br><li> Fixed hang when the Amazon Luna controller rumbles on macOS<br><li> Fixed issue with the touch binding in As Mouse mode releasing before the end of a swipe<br></ul><br><strong>Remote Play</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed occasional long hitches during Windows desktop capture<br><li> Fixed glyphs for third party Nintendo controllers while streaming<br></ul><br><strong>SteamVR</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li> Fixed issue that caused some OpenXR app images to not appear properly in SteamVR<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/155500/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/155500/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/155500/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Fri, 04 Nov 2022 10:08:00 -0700</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-11-04T10:08:00-0700</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed missing footer descriptions for the Gargoyle Case and the Creepy Crawly Case<br><li>Updated Beaten and Bruised<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Improved head bandage/bandaids clipping during some facial flexes<br><li>Fixed the style 3 and style 4 head bandages bouncing up and down during some animations<br><li>Fixed import errors for the Heavy and Pyro versions<br><li>Cleaned up the overall mesh exports</ul><li>Updated The Pony Express to fix an issue with the jigglebones<br><li>Updated pd_farmageddon to fix one of the point lines that said closing instead of opening<br><li>Updated koth_synthetic_event<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed missing brushwork<br><li>Changed Toastmaster to use Setmodel<br><li>Removed propdata file</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/154751/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/154751/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/154751/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Thu, 20 Oct 2022 17:43:00 -0700</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-10-20T17:43:00-0700</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed the Grim Tweeter hiding the hat/headphones<br><li>Updated cp_spookeyridge to fix missing tool brushes<br><li>Updated pd_farmageddon<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Lighting changes<br><li>Minor detail changes<br><li>Reworked scarecrow logic to make use of the setmodel and ondeath commands<br><li>Set scarecrow health to 500<br><li>Updated menu text</ul><li>Updated ctf_crasher<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed an edge case where a Giant's attributes weren't always granted properly<br><li>Fixed an edge case where if a Giant died before their door opened it would open and not receive the close input<br><li>Fixed an instance where a player could become trapped inside the opposing team's door</ul><li>Updated plr_hacksaw_event<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed broken area portals<br><li>Fixed skybox issue<br><li>Fixed HHH not animating</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/154639/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/154639/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/154639/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Tue, 18 Oct 2022 16:58:00 -0700</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-10-18T16:58:00-0700</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed missing nomip/nolod for Sniper's zombie image in the main menu<br><li>Fixed the match status HUD not being hidden during freezecam screenshots<br><li>Fixed the Safety Stripes hiding the Soldier's hat<br><li>Fixed tournament medals moving around while using the Taunt: Deep Fried Desire <br><li>Fixed a problem on ctf_crasher related to infinite giants<br><li>Updated pl_sludgepit_event<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed skeletons/ghosts being able to spawn again if the cart backs up over a checkpoint<br><li>Added an extra resupply locker in BLU's first spawn<br><li>Added a few more Mann brothers voice lines and fixed the map description<br><li>Added Soul Gargoyle pickups<br><li>Replaced a few skeleton spawns and reduced amount of skeletons that spawn on each cap<br><li>Made the map a bit spookier</ul><li>Updated plr_hacksaw_event<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Changed the roofing near the finale, preventing players from walking from one barn balcony to the other<br><li>Replaced barn balcony windows with widened doorways to streamline movement<br><li>Fixed the VO in the underworld playing multiple times<br><li>Fixed floating candles when the graves were destroyed<br><li>Updated the HHH to use the new "SetModel" input<br><li>Delayed final capture VO so they're more audible<br><li>Adjusted prop fades<br><li>Adjusted detailing</ul><li>Updated cp_spookeyridge<ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added significant health and ammo packs to underworld<br><li>Reduced damage dealt over time in underworld<br><li>Updated portal particles to stand out more in overworld (Thanks FissionMetroid!)<br><li>Added small healthpack to upper drop down area next to last<br><li>Adjusted ammo pack sizes around map<br><li>Slightly tweaked pumpkin bomb and coffin placement<br><li>Fixed a few areas you could get stuck in<br><li>Expanded area around coffins that won't allow teleporters<br><li>Fixed some minor clipping/collision issues<br><li>Adjusted some prop fades</ul></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/154638/">
+		<title><![CDATA[Steam Client Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/154638/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/154638/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Tue, 18 Oct 2022 13:00:00 -0700</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-10-18T13:00:00-0700</dc:date>
+		<content:encoded><![CDATA[<strong>Note:</strong> This update was re-released later in the day on October 18th to help reduce the number of server calls made by the client.<br><br>A new Steam client has been released and will be automatically downloaded.<br><br><strong>Library</strong><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Added a section to display a rollup of new DLC and other game content that has been released since you last visited a game's library page. Once visible, this section will automatically hide after a short period of time.<br><li>Rebuilt how featured game news is displayed on library game pages. It is now displayed as a featured post at the top of the activity feed to improve readability and reduce the required work for game devs. The entry is shown for a short period of time before returning to its chronological spot in the activity feed.<br><li>Updated the presentation of the new DLC added to your account section on library game pages.<br><li>Changed how major updates are displayed in the library activity section to make them easier to find.<br></ul>]]></content:encoded>
+	</item>
+	<item rdf:about="https://store.steampowered.com/news/144409/">
+		<title><![CDATA[Team Fortress 2 Update Released]]></title>
+		<link><![CDATA[https://store.steampowered.com/news/144409/]]></link>
+		<guid isPermaLink="true"><![CDATA[https://store.steampowered.com/news/144409/]]></guid>
+		<comments>https://steamcommunity.com//discussions/</comments>
+		<pubDate>Thu, 13 Oct 2022 13:42:00 -0700</pubDate>
+		<author>Valve</author>
+		<category>Valve news update</category>
+		<dc:subject>Valve news update</dc:subject>
+		<dc:creator>Valve</dc:creator>
+		<dc:date>2022-10-13T13:42:00-0700</dc:date>
+		<content:encoded><![CDATA[An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style="padding-bottom: 0px; margin-bottom: 0px;" ><li>Fixed point_hurt entity not always damaging Übercharged players<br><li>Fixed getting invalid strings for the server map list<br></ul>]]></content:encoded>
+	</item>
+</rdf:RDF>

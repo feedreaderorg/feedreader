@@ -53,5 +53,22 @@ namespace FeedReader.ServerCoreTest
             Assert.Equal("https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2022/12/931/523/Whale.jpg?ve=1&tl=1", feed.FeedItems[0].PictureUri);
             Assert.Equal("https://www.foxnews.com/us/vanishing-north-atlantic-right-whale-remain-protected-endangered-species-act", feed.FeedItems[0].Link);
         }
+
+        [Fact]
+        public void ParseRssV1_0()
+        {
+            var feedParser = FeedParser.TryCreateFeedParser(TestUtils.LoadTestData("store.steampowered.com.2023.03.02.xml"));
+            var feed = feedParser.TryParseFeed(parseItems: true);
+            Assert.NotNull(feed);
+            Assert.Equal("Steam RSS News Feed", feed.Name);
+            Assert.Equal("http://www.steampowered.com/", feed.WebsiteLink);
+            Assert.Equal("All Steam news, all the time!", feed.Description);
+            Assert.Equal(20, feed.FeedItems.Count);
+            Assert.Equal("Team Fortress 2 Update Released", feed.FeedItems[0].Title);
+            Assert.Equal("https://store.steampowered.com/news/190467/", feed.FeedItems[0].Link);
+            Assert.Equal(new DateTime(2023, 3, 2, 0, 34, 0, DateTimeKind.Utc), feed.FeedItems[0].PublishTime);
+            Assert.Equal("An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:<br/><br><ul style=\"padding-bottom: 0px; margin-bottom: 0px;\" ><li>Added missing Summer tag for Workshop maps<br></ul>", feed.FeedItems[0].Content);
+            Assert.Equal("An update to Team Fortress 2 has been released. The update will be applied automatically when you restart Team Fortress 2. The major changes include:Added missing Summer tag for Workshop maps", feed.FeedItems[0].Summary);
+        }
     }
 }

@@ -211,9 +211,13 @@ namespace FeedReader.ServerCore.FeedParsers
 
     public class RssFeedParser : XmlFeedParser
     {
+        private bool _isRssV1 = false;
+
         public RssFeedParser(XmlDocument xml)
             : base(xml)
         {
+            FeedXmlNS.AddNamespace("rss1_0_ns", "http://purl.org/rss/1.0/");
+            FeedXmlNS.AddNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
             FeedXmlNS.AddNamespace("content", "http://purl.org/rss/1.0/modules/content/");
         }
 
@@ -221,6 +225,15 @@ namespace FeedReader.ServerCore.FeedParsers
         {
             // Parse channel. As spec, every feed has only one channel.
             var channelNode = FeedXml.SelectSingleNode("/rss/channel");
+            if (channelNode == null)
+            {
+                _isRssV1 = true;
+                channelNode = FeedXml.SelectSingleNode("/rdf:RDF/rss1_0_ns:channel", FeedXmlNS);
+            }
+            if (channelNode == null)
+            {
+                return null;
+            }
 
             // Parse feed info.
             var feed = new FeedInfo()
@@ -235,7 +248,7 @@ namespace FeedReader.ServerCore.FeedParsers
             if (parseItems)
             {
                 feed.FeedItems = new List<FeedItem>();
-                var itemNodes = FeedXml.SelectNodes("/rss/channel/item");
+                var itemNodes = _isRssV1 ? FeedXml.SelectNodes("/rdf:RDF/rss1_0_ns:item", FeedXmlNS) : FeedXml.SelectNodes("/rss/channel/item");
                 if (itemNodes != null)
                 {
                     foreach (XmlNode itemNode in itemNodes)

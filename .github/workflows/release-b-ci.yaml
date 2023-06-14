@@ -72,7 +72,7 @@ jobs:
       - name: Deploy WebServer
         uses: azure/k8s-deploy@v1
         with:
-          namespace: yuboxie
+          namespace: feedreader
           manifests: |
             kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
           images: |
@@ -81,7 +81,7 @@ jobs:
       - name: Deploy TaskServer
         uses: azure/k8s-deploy@v1
         with:
-          namespace: yuboxie
+          namespace: feedreader
           manifests: |
             kubernetes/${{ env.TARGET_BRANCH }}-configs/taskserver.yaml
           images: |

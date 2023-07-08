@@ -34,16 +34,8 @@ namespace FeedReader.ServerCore.Services
             // Get Microsoft & google Keys
             using (var http = new HttpClient())
             {
-                MicrosoftKeyss = JsonConvert.DeserializeObject<MicrosoftKeys>(http.GetStringAsync(MICROSOFT_PUBLIC_KEYS_URL).Result);
-
-                var content = http.GetStringAsync(GOOGLE_PUBLIC_KEYS_URL).Result;
-                var keys = JsonConvert.DeserializeObject<IDictionary<string, string>>(content);
-                var certs = new Dictionary<string, X509Certificate2>();
-                foreach (var key in keys)
-				{
-                    certs[key.Key] = new X509Certificate2(Encoding.UTF8.GetBytes(key.Value));
-				}
-                GoogleCerts = certs;
+                MicrosoftKeyss = RefreshMicrosfotKeysAsync().Result;
+                GoogleCerts = RefreshGoogleKeysAsync().Result;
             }
         }
 
@@ -223,7 +215,12 @@ namespace FeedReader.ServerCore.Services
             var key = MicrosoftKeyss.Keys.Where(k => k.Kid == kid).FirstOrDefault();
             if (key == null)
             {
-                throw new UnauthorizedAccessException("Invalid kid claim in token");
+                MicrosoftKeyss = RefreshMicrosfotKeysAsync().Result;
+                key = MicrosoftKeyss.Keys.Where(k => k.Kid == kid).FirstOrDefault();
+                if (key == null)
+                {
+                    throw new UnauthorizedAccessException("Invalid kid claim in token");
+                }
             }
 
             // Get cert
@@ -264,7 +261,12 @@ namespace FeedReader.ServerCore.Services
             var cert = GoogleCerts.TryGetValue(kid);
             if (cert == null)
 			{
-                throw new FeedReaderException(HttpStatusCode.Unauthorized);
+                GoogleCerts = RefreshGoogleKeysAsync().Result;
+                cert = GoogleCerts.TryGetValue(kid);
+                if (cert == null)
+                {
+                    throw new FeedReaderException(HttpStatusCode.Unauthorized);
+                }
 			}
 
             // Validate algorithm type.
@@ -305,6 +307,29 @@ namespace FeedReader.ServerCore.Services
         {
             string value;
             return dict.TryGetValue(key, out value) ? value : null;
+        }
+
+        private static async Task<MicrosoftKeys> RefreshMicrosfotKeysAsync()
+        {
+            using (var http = new HttpClient())
+            {
+                return JsonConvert.DeserializeObject<MicrosoftKeys>(await http.GetStringAsync(MICROSOFT_PUBLIC_KEYS_URL));
+            }
+        }
+
+        private static async Task<Dictionary<string, X509Certificate2>> RefreshGoogleKeysAsync()
+        {
+            using (var http = new HttpClient())
+            {
+                var content = await http.GetStringAsync(GOOGLE_PUBLIC_KEYS_URL);
+                var keys = JsonConvert.DeserializeObject<IDictionary<string, string>>(content);
+                var certs = new Dictionary<string, X509Certificate2>();
+                foreach (var key in keys)
+				{
+                    certs[key.Key] = new X509Certificate2(Encoding.UTF8.GetBytes(key.Value));
+				}
+                return certs;
+            }
         }
 
         const string FEEDREADER_ISS = "https://auth.feedreader.org/v1.0";

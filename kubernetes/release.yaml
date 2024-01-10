@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: feedreader-webclient
+  namespace: feedreader
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - hosts:
+      - www.feedreader.org
+      secretName: feedreader-webclient-tls
+  rules:
+  - host: www.feedreader.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: feedreader-webclient-release-b
+            port:
+              number: 80

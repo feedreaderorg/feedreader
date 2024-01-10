@@ -4,6 +4,7 @@ metadata:
   name: feedreader-webclient-release-b
   namespace: feedreader
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: feedreader-webclient-release-b

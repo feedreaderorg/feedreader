@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedreader-webclient-release-b
+  namespace: feedreader
+spec:
+  selector:
+    matchLabels:
+      app: feedreader-webclient-release-b
+  template:
+    metadata:
+      labels:
+        app: feedreader-webclient-release-b
+    spec:
+      containers:
+      - name: feedreader-webclient-release-b
+        image: xieyubo/feedreader-webclient
+        ports:
+          - containerPort: 80
+      env:
+      - name: Blazor_Environment
+        value: release-b
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedreader-webclient-release-b
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: feedreader-webclient-release-b
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: feedreader-webclient-release-b
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - hosts:
+      - www.release-b.feedreader.org
+      secretName: feedreader-webclient-release-b-tls
+  rules:
+  - host: www.release-b.feedreader.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: feedreader-webclient-release-b
+            port:
+              number: 80

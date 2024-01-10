@@ -87,12 +87,11 @@ jobs:
           images: |
             xieyubo/feedreader-taskserver:${{ github.sha }}
 
-      # - name: Deploy WebClient
-      #   uses: Azure/static-web-apps-deploy@v1
-      #   with:
-      #     azure_static_web_apps_api_token: ${{ secrets.WEBCLIEN_RELEASE_B_DEPLOY_TOKEN }}
-      #     action: "upload"
-      #     skip_app_build: true
-      #     skip_api_build: true
-      #     app_location: "src/WebClient/bin/Release/net${{ env.DOTNET_VERSION }}/publish/wwwroot"
-      #     api_location: ""
+      - name: Deploy WebClient
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: feedreader
+          manifests: |
+            kubernetes/${{ env.TARGET_BRANCH }}-configs/webclient.yaml
+          images: |
+            xieyubo/feedreader-webclient:${{ github.sha }}

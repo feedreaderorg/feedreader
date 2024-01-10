@@ -17,9 +17,9 @@ spec:
         image: xieyubo/feedreader-webclient
         ports:
           - containerPort: 80
-      env:
-      - name: Blazor_Environment
-        value: release-b
+        env:
+        - name: Blazor_Environment
+          value: release-b
 ---
 apiVersion: v1
 kind: Service

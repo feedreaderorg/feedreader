@@ -69,14 +69,14 @@ jobs:
         with:
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
-      #- name: Deploy WebServer
-      #  uses: azure/k8s-deploy@v1
-      #  with:
-      #    namespace: feedreader
-      #    manifests: |
-      #      kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
-      #    images: |
-      #      xieyubo/private:f-webserver-${{ github.sha }}
+      - name: Deploy WebServer
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: feedreader
+          manifests: |
+            kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
+          images: |
+            xieyubo/feedreader-webserver-${{ github.sha }}
 
       - name: Deploy TaskServer
         uses: azure/k8s-deploy@v1

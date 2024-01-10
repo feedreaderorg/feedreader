@@ -65,9 +65,9 @@ jobs:
           tags: xieyubo/feedreader-taskserver:${{ github.sha }}
           push: true
 
-      # - uses: azure/k8s-set-context@v1
-      #   with:
-      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
+      - uses: azure/k8s-set-context@v1
+        with:
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       #- name: Deploy WebServer
       #  uses: azure/k8s-deploy@v1
@@ -78,14 +78,14 @@ jobs:
       #    images: |
       #      xieyubo/private:f-webserver-${{ github.sha }}
 
-      # - name: Deploy TaskServer
-      #   uses: azure/k8s-deploy@v1
-      #   with:
-      #     namespace: feedreader
-      #     manifests: |
-      #       kubernetes/${{ env.TARGET_BRANCH }}-configs/taskserver.yaml
-      #     images: |
-      #       xieyubo/private:f-taskserver-${{ github.sha }}
+      - name: Deploy TaskServer
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: feedreader
+          manifests: |
+            kubernetes/${{ env.TARGET_BRANCH }}-configs/taskserver.yaml
+          images: |
+            xieyubo/feedreader-taskserver:${{ github.sha }}
 
       # - name: Deploy WebClient
       #   uses: Azure/static-web-apps-deploy@v1

@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: f-taskserver-release-b
+  name: feedreader-taskserver-release-b
+  namespace: feedreader
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: f-taskserver-release-b
+      app: feedreader-taskserver-release-b
   template:
     metadata:
       labels:
-        app: f-taskserver-release-b
+        app: feedreader-taskserver-release-b
     spec:
-      imagePullSecrets:
-      - name: f-docker-secret
       containers:
-      - name: f-taskserver-release-b
-        image:  xieyubo/private:f-taskserver-release-b
+      - name: feedreader-taskserver-release-b
+        image:  xieyubo/feedreader-taskserver
         env:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:
               secretKeyRef:
-                name: f-release-db-secret
+                name: feedreader-db-secret
                 key: db-conns

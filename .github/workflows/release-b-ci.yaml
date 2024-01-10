@@ -46,7 +46,7 @@ jobs:
         with:
           context: src/WebClient/
           file: src/WebClient/Dockerfile
-          tags: xieyubo/private:f-webclient-${{ github.sha }}
+          tags: xieyubo/feedreader-webclient:${{ github.sha }}
           push: true
 
       - name: Build And Push Docker Image for webserver
@@ -54,7 +54,7 @@ jobs:
         with:
           context: .
           file: src/WebServer/Dockerfile
-          tags: xieyubo/private:f-webserver-${{ github.sha }}
+          tags: xieyubo/feedreader-webserver:${{ github.sha }}
           push: true
 
       - name: Build And Push Docker Image for taskserver
@@ -62,37 +62,37 @@ jobs:
         with:
           context: src/TaskServer/
           file: src/TaskServer/Dockerfile
-          tags: xieyubo/private:f-taskserver-${{ github.sha }}
+          tags: xieyubo/feedreader-taskserver:${{ github.sha }}
           push: true
 
-      - uses: azure/k8s-set-context@v1
-        with:
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
+      # - uses: azure/k8s-set-context@v1
+      #   with:
+      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
 
-      - name: Deploy WebServer
-        uses: azure/k8s-deploy@v1
-        with:
-          namespace: feedreader
-          manifests: |
-            kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
-          images: |
-            xieyubo/private:f-webserver-${{ github.sha }}
+      #- name: Deploy WebServer
+      #  uses: azure/k8s-deploy@v1
+      #  with:
+      #    namespace: feedreader
+      #    manifests: |
+      #      kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
+      #    images: |
+      #      xieyubo/private:f-webserver-${{ github.sha }}
 
-      - name: Deploy TaskServer
-        uses: azure/k8s-deploy@v1
-        with:
-          namespace: feedreader
-          manifests: |
-            kubernetes/${{ env.TARGET_BRANCH }}-configs/taskserver.yaml
-          images: |
-            xieyubo/private:f-taskserver-${{ github.sha }}
+      # - name: Deploy TaskServer
+      #   uses: azure/k8s-deploy@v1
+      #   with:
+      #     namespace: feedreader
+      #     manifests: |
+      #       kubernetes/${{ env.TARGET_BRANCH }}-configs/taskserver.yaml
+      #     images: |
+      #       xieyubo/private:f-taskserver-${{ github.sha }}
 
-      - name: Deploy WebClient
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.WEBCLIEN_RELEASE_B_DEPLOY_TOKEN }}
-          action: "upload"
-          skip_app_build: true
-          skip_api_build: true
-          app_location: "src/WebClient/bin/Release/net${{ env.DOTNET_VERSION }}/publish/wwwroot"
-          api_location: ""
+      # - name: Deploy WebClient
+      #   uses: Azure/static-web-apps-deploy@v1
+      #   with:
+      #     azure_static_web_apps_api_token: ${{ secrets.WEBCLIEN_RELEASE_B_DEPLOY_TOKEN }}
+      #     action: "upload"
+      #     skip_app_build: true
+      #     skip_api_build: true
+      #     app_location: "src/WebClient/bin/Release/net${{ env.DOTNET_VERSION }}/publish/wwwroot"
+      #     api_location: ""

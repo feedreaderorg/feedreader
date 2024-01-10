@@ -76,7 +76,7 @@ jobs:
           manifests: |
             kubernetes/${{ env.TARGET_BRANCH }}-configs/webserver.yaml
           images: |
-            xieyubo/feedreader-webserver-${{ github.sha }}
+            xieyubo/feedreader-webserver:${{ github.sha }}
 
       - name: Deploy TaskServer
         uses: azure/k8s-deploy@v1

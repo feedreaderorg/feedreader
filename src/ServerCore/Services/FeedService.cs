@@ -99,8 +99,21 @@ namespace FeedReader.ServerCore.Services
                         }
                         catch (Exception ex)
                         {
-                            // TODO: save error in db?
-                            Logger.LogError(ex, "Refresh feedId: {0} failed.", feedId);
+                            try
+                            {
+                                db.Events.Add(new Event()
+                                {
+                                    EventCategory = EventCategory.RefreshFeed,
+                                    Content = $"Refresh feedId: {feedId} failed: {ex}",
+                                    LogLevel = LogLevel.Error,
+                                });
+
+                                await db.SaveChangesAsync();
+                            }
+                            catch (Exception dbEx)
+                            {
+                                Logger.LogError(ex, $"Save error {ex} in to db failed: {dbEx}");
+                            }
                         }
                     });
             }

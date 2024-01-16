@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FeedReader.ServerCore.Models;
+using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace FeedReader.ServerCore
 {
@@ -12,6 +14,9 @@ namespace FeedReader.ServerCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasPostgresEnum<LogLevel>()
+                        .HasPostgresEnum<EventCategory>();
+
             modelBuilder.Entity<UserOAuthIds>().HasKey(u => new { u.OAuthIssuer, u.OAuthId });
 
             modelBuilder.Entity<Favorite>().HasKey(f => new { f.UserId, f.FeedItemId });
@@ -34,6 +39,7 @@ namespace FeedReader.ServerCore
         public DbSet<FeedSubscription> FeedSubscriptions { get; set; }
         public DbSet<FeedItem> FeedItems { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Event> Events { get; set; }
     }
 
     public class DesignTimeFeedReaderDbFactory : Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<DbContext>
@@ -52,8 +58,13 @@ namespace FeedReader.ServerCore
                 }
             }
 
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+            dataSourceBuilder.MapEnum<LogLevel>()
+                             .MapEnum<EventCategory>();
+            var dataSource = dataSourceBuilder.Build();
+
             var optsBuilder = new DbContextOptionsBuilder<DbContext>();
-            optsBuilder.UseNpgsql(connectionString);
+            optsBuilder.UseNpgsql(dataSource);
             return new DbContext(optsBuilder.Options);
         }
     }

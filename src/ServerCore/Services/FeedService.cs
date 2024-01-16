@@ -90,7 +90,7 @@ namespace FeedReader.ServerCore.Services
         {
             using (var db = DbFactory.CreateDbContext())
             {
-                await BatchOperation(db.FeedInfos.OrderBy(f => f.DbId).Select(f => f.Id), batchSize: 50, cancellationToken,
+                await BatchOperation(db.FeedInfos.OrderBy(f => f.DbId).Where(f => !f.DisableRefresh).Select(f => f.Id), batchSize: 50, cancellationToken,
                     perItemOp: async (feedId) =>
                     {
                         try

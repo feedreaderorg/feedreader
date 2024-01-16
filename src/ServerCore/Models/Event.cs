@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,4 +16,6 @@ public class Event
     public LogLevel LogLevel { get; set; }
 
     public string? Content { get; set; }
+
+    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 }

@@ -39,6 +39,8 @@ namespace FeedReader.ServerCore.Models
 
         public int TotalFavorites { get; set; }
 
+        public bool DisableRefresh { get; set; }
+
         /// <summary>
         /// The last fetch time.
         /// </summary>

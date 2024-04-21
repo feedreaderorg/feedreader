@@ -1,19 +1,16 @@
 # See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-jammy AS base
-WORKDIR /app
-RUN apt update && apt install curl -y
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS build
+ARG TARGETARCH
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS build
 WORKDIR /src
 COPY . .
+RUN dotnet restore -a $TARGETARCH
+
 WORKDIR /src/src/WebServer
-RUN dotnet build "WebServer.csproj" -c Release -o /app/build
+RUN dotnet publish "WebServer.csproj" -c Release -a $TARGETARCH --no-restore -o /app/publish
 
-FROM build AS publish
-RUN dotnet publish "WebServer.csproj" -c Release -o /app/publish
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-jammy-arm64v8 AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "FeedReader.WebServer.dll"]

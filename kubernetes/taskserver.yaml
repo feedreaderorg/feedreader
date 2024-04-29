@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: feedreader-taskserver-release-b
-  namespace: feedreader
+  name: frtasksrv
+  namespace: yuboxie
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: feedreader-taskserver-release-b
+      app: frtasksrv
   template:
     metadata:
       labels:
-        app: feedreader-taskserver-release-b
+        app: frtasksrv
     spec:
       containers:
-      - name: feedreader-taskserver-release-b
-        image:  xieyubo/feedreader-taskserver
+      - name: frtasksrv
+        image:  xieyubo/frtasksrv
         env:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:
               secretKeyRef:
-                name: feedreader-db-secret
+                name: frdbsec
                 key: db-conns
       nodeSelector:
         kubernetes.io/arch: arm64

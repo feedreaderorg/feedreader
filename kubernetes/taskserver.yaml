@@ -16,6 +16,7 @@ spec:
       containers:
       - name: frtasksrv
         image:  xieyubo/frtasksrv
+        imagePullPolicy: Always
         env:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:

@@ -1,6 +1,9 @@
 {
   "profiles": {
     "Docker": {
+      "environmentVariables": {
+          "ASPNETCORE_URLS": "http://+:80"
+      },
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "httpPort": 5001

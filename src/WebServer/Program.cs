@@ -43,6 +43,10 @@ namespace FeedReader.WebServer
 
             services.AddSingleton<StaticFileService>();
 
+            services.AddControllers();
+
+            services.AddApiVersioning();
+
             var grpc = services.AddGrpc();
             grpc.AddServiceOptions<WebServerApi>(configure => configure.Interceptors.Add<WebServerApiInterceptor>());
 
@@ -95,6 +99,7 @@ namespace FeedReader.WebServer
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapGrpcService<AnonymousService>().EnableGrpcWeb().RequireCors("AllowAll");
                 endpoints.MapGrpcService<WebServerApi>().EnableGrpcWeb().RequireCors("AllowAll");
                 endpoints.MapFallbackToFile("/index.html");

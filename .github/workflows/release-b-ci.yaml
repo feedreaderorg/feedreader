@@ -80,12 +80,14 @@ jobs:
       #    push: true
 
       - uses: azure/k8s-set-context@v1
+        if: github.event_name != 'schedule'
         with:
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
-      # - uses: azure/k8s-set-context@v1
-      #  with:
-      #     kubeconfig: '${{ secrets.MSOK_KUBECONFIG }}'
+      - uses: azure/k8s-set-context@v1
+        if: github.event_name == 'schedule'
+        with:
+          kubeconfig: '${{ secrets.MSOK_KUBECONFIG }}'
 
       - name: Deploy WebServer
         uses: azure/k8s-deploy@v1

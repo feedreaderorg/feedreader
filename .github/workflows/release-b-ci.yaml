@@ -76,7 +76,7 @@ jobs:
           context: .
           platforms: linux/arm64
           file: src/TaskServer/Dockerfile
-          tags: xieyubo/frtasksrv:${{ github.sha }}
+          tags: xieyubo/feedreader-taskserver:${{ github.sha }}
           push: true
 
       - uses: azure/k8s-set-context@v1
@@ -96,22 +96,22 @@ jobs:
 
       - uses: azure/k8s-set-context@v1
         with:
-          kubeconfig: '${{ secrets.YUBOXIE_KUBECONFIG }}'
+          kubeconfig: '${{ secrets.NEW_KUBECONFIG }}'
 
       - name: Deploy TaskServer
         if: github.event_name == 'push'
         uses: azure/k8s-deploy@v1
         with:
-          namespace: yuboxie
+          namespace: feedreader
           manifests: |
             kubernetes/taskserver.yaml
           images: |
-            xieyubo/frtasksrv:${{ github.sha }}
+            xieyubo/feedreader-taskserver:${{ github.sha }}
 
       - name: Security update TaskServer 
         if: github.event_name == 'schedule'
         run: |
-          kubectl -n yuboxie rollout restart deployment/frtasksrv
+          kubectl -n feedreader rollout restart deployment/feedreader-taskserver
 
       #- name: Deploy WebClient
       #  uses: azure/k8s-deploy@v1

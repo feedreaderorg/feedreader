@@ -23,7 +23,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: feedreader-db-secret
-                key: db-conns
+                key: db-conn
           - name: FeedReaderJwtSecret
             valueFrom:
               secretKeyRef:
@@ -52,7 +52,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
 spec:
-  ingressClassName: webapprouting.kubernetes.azure.com
+  ingressClassName: nginx
   tls:
   - hosts:
     - api.release-b.feedreader.org

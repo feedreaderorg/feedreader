@@ -5,9 +5,6 @@ on:
     branches:
       - release-b
 
-  schedule:
-    - cron: '0 0 * * *'
-
 env:
   DOTNET_VERSION: '7.0'
   TARGET_BRANCH: 'release-b'
@@ -82,7 +79,7 @@ jobs:
       - uses: azure/k8s-set-context@v1
         if: github.event_name == 'push'
         with:
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
+          kubeconfig: '${{ secrets.NEW_KUBECONFIG }}'
 
       - name: Deploy WebServer
         if: github.event_name == 'push'
@@ -94,10 +91,6 @@ jobs:
           images: |
             xieyubo/feedreader-webserver:${{ github.sha }}
 
-      - uses: azure/k8s-set-context@v1
-        with:
-          kubeconfig: '${{ secrets.NEW_KUBECONFIG }}'
-
       - name: Deploy TaskServer
         if: github.event_name == 'push'
         uses: azure/k8s-deploy@v1
@@ -107,11 +100,6 @@ jobs:
             kubernetes/taskserver.yaml
           images: |
             xieyubo/feedreader-taskserver:${{ github.sha }}
-
-      - name: Security update TaskServer 
-        if: github.event_name == 'schedule'
-        run: |
-          kubectl -n feedreader rollout restart deployment/feedreader-taskserver
 
       #- name: Deploy WebClient
       #  uses: azure/k8s-deploy@v1

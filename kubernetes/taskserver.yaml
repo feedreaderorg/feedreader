@@ -21,7 +21,7 @@ spec:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:
               secretKeyRef:
-                name: feedreader-taskserver-secret
+                name: feedreader-db-secret
                 key: db-conn
       nodeSelector:
         kubernetes.io/arch: arm64

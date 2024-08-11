@@ -95,7 +95,7 @@ namespace FeedReader.WebServer
 
             app.UseGrpcWeb();
 
-            app.UseCors();
+            app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
             {

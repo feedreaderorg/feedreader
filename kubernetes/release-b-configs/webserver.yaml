@@ -17,7 +17,7 @@ spec:
       - name: feedreader-webserver-release-b
         image: xieyubo/feedreader-webserver
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         env:
           - name: ConnectionStrings__DbConnectionString
             valueFrom:
@@ -41,7 +41,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 80
+  - port: 8080
   selector:
     app: feedreader-webserver-release-b
 ---
@@ -67,4 +67,4 @@ spec:
           service:
             name: feedreader-webserver-release-b
             port:
-              number: 80
+              number: 8080

@@ -22,4 +22,12 @@ public class FeedController : ControllerBase
         (start, count) = Validator.ValidateStartIndexAndCount(start, count);
         return (await feedService.GetFeedItemsByIdAsync(feedId: null, start, count)).Select(s => s.ToProtocolFeedItem());
     }
+
+    [Route("discover")]
+    [HttpGet]
+    public async Task<IEnumerable<FeedInfo>> DiscoverFeeds(FeedService feedService, string query, int start = 0, int count = 50)
+    {
+        (start, count) = Validator.ValidateStartIndexAndCount(start, count);
+        return (await feedService.DiscoverFeedsAsync(query, start, count)).Select(s => s.ToProtocolFeedInfo());
+    }
 }

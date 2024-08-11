@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>FeedReader.ServerCore</AssemblyName>
     <RootNamespace>FeedReader.ServerCore</RootNamespace>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />

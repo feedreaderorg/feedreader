@@ -1,9 +1,9 @@
 # See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/runtime:7.0-jammy-arm64v8 AS base
+FROM mcr.microsoft.com/dotnet/runtime:8.0-jammy-arm64v8 AS base
 RUN apt update && apt install curl -y
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 ARG TARGETARCH
 
 WORKDIR /src

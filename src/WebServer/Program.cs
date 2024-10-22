@@ -47,6 +47,8 @@ namespace FeedReader.WebServer
 
             services.AddApiVersioning();
 
+            services.AddResponseCaching();
+
             var grpc = services.AddGrpc();
             grpc.AddServiceOptions<WebServerApi>(configure => configure.Interceptors.Add<WebServerApiInterceptor>());
 
@@ -96,6 +98,8 @@ namespace FeedReader.WebServer
             app.UseGrpcWeb();
 
             app.UseCors("AllowAll");
+
+            app.UseResponseCaching();
 
             app.UseEndpoints(endpoints =>
             {

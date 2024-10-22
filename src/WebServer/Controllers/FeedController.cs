@@ -9,9 +9,8 @@ using System.Collections.Generic;
 namespace FeedReader.WebServer.Controllers;
 
 [Route("api/v{version:apiVersion}/feed")]
-[ApiController]
 [ApiVersion("1.0")]
-public class FeedController : ControllerBase
+public class FeedController : ApiControllerBase
 {
     private Validator Validator { get; } = new Validator();
 

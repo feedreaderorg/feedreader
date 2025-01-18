@@ -1,0 +1,6 @@
+webserver:
+  address: https://api.feedreader.org
+  domain: api.feedreader.org
+  image: feedreaderorg2/feedreader-webserver
+  imagePullPolicy: Always
+  replicas: 2

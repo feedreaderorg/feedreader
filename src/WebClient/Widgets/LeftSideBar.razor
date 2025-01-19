@@ -80,11 +80,7 @@
 
 		if (CurrentUser.Role == UserRole.Guest)
 		{
-			var response = await CurrentUser.AnonymousService.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
-			{
-				Count = 10
-			});
-			_recommendedFeeds = response.Feeds.Select(f => f.ToModelFeed());
+			_recommendedFeeds = await CurrentUser.SearchFeedAsync(query: "", count: 10);
 		}
 		else
 		{

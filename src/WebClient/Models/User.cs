@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
@@ -9,6 +11,7 @@ using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.JSInterop;
 using static FeedReader.Share.Protocols.AnonymousService;
 using static FeedReader.Share.Protocols.WebServerApi;
@@ -43,7 +46,7 @@ namespace FeedReader.WebClient.Models
 
         private IJSRuntime JS { get; set; }
         private List<Feed> _allFeeds = new List<Feed>();
-
+        private HttpClient _api;
         public User(IJSRuntime js)
         {
             JS = js;
@@ -57,6 +60,7 @@ namespace FeedReader.WebClient.Models
             var grpcHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, httpHandler);
             var grpcChannel = GrpcChannel.ForAddress(serverAddress, new GrpcChannelOptions { HttpHandler = grpcHandler });
             AnonymousService = new AnonymousServiceClient(grpcChannel);
+            _api = new HttpClient() { BaseAddress = new Uri(serverAddress) };
 
             // Try to load token
             Token = await Load("feedreader-access-token");
@@ -126,13 +130,24 @@ namespace FeedReader.WebClient.Models
             await Task.CompletedTask;
         }
 
-        public async Task<List<Feed>> SearchFeedAsync(string query, CancellationToken cancelToken)
+        public async Task<List<Feed>> SearchFeedAsync(string query, int count = 50, CancellationToken cancelToken = default)
         {
-            var response = await AnonymousService.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
-            {
-                Query = query ?? string.Empty
-            }, headers: null, deadline: null, cancelToken);
-            return response.Feeds.Select(s => s.ToModelFeed()).ToList();
+            var feeds = await _api.GetFromJsonAsync<IEnumerable<Share.Protocols.FeedInfo>>(QueryHelpers.AddQueryString("api/v1.0/feed/discover", 
+                new Dictionary<string, string> { { "query", query }, { "start", "0" }, { "count", $"{count}" } }
+            ));
+            return feeds.Select(s => s.ToModelFeed()).ToList();
+        }
+
+        public async Task<List<FeedItem>> GetRecommedFeedItemsAsync(int start = 0, int count = 50, CancellationToken cancelToken = default)
+        {
+
+            Console.WriteLine(QueryHelpers.AddQueryString("v1.0/feed/recommends",
+                new Dictionary<string, string> { { "start", $"{start}" }, { "count", $"{count}" } }
+            ));
+            var feedItems = await _api.GetFromJsonAsync<IEnumerable<Share.Protocols.FeedItem>>(QueryHelpers.AddQueryString("api/v1.0/feed/recommends",
+                new Dictionary<string, string> { { "start", $"{start}" }, { "count", $"{count}" } }
+            ));
+            return feedItems.Select(s => s.ToModelFeedItem()).ToList();
         }
 
         public async Task SubscribeFeedAsync(Feed feed)

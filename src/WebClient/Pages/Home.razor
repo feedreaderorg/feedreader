@@ -58,11 +58,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var response = await App.CurrentUser.AnonymousService.DiscoverFeedsAsync(new Share.Protocols.DiscoverFeedsRequest()
-		{
-			Count = 10
-		});
-		RecommededFeeds = response.Feeds.Select(f => f.ToModelFeed()).ToList();
+		RecommededFeeds = await App.CurrentUser.SearchFeedAsync(query: "", count: 10);
 	}
 
 	async Task OnSearchRssChanged(string query)
@@ -80,7 +76,7 @@
 		SearchRssCancellationSource = new CancellationTokenSource();
 		try
 		{	
-			Feeds = await CurrentUser.SearchFeedAsync(query, SearchRssCancellationSource.Token);
+			Feeds = await CurrentUser.SearchFeedAsync(query, cancelToken: SearchRssCancellationSource.Token);
 		}
 		catch
 		{

@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{277DF4D9-B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCoreTest", "test\ServerCoreTest\ServerCoreTest.csproj", "{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09321537-AEDC-4D68-8117-622C97CFBB25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClient", "src\WebClient\WebClient.csproj", "{4DA8FECF-16C1-426D-9CBF-D88159234357}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,12 +45,17 @@ Global
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DA8FECF-16C1-426D-9CBF-D88159234357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA8FECF-16C1-426D-9CBF-D88159234357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA8FECF-16C1-426D-9CBF-D88159234357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA8FECF-16C1-426D-9CBF-D88159234357}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{17B735B6-A57F-41E3-87EC-D5E5913EB5B0} = {277DF4D9-B036-422B-A564-E902E5FB140B}
+		{4DA8FECF-16C1-426D-9CBF-D88159234357} = {09321537-AEDC-4D68-8117-622C97CFBB25}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9AD56D62-315F-429C-8F39-3988C03E5716}

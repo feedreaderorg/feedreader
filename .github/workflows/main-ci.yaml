@@ -27,6 +27,15 @@ jobs:
           username: feedreaderorg2
           password: ${{ secrets.DOCKER_REPOSITORY_PASSWORD }}
 
+      - name: Build And Push Docker Image for webclient
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/arm64
+          file: src/WebClient/Dockerfile
+          tags: feedreaderorg2/feedreader-webclient:latest,feedreaderorg2/feedreader-webclient:${{ github.sha }}
+          push: true
+
       - name: Build And Push Docker Image for webserver
         uses: docker/build-push-action@v2
         with:
@@ -42,7 +51,11 @@ jobs:
 
       - name: Deploy WebServer
         run: |
-          helm upgrade --install feedreader-webserver helm/ --namespace feedreader-main --create-namespace \
+          helm upgrade --install feedreader helm/ --namespace feedreader-main --create-namespace \
+            --set webclient.blazor_environment=main \
+            --set webclient.domain=www.main.feedreader.org \
+            --set webclient.image=feedreaderorg2/feedreader-webclient:${{ github.sha }} \
+            --set webclient.replicas=1 \
             --set webserver.address=https://api.main.feedreader.org \
             --set webserver.domain=api.main.feedreader.org \
             --set webserver.image=feedreaderorg2/feedreader-webserver:${{ github.sha }} \

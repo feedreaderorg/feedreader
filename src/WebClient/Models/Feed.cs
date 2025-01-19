@@ -109,12 +109,7 @@ namespace FeedReader.WebClient.Models
         {
             return await GetFeedItems(RecomendedFeedItems, startIndex, count, async (s, c) =>
             {
-                var request = new Share.Protocols.GetRecommedFeedItemsRequest()
-                {
-                    StartIndex = s,
-                    Count = c,
-                };
-                return (await App.CurrentUser.AnonymousService.GetRecommedFeedItemsAsync(request)).FeedItems;
+                return await App.CurrentUser.GetRecommedFeedItemsAsync(s, c);
             });
         }
 
@@ -124,6 +119,28 @@ namespace FeedReader.WebClient.Models
             {
                 var response = await op(cacheList.Count, 50);
                 var newItems = response.Select(i => i.ToModelFeedItem()).ToArray();
+                foreach (var item in newItems)
+                {
+                    if (cacheList.FirstOrDefault(f => f.Id == item.Id) == null)
+                    {
+                        perItemOp?.Invoke(item);
+                        cacheList.Add(item);
+                    }
+                }
+                cacheList.Sort((x, y) => x.PublishTime.DescCompareTo(y.PublishTime));
+                if (newItems.Count() < 50)
+                {
+                    break;
+                }
+            }
+            return cacheList.Skip(startIndex).Take(count);
+        }
+
+        private static async Task<IEnumerable<FeedItem>> GetFeedItems(List<FeedItem> cacheList, int startIndex, int count, Func<int, int, Task<IEnumerable<FeedItem>>> op, Action<FeedItem> perItemOp = null)
+        {
+            while (cacheList.Count < startIndex + count)
+            {
+                var newItems = await op(cacheList.Count, 50);
                 foreach (var item in newItems)
                 {
                     if (cacheList.FirstOrDefault(f => f.Id == item.Id) == null)

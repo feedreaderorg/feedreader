@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedreader-webclient
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.webclient.replicas }}
+  selector:
+    matchLabels:
+      app: feedreader-webclient
+  template:
+    metadata:
+      labels:
+        app: feedreader-webclient
+    spec:
+      containers:
+      - name: feedreader-webclient
+        image: {{ .Values.webclient.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+          - name: Blazor_Environment
+            value: {{ .Values.webclient.blazor_environment }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedreader-webclient
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: feedreader-webclient
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: feedreader-webclient
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - {{ .Values.webclient.domain }}
+    secretName: feedreader-webclient-tls
+  rules:
+  - host: {{ .Values.webclient.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: feedreader-webclient
+            port:
+              number: 80

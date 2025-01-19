@@ -7,7 +7,7 @@ COPY . .
 WORKDIR /src/src/WebClient
 RUN dotnet publish "WebClient.csproj" -c Release -a $TARGETARCH -o /app/publish
 
-FROM --platform=$BUILDPLATFORM nginx:alpine AS final
+FROM nginx:alpine AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 COPY --from=build /src/src/WebClient/feedreader.webclient.conf.template /etc/nginx/templates/

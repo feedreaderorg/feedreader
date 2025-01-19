@@ -9,7 +9,7 @@ COPY . .
 WORKDIR /src/src/WebServer
 RUN dotnet publish "WebServer.csproj" -c Release -a $TARGETARCH -o /app/publish
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0-jammy AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "FeedReader.WebServer.dll"]

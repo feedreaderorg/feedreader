@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+import "Protocols/Types.proto";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+service AnonymousService
+{
+    rpc DiscoverFeeds(DiscoverFeedsRequest) returns (DiscoverFeedsResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc GetRecommedFeedItems(GetRecommedFeedItemsRequest) returns (GetRecommedFeedItemsResponse);
+    rpc GetFeedInfo(GetFeedInfoRequest) returns (GetFeedInfoResponse);
+    rpc GetFeedItems(GetFeedItemsRequest) returns (GetFeedItemsResponse);
+}
+
+message DiscoverFeedsRequest
+{
+    // If empty, will return recomended feeds.
+    optional string Query = 1;
+    int32 StartIndex = 2;
+    int32 Count = 3;
+}
+
+message DiscoverFeedsResponse
+{
+    repeated FeedInfo Feeds = 1;
+}
+
+message LoginRequest
+{
+    string Token = 1;
+}
+
+message LoginResponse
+{
+    string Token = 1;
+    string UserId = 2;
+    string Nonce = 3;
+}
+
+message GetRecommedFeedItemsRequest
+{
+    int32 StartIndex = 1;
+    int32 Count = 2;
+}
+
+message GetRecommedFeedItemsResponse
+{
+    repeated FeedItem FeedItems = 1; 
+}
+
+message GetFeedInfoRequest
+{
+    oneof Key {
+        string FeedId = 1;
+        string SubscriptionName = 2;
+    }
+}
+
+message GetFeedInfoResponse
+{
+    FeedInfo Feed = 1;
+}
+
+message GetFeedItemsRequest
+{
+    string FeedId = 1;
+    int32 StartIndex = 2;
+    int32 Count = 3;
+}
+
+message GetFeedItemsResponse
+{
+    repeated FeedItem FeedItems = 1;
+}

@@ -1,0 +1,39 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "FeedReader.Share.Protocols";
+
+message FeedInfo
+{
+    string SubscriptionName = 1;
+    string IconUri = 2;
+    string Name = 3;
+    string Description = 4;
+    int32 TotalSubscribers = 5;
+    string Id = 6;
+    string SiteLink = 7;
+    int32 TotalPosts = 8;
+    int32 TotalFavorites = 9;
+    optional google.protobuf.Timestamp LastReadedTime = 10;
+    string RssUri = 11;
+    bool ForceSubscribed = 12;
+    optional bool Subscribed = 13;
+}
+
+message FeedItem
+{
+    string Id = 1;
+    string FeedId = 2;
+    string Link = 3;
+    google.protobuf.Timestamp PublishTime = 4;
+    string Summary = 5;
+    string Title = 6;
+    string PictureUri = 7;
+    int32 TotalFavorites = 8;
+    optional FeedInfo Feed = 9;
+}
+
+message User {
+    string Id = 1;
+}

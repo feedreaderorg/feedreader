@@ -5,12 +5,11 @@ ARG TARGETARCH
 
 WORKDIR /src
 COPY . .
-RUN dotnet restore -a $TARGETARCH
 
 WORKDIR /src/src/WebServer
-RUN dotnet publish "WebServer.csproj" -c Release -a $TARGETARCH --no-restore -o /app/publish
+RUN dotnet publish "WebServer.csproj" -c Release -a $TARGETARCH -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-arm64v8 AS final
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0-jammy AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "FeedReader.WebServer.dll"]

@@ -3,12 +3,11 @@ ARG TARGETARCH
 
 WORKDIR /src
 COPY . .
-RUN dotnet restore -a $TARGETARCH
 
 WORKDIR /src/src/WebClient
-RUN dotnet publish "WebClient.csproj" -c Release -a $TARGETARCH --no-restore -o /app/publish
+RUN dotnet publish "WebClient.csproj" -c Release -a $TARGETARCH -o /app/publish
 
-FROM nginx:alpine AS final
+FROM --platform=$BUILDPLATFORM nginx:alpine AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 COPY --from=build /src/src/WebClient/feedreader.webclient.conf.template /etc/nginx/templates/
